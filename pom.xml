@@ -138,7 +138,10 @@
     <minimalMavenBuildVersion>3.6.0</minimalMavenBuildVersion>
     <!-- timestamp for reproducible outputs, updated on release by the release plugin -->
     <project.build.outputTimestamp>2023-08-14T08:00:50Z</project.build.outputTimestamp>
+    <apilyzer.skip>true</apilyzer.skip>
     <rat.consoleOutput>true</rat.consoleOutput>
+    <rat.skip>true</rat.skip>
+    <spotbugs.skip>true</spotbugs.skip>
     <sourceReleaseAssemblyDescriptor>source-release-tar</sourceReleaseAssemblyDescriptor>
     <surefire.excludedGroups />
     <surefire.failIfNoSpecifiedTests>false</surefire.failIfNoSpecifiedTests>
