@@ -1005,15 +1005,147 @@ Ensure the following dependencies are included in the test's module to use the R
 
 **IMPORTANT**: Accumulo tests require Java 17 to build and compile.
 
-Before building or running Accumulo tests with restart injection:
+### Prerequisites
+
+1. **Java 17** - Required for building Accumulo
+2. **Maven 3.6+** - Build tool (with Java 17 configured)
+3. **Restart Testing Framework** - Core framework and adapters
+
+### Build Steps
+
+#### Step 1: Configure Java 17 for Maven
+
+Ensure Maven is using Java 17:
 
 ```bash
-# Ensure Java 17 is being used
+# Check Java version
 java -version  # Should show Java 17
 
-# If using SDKMAN or similar:
-# sdk use java 17.x.x
+# Check Maven is using Java 17
+mvn -version   # Should show Java version: 17.x.x
 
-# Then build the tests
-mvn clean test
+# If Maven is not using Java 17, set JAVA_HOME:
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64  # Adjust path as needed
+
+# For Java 17 compatibility with older Maven versions, set MAVEN_OPTS:
+export MAVEN_OPTS="--add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.text=ALL-UNNAMED --add-opens=java.desktop/java.awt.font=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.util.stream=ALL-UNNAMED"
+```
+
+#### Step 2: Build restart-accumulo-adapter Module (Standalone)
+
+The restart-accumulo-adapter module is **standalone** and must be built separately first:
+
+```bash
+cd restart-accumulo-adapter
+
+# Build and install to local Maven repository
+mvn clean install -DskipTests
+
+# This installs:
+# - org.restarttest:restart-accumulo-adapter:1.0.0-SNAPSHOT
+```
+
+**Note**: The restart-accumulo-adapter module is NOT part of the main Accumulo project modules. It's a separate adapter that bridges the Restart Testing Framework with Accumulo's MiniAccumuloCluster.
+
+#### Step 3: Build Accumulo Test Modules
+
+After building the adapter, build the Accumulo test modules that now include restart dependencies:
+
+```bash
+cd /path/to/accumulo
+
+# Build specific modules that contain the tests:
+# 1. test module - Contains most integration tests
+# 2. hadoop-mapreduce module - Contains Hadoop integration tests
+# 3. minicluster module - Contains minicluster tests
+
+# Build all three modules:
+mvn clean install -DskipTests -pl test,hadoop-mapreduce,minicluster
+
+# Or build the entire project:
+mvn clean install -DskipTests
+```
+
+#### Step 4: Run Restart-Injected Tests
+
+After successful build, you can run the generated restart-injected tests:
+
+```bash
+# Run a specific restart-injected test
+mvn test -pl test -Dtest=TestClassName_RestartInjected
+
+# Run all tests in a module
+mvn test -pl test
+```
+
+### Modules with Restart Dependencies
+
+The following Accumulo modules now include restart testing dependencies:
+
+| Module | Location | Tests Count | Description |
+|--------|----------|-------------|-------------|
+| **accumulo-test** | `/test` | 245 tests | Core, functional, FATE, and additional tests |
+| **accumulo-hadoop-mapreduce** | `/hadoop-mapreduce` | 14 tests | Hadoop MapReduce integration tests |
+| **accumulo-minicluster** | `/minicluster` | 2 tests | Mini cluster tests |
+
+### Dependency Information
+
+Each module includes these test-scoped dependencies:
+
+```xml
+<dependency>
+  <groupId>org.restarttest</groupId>
+  <artifactId>restart-core</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <scope>test</scope>
+</dependency>
+<dependency>
+  <groupId>org.restarttest</groupId>
+  <artifactId>restart-accumulo-adapter</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <scope>test</scope>
+</dependency>
+```
+
+### Troubleshooting
+
+**Maven Permission Issues**:
+If you encounter permission errors in the .m2 repository:
+```bash
+# Fix ownership of .m2 directory
+sudo chown -R $USER:$USER ~/.m2
+```
+
+**Java Version Mismatch**:
+If Maven uses a different Java version than expected:
+```bash
+# Set JAVA_HOME explicitly before running Maven
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+mvn -version  # Verify Java 17 is being used
+```
+
+**Build Order**:
+Always build in this order:
+1. First: `restart-accumulo-adapter` (standalone)
+2. Then: Accumulo test modules (`test`, `hadoop-mapreduce`, `minicluster`)
+
+### Complete Build Example
+
+Complete workflow from scratch:
+
+```bash
+# 1. Set up Java 17 environment
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+export MAVEN_OPTS="--add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.text=ALL-UNNAMED --add-opens=java.desktop/java.awt.font=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.util.stream=ALL-UNNAMED"
+
+# 2. Build restart-accumulo-adapter separately
+cd /path/to/accumulo/restart-accumulo-adapter
+mvn clean install -DskipTests
+
+# 3. Build Accumulo modules with restart dependencies
+cd /path/to/accumulo
+mvn clean install -DskipTests -pl test,hadoop-mapreduce,minicluster
+
+# 4. Run a restart-injected test
+mvn test -pl test -Dtest=YourTest_RestartInjected
 ```
