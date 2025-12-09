@@ -1,0 +1,31 @@
+  {
+    "testClass": "org.apache.accumulo.test.functional.ConstraintIT_RestartInjected",
+    "testMethod": "run",
+    "restartPoints": [
+      {
+        "position": "after_table_creation_and_constraint_setup",
+        "targets": ["manager"],
+        "modes": ["GRACEFUL", "CRASH"]
+      },
+      {
+        "position": "after_constraint_verification",
+        "targets": ["manager"],
+        "modes": ["GRACEFUL", "CRASH"]
+      },
+      {
+        "position": "after_test1_complete",
+        "targets": ["tablet_server"],
+        "modes": ["GRACEFUL", "CRASH"]
+      },
+      {
+        "position": "after_test2_no_flush",
+        "targets": ["tablet_server"],
+        "modes": ["GRACEFUL", "CRASH"]
+      },
+      {
+        "position": "after_test2_with_flush",
+        "targets": ["tablet_server"],
+        "modes": ["GRACEFUL", "CRASH"]
+      }
+    ]
+  }

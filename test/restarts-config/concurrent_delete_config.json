@@ -1,0 +1,34 @@
+[
+  {
+    "testClass": "org.apache.accumulo.test.functional.ConcurrentDeleteTableIT_RestartInjected",
+    "testMethod": "testConcurrentDeleteTablesOps",
+    "restartPoints": [
+      {
+        "position": "after_table_create_concurrent_delete",
+        "targets": ["manager"],
+        "modes": ["GRACEFUL", "CRASH"]
+      },
+      {
+        "position": "after_concurrent_delete_test1_complete",
+        "targets": ["manager"],
+        "modes": ["GRACEFUL", "CRASH"]
+      }
+    ]
+  },
+  {
+    "testClass": "org.apache.accumulo.test.functional.ConcurrentDeleteTableIT_RestartInjected",
+    "testMethod": "testConcurrentFateOpsWithDelete",
+    "restartPoints": [
+      {
+        "position": "after_table_create_concurrent_fate",
+        "targets": ["manager"],
+        "modes": ["GRACEFUL", "CRASH"]
+      },
+      {
+        "position": "after_concurrent_fate_test_complete",
+        "targets": ["manager"],
+        "modes": ["GRACEFUL", "CRASH"]
+      }
+    ]
+  }
+]

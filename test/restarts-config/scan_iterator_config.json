@@ -1,0 +1,203 @@
+{
+  "tests": [
+    {
+      "testClass": "org.apache.accumulo.test.functional.ScanIteratorIT_RestartInjected",
+      "testMethod": "run",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_user_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_grant_read_permission",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_grant_write_permission",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_change_authorizations",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "after_scanner_iterator_setup",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_scanner_verify",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_batchscanner_iterator_setup",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_batchscanner_verify_full_range",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_batchscanner_multi_range_setup",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.ScanIteratorIT_RestartInjected",
+      "testMethod": "testAuthsPresentInIteratorEnvironment",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_user_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_grant_read_permission",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_grant_write_permission",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_change_authorizations",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_write_test_mutation",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "after_scanner_iterator_add",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_batchscanner_iterator_add",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.ScanIteratorIT_RestartInjected",
+      "testMethod": "testAuthsNotPresentInIteratorEnvironment",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_user_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_grant_read_permission",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_grant_write_permission",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_change_authorizations",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_write_test_mutation",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "after_scanner_iterator_add",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_batchscanner_iterator_add",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.ScanIteratorIT_RestartInjected",
+      "testMethod": "testEmptyAuthsInIteratorEnvironment",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_user_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_grant_read_permission",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_grant_write_permission",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_change_authorizations",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_write_test_mutation",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "after_scanner_iterator_add",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_batchscanner_iterator_add",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+[
+  {
+    "testMethod": "testCompactionDurationContinuesAfterCoordinatorStop",
+    "restartPoints": [
+      {
+        "position": "after_create_table_duration_1",
+        "target": "manager"
+      },
+      {
+        "position": "after_write_data_duration_1",
+        "target": "tablet_server"
+      },
+      {
+        "position": "after_start_compaction_services_duration_1",
+        "target": "manager"
+      },
+      {
+        "position": "after_compact_start_duration_1",
+        "target": "tablet_server"
+      }
+    ]
+  },
+  {
+    "testMethod": "testProgressViaMetrics",
+    "restartPoints": [
+      {
+        "position": "after_create_table_metrics_1",
+        "target": "manager"
+      },
+      {
+        "position": "after_write_data_metrics_1",
+        "target": "tablet_server"
+      },
+      {
+        "position": "after_start_compaction_services_metrics_1",
+        "target": "manager"
+      },
+      {
+        "position": "after_compact_metrics_1",
+        "target": "tablet_server"
+      }
+    ]
+  },
+  {
+    "testMethod": "testProgress",
+    "restartPoints": [
+      {
+        "position": "after_create_table_progress_1",
+        "target": "manager"
+      },
+      {
+        "position": "after_write_data_progress_1",
+        "target": "tablet_server"
+      },
+      {
+        "position": "after_start_compaction_services_progress_1",
+        "target": "manager"
+      },
+      {
+        "position": "after_compact_progress_1",
+        "target": "tablet_server"
+      }
+    ]
+  },
+  {
+    "testMethod": "testProgressWithBulkImport",
+    "restartPoints": [
+      {
+        "position": "after_create_tables_bulk_import_1",
+        "target": "manager"
+      },
+      {
+        "position": "after_write_data_bulk_import_1",
+        "target": "tablet_server"
+      },
+      {
+        "position": "after_set_properties_bulk_import_1",
+        "target": "manager"
+      },
+      {
+        "position": "after_start_compaction_services_bulk_import_1",
+        "target": "manager"
+      },
+      {
+        "position": "after_bulk_import_bulk_import_1",
+        "target": "tablet_server"
+      },
+      {
+        "position": "after_compact_bulk_import_1",
+        "target": "tablet_server"
+      }
+    ]
+  }
+]

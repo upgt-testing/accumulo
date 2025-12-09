@@ -1,0 +1,16 @@
+  {
+    "testClass": "org.apache.accumulo.test.functional.DeleteFailIT_RestartInjected",
+    "testMethod": "testFail",
+    "restartPoints": [
+      {
+        "position": "after_table_create_with_delete_behavior",
+        "targets": ["manager"],
+        "modes": ["GRACEFUL", "CRASH"]
+      },
+      {
+        "position": "after_delete_mutation_write",
+        "targets": ["tablet_server"],
+        "modes": ["GRACEFUL", "CRASH"]
+      }
+    ]
+  }

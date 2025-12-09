@@ -1,0 +1,55 @@
+{
+  "tests": [
+    {
+      "testClass": "org.apache.accumulo.test.functional.ScanSessionTimeOutIT_RestartInjected",
+      "testMethod": "run",
+      "restartPoints": [
+        {
+          "position": "after_session_idle_property_set",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_session_idle_wait",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "after_first_verify_with_active_session",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_session_timeout_verification",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_second_verify_new_session",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_third_verify_session_closed",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_final_scan_verification",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    }
+  ]
+}

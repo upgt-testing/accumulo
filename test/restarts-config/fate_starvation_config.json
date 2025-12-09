@@ -1,0 +1,31 @@
+  {
+    "testClass": "org.apache.accumulo.test.functional.FateStarvationIT_RestartInjected",
+    "testMethod": "run",
+    "restartPoints": [
+      {
+        "position": "after_table_create_fate_starvation",
+        "targets": ["manager"],
+        "modes": ["GRACEFUL", "CRASH"]
+      },
+      {
+        "position": "after_data_ingest_fate_starvation",
+        "targets": ["tablet_server"],
+        "modes": ["GRACEFUL", "CRASH"]
+      },
+      {
+        "position": "after_flush_fate_starvation",
+        "targets": ["tablet_server"],
+        "modes": ["GRACEFUL", "CRASH"]
+      },
+      {
+        "position": "after_compaction_loop_fate_starvation",
+        "targets": ["tablet_server"],
+        "modes": ["GRACEFUL", "CRASH"]
+      },
+      {
+        "position": "after_offline_fate_starvation",
+        "targets": ["manager"],
+        "modes": ["GRACEFUL", "CRASH"]
+      }
+    ]
+  }

@@ -1,0 +1,58 @@
+  {
+    "testClass": "org.apache.accumulo.test.functional.ConcurrencyIT_RestartInjected",
+    "testMethod": "run",
+    "restartPoints": [
+      {
+        "position": "after_table_create_concurrency",
+        "targets": ["manager"],
+        "modes": ["GRACEFUL", "CRASH"]
+      },
+      {
+        "position": "after_iterator_attach_concurrency",
+        "targets": ["manager"],
+        "modes": ["GRACEFUL", "CRASH"]
+      },
+      {
+        "position": "after_initial_batch_write",
+        "targets": ["tablet_server"],
+        "modes": ["GRACEFUL", "CRASH"]
+      },
+      {
+        "position": "after_all_scans_complete",
+        "targets": ["tablet_server"],
+        "modes": ["GRACEFUL"]
+      }
+    ]
+  },
+  {
+    "testClass": "org.apache.accumulo.test.functional.ConcurrentDeleteTableIT_RestartInjected",
+    "testMethod": "testConcurrentDeleteTablesOps",
+    "restartPoints": [
+      {
+        "position": "after_table_create_concurrent_delete",
+        "targets": ["manager"],
+        "modes": ["GRACEFUL", "CRASH"]
+      },
+      {
+        "position": "after_concurrent_delete_test1_complete",
+        "targets": ["manager"],
+        "modes": ["GRACEFUL", "CRASH"]
+      }
+    ]
+  },
+  {
+    "testClass": "org.apache.accumulo.test.functional.ConcurrentDeleteTableIT_RestartInjected",
+    "testMethod": "testConcurrentFateOpsWithDelete",
+    "restartPoints": [
+      {
+        "position": "after_table_create_concurrent_fate",
+        "targets": ["manager"],
+        "modes": ["GRACEFUL", "CRASH"]
+      },
+      {
+        "position": "after_concurrent_fate_test_complete",
+        "targets": ["manager"],
+        "modes": ["GRACEFUL", "CRASH"]
+      }
+    ]
+  }

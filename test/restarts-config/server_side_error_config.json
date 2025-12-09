@@ -1,0 +1,60 @@
+{
+  "tests": [
+    {
+      "testClass": "org.apache.accumulo.test.functional.ServerSideErrorIT_RestartInjected",
+      "testMethod": "run",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_bad_iterator_attach",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "after_scanner_error_verification",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_batchscanner_error_verification",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_properties_removal",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_sleep",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_successful_scan",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_bogus_iterator_add",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_final_error_verification",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    }
+  ]
+}

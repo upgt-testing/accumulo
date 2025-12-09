@@ -1,0 +1,70 @@
+{
+  "tests": [
+    {
+      "testClass": "org.apache.accumulo.test.functional.SimpleBalancerFairnessIT_RestartInjected",
+      "testMethod": "simpleBalancerFairness",
+      "restartPoints": [
+        {
+          "position": "after_test_ingest_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_split_threshold_set",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_unused_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_add_splits",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_get_tablet_servers",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_ingest",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "after_flush",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_sleep_for_balance",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_wait_for_assignment",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_assignment_verification",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_compute_counts",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_fairness_verification",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    }
+  ]
+}

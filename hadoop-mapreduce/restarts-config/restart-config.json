@@ -1,0 +1,584 @@
+{
+  "tests": [
+    {
+      "testClass": "org.apache.accumulo.hadoop.its.mapred.AccumuloFileOutputFormatIT_RestartInjected",
+      "testMethod": "testEmptyWrite",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.hadoop.its.mapred.AccumuloFileOutputFormatIT_RestartInjected",
+      "testMethod": "testRealWrite",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_mutation",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "after_batch_close",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.hadoop.its.mapred.AccumuloFileOutputFormatIT_RestartInjected",
+      "testMethod": "writeBadVisibility",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_mutation",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "after_batch_close",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.hadoop.its.mapred.AccumuloInputFormatIT_RestartInjected",
+      "testMethod": "testMap",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "after_batch_close",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.hadoop.its.mapred.AccumuloInputFormatIT_RestartInjected",
+      "testMethod": "testSample",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "after_batch_close",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.hadoop.its.mapred.AccumuloInputFormatIT_RestartInjected",
+      "testMethod": "testCorrectRangeInputSplits",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.hadoop.its.mapred.AccumuloOutputFormatIT_RestartInjected",
+      "testMethod": "testMapred",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_mutations",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "after_revoke_permission",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.hadoop.its.mapred.AccumuloOutputFormatIT_RestartInjected",
+      "testMethod": "testMR",
+      "restartPoints": [
+        {
+          "position": "after_table1_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_table2_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "after_batch_close",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.hadoop.its.mapred.AccumuloRowInputFormatIT_RestartInjected",
+      "testMethod": "test",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "after_batch_close",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.hadoop.its.mapred.MultiTableInputFormatIT_RestartInjected",
+      "testMethod": "testMap",
+      "restartPoints": [
+        {
+          "position": "after_table1_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_table2_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "after_batch_close",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.hadoop.its.mapred.TokenFileIT_RestartInjected",
+      "testMethod": "testMR",
+      "restartPoints": [
+        {
+          "position": "after_table1_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_table2_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "after_batch_close",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.hadoop.its.mapreduce.AccumuloFileOutputFormatIT_RestartInjected",
+      "testMethod": "testEmptyWrite",
+      "restartPoints": [
+        {
+          "position": "after_empty_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_test_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_bad_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_test_table_batch_write",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "after_test_table_batch_close",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_bad_table_batch_write",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "after_bad_table_batch_close",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.hadoop.its.mapreduce.AccumuloFileOutputFormatIT_RestartInjected",
+      "testMethod": "testRealWrite",
+      "restartPoints": [
+        {
+          "position": "after_empty_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_test_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_bad_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_test_table_batch_write",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "after_test_table_batch_close",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_bad_table_batch_write",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "after_bad_table_batch_close",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.hadoop.its.mapreduce.AccumuloFileOutputFormatIT_RestartInjected",
+      "testMethod": "writeBadVisibility",
+      "restartPoints": [
+        {
+          "position": "after_empty_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_test_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_bad_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_test_table_batch_write",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "after_test_table_batch_close",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_bad_table_batch_write",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "after_bad_table_batch_close",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.hadoop.its.mapreduce.AccumuloInputFormatIT_RestartInjected",
+      "testMethod": "testGetSplits",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_insert_data",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.hadoop.its.mapreduce.AccumuloInputFormatIT_RestartInjected",
+      "testMethod": "testMap",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "after_batch_close",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.hadoop.its.mapreduce.AccumuloInputFormatIT_RestartInjected",
+      "testMethod": "testSample",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "after_batch_close",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.hadoop.its.mapreduce.AccumuloInputFormatIT_RestartInjected",
+      "testMethod": "testMapWithBatchScanner",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "after_batch_close",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.hadoop.its.mapreduce.AccumuloInputFormatIT_RestartInjected",
+      "testMethod": "testCorrectRangeInputSplits",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.hadoop.its.mapreduce.AccumuloInputFormatIT_RestartInjected",
+      "testMethod": "testPartialInputSplitDelegationToConfiguration",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "after_batch_close",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.hadoop.its.mapreduce.AccumuloOutputFormatIT_RestartInjected",
+      "testMethod": "testMR",
+      "restartPoints": [
+        {
+          "position": "after_table1_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_table2_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "after_batch_close",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.hadoop.its.mapreduce.AccumuloRowInputFormatIT_RestartInjected",
+      "testMethod": "test",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "after_batch_close",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.hadoop.its.mapreduce.MultiTableInputFormatIT_RestartInjected",
+      "testMethod": "testMap",
+      "restartPoints": [
+        {
+          "position": "after_table1_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_table2_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "after_batch_close",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.hadoop.its.mapreduce.RowHashIT_RestartInjected",
+      "testMethod": "test",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "after_batch_close",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.hadoop.its.mapreduce.TokenFileIT_RestartInjected",
+      "testMethod": "testMR",
+      "restartPoints": [
+        {
+          "position": "after_table1_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_table2_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "after_batch_close",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,145 @@
+{
+  "tests": [
+    {
+      "testClass": "org.apache.accumulo.test.functional.ShutdownIT_RestartInjected",
+      "testMethod": "shutdownDuringIngest",
+      "restartPoints": [
+        {
+          "position": "after_ingest_process_start",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_sleep_during_ingest",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_stopAll_during_ingest",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.ShutdownIT_RestartInjected",
+      "testMethod": "shutdownDuringQuery",
+      "restartPoints": [
+        {
+          "position": "after_ingest_completion_query",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "after_verify_process_start",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_sleep_during_query",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_stopAll_during_query",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.ShutdownIT_RestartInjected",
+      "testMethod": "shutdownDuringDelete",
+      "restartPoints": [
+        {
+          "position": "after_ingest_completion_delete",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "after_deleter_process_start",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_sleep_during_delete",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_stopAll_during_delete",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.ShutdownIT_RestartInjected",
+      "testMethod": "shutdownDuringDeleteTable",
+      "restartPoints": [
+        {
+          "position": "after_tables_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_async_delete_start",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_sleep_during_delete_table",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_stopAll_during_delete_table",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.ShutdownIT_RestartInjected",
+      "testMethod": "stopDuringStart",
+      "restartPoints": [
+        {
+          "position": "after_stopAll_during_start",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.ShutdownIT_RestartInjected",
+      "testMethod": "adminStop",
+      "restartPoints": [
+        {
+          "position": "after_ingest_completion_admin_stop",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "after_get_tablet_servers",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_admin_stop_tserver",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_wait_for_tserver_removal",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_final_verification_admin_stop",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    }
+  ]
+}

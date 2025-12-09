@@ -1,0 +1,66 @@
+  {
+    "testClass": "org.apache.accumulo.test.functional.DurabilityIT_RestartInjected",
+    "testMethod": "testSync",
+    "restartPoints": [
+      {
+        "position": "after_table_init_durability_sync",
+        "targets": ["manager"],
+        "modes": ["GRACEFUL", "CRASH"]
+      }
+    ]
+  },
+  {
+    "testClass": "org.apache.accumulo.test.functional.DurabilityIT_RestartInjected",
+    "testMethod": "testFlush",
+    "restartPoints": [
+      {
+        "position": "after_table_init_durability_flush",
+        "targets": ["manager"],
+        "modes": ["GRACEFUL", "CRASH"]
+      }
+    ]
+  },
+  {
+    "testClass": "org.apache.accumulo.test.functional.DurabilityIT_RestartInjected",
+    "testMethod": "testLog",
+    "restartPoints": [
+      {
+        "position": "after_table_init_durability_log",
+        "targets": ["manager"],
+        "modes": ["GRACEFUL", "CRASH"]
+      }
+    ]
+  },
+  {
+    "testClass": "org.apache.accumulo.test.functional.DurabilityIT_RestartInjected",
+    "testMethod": "testNone",
+    "restartPoints": [
+      {
+        "position": "after_table_init_durability_none",
+        "targets": ["manager"],
+        "modes": ["GRACEFUL", "CRASH"]
+      }
+    ]
+  },
+  {
+    "testClass": "org.apache.accumulo.test.functional.DurabilityIT_RestartInjected",
+    "testMethod": "testIncreaseDurability",
+    "restartPoints": [
+      {
+        "position": "after_table_create_durability_increase",
+        "targets": ["manager"],
+        "modes": ["GRACEFUL", "CRASH"]
+      }
+    ]
+  },
+  {
+    "testClass": "org.apache.accumulo.test.functional.DurabilityIT_RestartInjected",
+    "testMethod": "testMetaDurability",
+    "restartPoints": [
+      {
+        "position": "after_table_create_meta_durability",
+        "targets": ["manager"],
+        "modes": ["GRACEFUL", "CRASH"]
+      }
+    ]
+  }

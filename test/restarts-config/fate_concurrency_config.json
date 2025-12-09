@@ -1,0 +1,33 @@
+  {
+    "testClass": "org.apache.accumulo.test.functional.FateConcurrencyIT_RestartInjected",
+    "testMethod": "changeTableStateTest",
+    "restartPoints": [
+      {
+        "position": "after_table_state_test_complete",
+        "targets": ["manager"],
+        "modes": ["GRACEFUL", "CRASH"]
+      }
+    ]
+  },
+  {
+    "testClass": "org.apache.accumulo.test.functional.FateConcurrencyIT_RestartInjected",
+    "testMethod": "getFateStatus",
+    "restartPoints": [
+      {
+        "position": "after_fate_status_test_complete",
+        "targets": ["manager"],
+        "modes": ["GRACEFUL", "CRASH"]
+      }
+    ]
+  },
+  {
+    "testClass": "org.apache.accumulo.test.functional.FateConcurrencyIT_RestartInjected",
+    "testMethod": "multipleCompactions",
+    "restartPoints": [
+      {
+        "position": "after_multiple_compactions_complete",
+        "targets": ["manager"],
+        "modes": ["GRACEFUL", "CRASH"]
+      }
+    ]
+  }

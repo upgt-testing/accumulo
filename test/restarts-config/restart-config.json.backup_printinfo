@@ -1,0 +1,7839 @@
+{
+  "tests": [
+    {
+      "testClass": "org.apache.accumulo.test.AuditMessageIT_RestartInjected",
+      "testMethod": "testTableOperationsAudits",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table_rename",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table_clone",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.AuditMessageIT_RestartInjected",
+      "testMethod": "testUserOperationsAudits",
+      "restartPoints": [
+        {
+          "position": "after_user_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.AuditMessageIT_RestartInjected",
+      "testMethod": "testDataOperationsAudits",
+      "restartPoints": [
+        {
+          "position": "after_table_create_data",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.BadDeleteMarkersCreatedIT_RestartInjected",
+      "testMethod": "test",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_add_splits",
+          "targets": [
+            "manager",
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_delete_rows",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.BalanceIT_RestartInjected",
+      "testMethod": "testBalance",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_add_splits",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.BalanceIT_RestartInjected",
+      "testMethod": "testBalanceMetadata",
+      "restartPoints": [
+        {
+          "position": "after_table_create_meta",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_metadata_splits",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.BalanceWithOfflineTableIT_RestartInjected",
+      "testMethod": "test",
+      "restartPoints": [
+        {
+          "position": "after_table1_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table1_splits",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table2_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table2_splits",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table_offline",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.BatchWriterInTabletServerIT_RestartInjected",
+      "testMethod": "testNormalWrite",
+      "restartPoints": [
+        {
+          "position": "after_t1_create_normal",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_batch_write_normal",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_t2_create_normal",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_iterator_attach_normal",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.BatchWriterInTabletServerIT_RestartInjected",
+      "testMethod": "testClearLocatorAndSplitWrite",
+      "restartPoints": [
+        {
+          "position": "after_t1_create_locator_split",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_batch_write_locator_split",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_t2_create_locator_split",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_iterator_attach_locator_split",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.BatchWriterIT_RestartInjected",
+      "testMethod": "test",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.BatchWriterIT_RestartInjected",
+      "testMethod": "testSingleMutationWriteRPC",
+      "restartPoints": [
+        {
+          "position": "after_table_create_rpc",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_first_update",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_second_update",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.BrokenBalancerIT_RestartInjected",
+      "testMethod": "testBalancerException",
+      "restartPoints": [
+        {
+          "position": "after_table_create_exception",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_fix_table_balancer_exception",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_break_manager_balancer_exception",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_fix_manager_balancer_exception",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.BrokenBalancerIT_RestartInjected",
+      "testMethod": "testBalancerNotFound",
+      "restartPoints": [
+        {
+          "position": "after_table_create_notfound",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_fix_table_balancer_notfound",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_break_manager_balancer_notfound",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_fix_manager_balancer_notfound",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.BulkImportSequentialRowsIT_RestartInjected",
+      "testMethod": "testBulkImportFailure",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_add_splits",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_bulk_import",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.CleanWalIT_RestartInjected",
+      "testMethod": "test",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_first_batch_write",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_first_recovery",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_delete_mutation",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.ClientSideIteratorIT_RestartInjected",
+      "testMethod": "testIntersect",
+      "restartPoints": [
+        {
+          "position": "after_table_create_intersect",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_batch_write_intersect",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.ClientSideIteratorIT_RestartInjected",
+      "testMethod": "testVersioning",
+      "restartPoints": [
+        {
+          "position": "after_table_create_versioning",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_batch_write_versioning",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.ClientSideIteratorIT_RestartInjected",
+      "testMethod": "testPluginEnv",
+      "restartPoints": [
+        {
+          "position": "after_table_create_pluginenv",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_batch_write_pluginenv",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.CloseScannerIT_RestartInjected",
+      "testMethod": "testManyScans",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_ingest",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_flush",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.compaction.BadCompactionServiceConfigIT_RestartInjected",
+      "testMethod": "testUsingMisconfiguredService",
+      "restartPoints": [
+        {
+          "position": "after_table_create_misconfig",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_batch_write_misconfig",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_flush_misconfig",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_fix_config_misconfig",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.compaction.BadCompactionServiceConfigIT_RestartInjected",
+      "testMethod": "testUsingNonExistentService",
+      "restartPoints": [
+        {
+          "position": "after_table_create_nonexistent",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_add_splits_nonexistent",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_batch_write_nonexistent",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_flush_nonexistent",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_fix_config_nonexistent",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.compaction.ClassLoaderContextCompactionIT_RestartInjected",
+      "testMethod": "testClassLoaderContextErrorKillsCompactor",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_ingest",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_setup_context",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_config_context",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.compaction.CompactionConfigChangeIT_RestartInjected",
+      "testMethod": "testRemovingCompactionExecutor",
+      "restartPoints": [
+        {
+          "position": "after_property_setup",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_write_data",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH",
+            "DELAYED_CRASH"
+          ]
+        },
+        {
+          "position": "after_flush",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_compact_start",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_config_change",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.compaction.CompactionExecutorIT_RestartInjected",
+      "testMethod": "testReconfigureCompactionService",
+      "restartPoints": [
+        {
+          "position": "after_table_create_recfg",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_first_files_add_recfg",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_config_change_recfg",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_second_files_add_recfg",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.compaction.CompactionExecutorIT_RestartInjected",
+      "testMethod": "testAddCompactionService",
+      "restartPoints": [
+        {
+          "position": "after_properties_set_addcs",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table_create_addcs",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_files_add_addcs",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.compaction.CompactionExecutorIT_RestartInjected",
+      "testMethod": "testDispatchSystem",
+      "restartPoints": [
+        {
+          "position": "after_tables_create_dispatch_sys",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_files_add_dispatch_sys",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.compaction.CompactionExecutorIT_RestartInjected",
+      "testMethod": "testDispatchUser",
+      "restartPoints": [
+        {
+          "position": "after_tables_create_dispatch_user",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_files_add_dispatch_user",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_compact_dispatch_user",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.compaction.CompactionExecutorIT_RestartInjected",
+      "testMethod": "testTooManyDeletes",
+      "restartPoints": [
+        {
+          "position": "after_tables_create_tmd",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_files_add_tmd",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_first_compact_tmd",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.compaction.CompactionExecutorIT_RestartInjected",
+      "testMethod": "testIteratorsWithRange",
+      "restartPoints": [
+        {
+          "position": "after_table_create_iwr",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_write_iwr",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_first_compact_iwr",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.compaction.CompactionExecutorIT_RestartInjected",
+      "testMethod": "testConfigurer",
+      "restartPoints": [
+        {
+          "position": "after_table_create_configurer",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_write_flush_configurer",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_first_compact_configurer",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.compaction.CompactionExecutorIT_RestartInjected",
+      "testMethod": "testIncorrectSelectorType",
+      "restartPoints": [
+        {
+          "position": "after_table_create_selector",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_files_add_selector",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.compaction.CompactionExecutorIT_RestartInjected",
+      "testMethod": "testIncorrectConfigurerType",
+      "restartPoints": [
+        {
+          "position": "after_table_create_configurer_type",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_files_add_configurer_type",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.compaction.ErasureCodeIT_RestartInjected",
+      "testMethod": "test",
+      "restartPoints": [
+        {
+          "position": "after_tables_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_first_write",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_first_flush",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_first_compaction_set",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_second_flush",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_set_ec_policies",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_compaction_with_ec",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_unset_ec_policies",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_final_compaction",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.compaction.ExternalCompaction_1_IT_RestartInjected",
+      "testMethod": "testExternalCompaction",
+      "restartPoints": [
+        {
+          "position": "after_table1_create_ext1",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table2_create_ext1",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_write_data_table1_ext1",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_write_data_table2_ext1",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_start_compactors_ext1",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_compact_table1_ext1",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_splits_table2_ext1",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_compact_table2_ext1",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.compaction.ExternalCompaction_1_IT_RestartInjected",
+      "testMethod": "testCompactionAndCompactorDies",
+      "restartPoints": [
+        {
+          "position": "after_table_create_extdies",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_write_data_extdies",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_start_compactors_extdies",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_compact_extdies",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.compaction.ExternalCompaction_1_IT_RestartInjected",
+      "testMethod": "testManytablets",
+      "restartPoints": [
+        {
+          "position": "after_table_create_many",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_write_data_many",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_start_compactors_many",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_compact_many",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.compaction.ExternalCompaction_1_IT_RestartInjected",
+      "testMethod": "testConfigurer",
+      "restartPoints": [
+        {
+          "position": "after_start_compactors_config",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table_create_config",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_write_data_config",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_flush_config",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_compact_with_compression_config",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_compact_without_compression_config",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.compaction.ExternalCompaction_1_IT_RestartInjected",
+      "testMethod": "testExternalCompactionWithTableIterator",
+      "restartPoints": [
+        {
+          "position": "after_table_create_iter",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_write_data_iter",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_start_compactors_iter",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_first_compact_iter",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_second_compact_iter",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.compaction.ExternalCompaction_1_IT_RestartInjected",
+      "testMethod": "testExternalCompactionDeadTServer",
+      "restartPoints": [
+        {
+          "position": "after_table_create_dead",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_write_data_dead",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_start_compactors_dead",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_compact_dead",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_flush_metadata_dead",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.compaction.ExternalCompaction_1_IT_RestartInjected",
+      "testMethod": "testPartialCompaction",
+      "restartPoints": [
+        {
+          "position": "after_start_compactors_partial",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table_create_partial",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_write_data_partial",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_first_compact_partial",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_second_write_partial",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_flush_partial",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_second_compact_partial",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.compaction.ExternalCompaction_1_IT_RestartInjected",
+      "testMethod": "testGetActiveCompactions",
+      "restartPoints": [
+        {
+          "position": "after_start_compactors_active",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table_create_active",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_write_and_flush_active",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.compaction.ExternalCompaction_2_IT_RestartInjected",
+      "testMethod": "testSplitCancelsExternalCompaction",
+      "restartPoints": [
+        {
+          "position": "after_coordinator_compactor_start_splitcancels",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table_create_splitcancels",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_write_data_splitcancels",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_compaction_running_splitcancels",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table_split_splitcancels",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.compaction.ExternalCompaction_2_IT_RestartInjected",
+      "testMethod": "testExternalCompactionsSucceedsRunWithTableOffline",
+      "restartPoints": [
+        {
+          "position": "after_table_create_tableoffline",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_config_change_tableoffline",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_write_data_tableoffline",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_coordinator_start_tableoffline",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_compactor_start_tableoffline",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_compaction_running_tableoffline",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table_online_tableoffline",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.compaction.ExternalCompaction_2_IT_RestartInjected",
+      "testMethod": "testUserCompactionCancellation",
+      "restartPoints": [
+        {
+          "position": "after_coordinator_compactor_start_usercancellation",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table_create_usercancellation",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_write_data_usercancellation",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_compaction_running_usercancellation",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_cancel_compaction_usercancellation",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.compaction.ExternalCompaction_2_IT_RestartInjected",
+      "testMethod": "testDeleteTableCancelsUserExternalCompaction",
+      "restartPoints": [
+        {
+          "position": "after_coordinator_compactor_start_deletetableuserec",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table_create_deletetableuserec",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_write_data_deletetableuserec",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_compaction_running_deletetableuserec",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_delete_table_deletetableuserec",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.compaction.ExternalCompaction_2_IT_RestartInjected",
+      "testMethod": "testDeleteTableCancelsSleepingExternalCompaction",
+      "restartPoints": [
+        {
+          "position": "after_coordinator_compactor_start_deletetablesleeping",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table_create_deletetablesleeping",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_write_data_deletetablesleeping",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_compaction_running_deletetablesleeping",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_delete_table_deletetablesleeping",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.compaction.ExternalCompaction_2_IT_RestartInjected",
+      "testMethod": "testDeleteTableCancelsExternalCompaction",
+      "restartPoints": [
+        {
+          "position": "after_coordinator_compactor_start_deletetableec",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table_create_deletetableec",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_config_change_deletetableec",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_write_data_deletetableec",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_compaction_running_deletetableec",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_delete_table_deletetableec",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.compaction.ExternalCompaction_3_IT_RestartInjected",
+      "testMethod": "testMergeCancelsExternalCompaction",
+      "restartPoints": [
+        {
+          "position": "after_coordinator_compactor_start_merge_test",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table_create_merge_test",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_data_writes_merge_test",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_compaction_start_merge_test",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_merge_operation_merge_test",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.compaction.ExternalCompaction_3_IT_RestartInjected",
+      "testMethod": "testCoordinatorRestartsDuringCompaction",
+      "restartPoints": [
+        {
+          "position": "after_coordinator_compactor_start_coordinator_restart_test",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table_create_coordinator_restart_test",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_data_write_coordinator_restart_test",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_compact_call_coordinator_restart_test",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_compaction_start_coordinator_restart_test",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_coordinator_restart_coordinator_restart_test",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.compaction.ExternalCompaction4_IT_RestartInjected",
+      "testMethod": "testErrorDuringCompactionNoOutput",
+      "restartPoints": [
+        {
+          "position": "after_coordinator_compactor_start_nooutput",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table_creation_nooutput",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table_properties_nooutput",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_ingest_nooutput",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_iterators_attached_nooutput",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_compaction_nooutput",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.compaction.ExternalCompaction4_IT_RestartInjected",
+      "testMethod": "testErrorDuringUserCompaction",
+      "restartPoints": [
+        {
+          "position": "after_coordinator_compactor_start_usercompaction",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table_creation_usercompaction",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table_properties_usercompaction",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_ingest_usercompaction",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_iterator_attached_usercompaction",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_compaction_usercompaction",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.compaction.ExternalCompactionMetricsIT_RestartInjected",
+      "testMethod": "testMetrics",
+      "restartPoints": [
+        {
+          "position": "after_table1_create_metrics",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table2_create_metrics",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_data_write_metrics",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_compact_initiate_metrics",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_compactors_start_metrics",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_verify_metrics",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.compaction.ExternalCompactionProgressIT_RestartInjected",
+      "testMethod": "testCompactionDurationContinuesAfterCoordinatorStop",
+      "restartPoints": [
+        {
+          "position": "after_create_table_duration_1",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_write_data_duration_1",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_start_compaction_services_duration_1",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_compact_start_duration_1",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.compaction.ExternalCompactionProgressIT_RestartInjected",
+      "testMethod": "testProgressViaMetrics",
+      "restartPoints": [
+        {
+          "position": "after_create_table_metrics_1",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_write_data_metrics_1",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_start_compaction_services_metrics_1",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_compact_metrics_1",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.compaction.ExternalCompactionProgressIT_RestartInjected",
+      "testMethod": "testProgress",
+      "restartPoints": [
+        {
+          "position": "after_create_table_progress_1",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_write_data_progress_1",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_start_compaction_services_progress_1",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_compact_progress_1",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.compaction.ExternalCompactionProgressIT_RestartInjected",
+      "testMethod": "testProgressWithBulkImport",
+      "restartPoints": [
+        {
+          "position": "after_create_tables_bulk_import_1",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_write_data_bulk_import_1",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_set_properties_bulk_import_1",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_start_compaction_services_bulk_import_1",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_bulk_import_bulk_import_1",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_compact_bulk_import_1",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.compaction.SplitCancelsMajCIT_RestartInjected",
+      "testMethod": "test",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_iterator_attach",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_data_flush",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_compaction_start",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_split",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.ConcurrencyIT_RestartInjected",
+      "testMethod": "run",
+      "restartPoints": [
+        {
+          "position": "after_table_create_concurrency",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_iterator_attach_concurrency",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_initial_batch_write",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_all_scans_complete",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.ConcurrentDeleteTableIT_RestartInjected",
+      "testMethod": "testConcurrentDeleteTablesOps",
+      "restartPoints": [
+        {
+          "position": "after_table_create_concurrent_delete",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_concurrent_delete_test1_complete",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.ConcurrentDeleteTableIT_RestartInjected",
+      "testMethod": "testConcurrentFateOpsWithDelete",
+      "restartPoints": [
+        {
+          "position": "after_table_create_concurrent_fate",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_concurrent_fate_test_complete",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.ConstraintIT_RestartInjected",
+      "testMethod": "run",
+      "restartPoints": [
+        {
+          "position": "after_table_creation_and_constraint_setup",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_constraint_verification",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_test1_complete",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_test2_no_flush",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_test2_with_flush",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.DeleteFailIT_RestartInjected",
+      "testMethod": "testFail",
+      "restartPoints": [
+        {
+          "position": "after_table_create_with_delete_behavior",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_delete_mutation_write",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.DurabilityIT_RestartInjected",
+      "testMethod": "testSync",
+      "restartPoints": [
+        {
+          "position": "after_table_init_durability_sync",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.DurabilityIT_RestartInjected",
+      "testMethod": "testFlush",
+      "restartPoints": [
+        {
+          "position": "after_table_init_durability_flush",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.DurabilityIT_RestartInjected",
+      "testMethod": "testLog",
+      "restartPoints": [
+        {
+          "position": "after_table_init_durability_log",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.DurabilityIT_RestartInjected",
+      "testMethod": "testNone",
+      "restartPoints": [
+        {
+          "position": "after_table_init_durability_none",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.DurabilityIT_RestartInjected",
+      "testMethod": "testIncreaseDurability",
+      "restartPoints": [
+        {
+          "position": "after_table_create_durability_increase",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.DurabilityIT_RestartInjected",
+      "testMethod": "testMetaDurability",
+      "restartPoints": [
+        {
+          "position": "after_table_create_meta_durability",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.FateConcurrencyIT_RestartInjected",
+      "testMethod": "changeTableStateTest",
+      "restartPoints": [
+        {
+          "position": "after_table_state_test_complete",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.FateConcurrencyIT_RestartInjected",
+      "testMethod": "getFateStatus",
+      "restartPoints": [
+        {
+          "position": "after_fate_status_test_complete",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.FateConcurrencyIT_RestartInjected",
+      "testMethod": "multipleCompactions",
+      "restartPoints": [
+        {
+          "position": "after_multiple_compactions_complete",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.FateStarvationIT_RestartInjected",
+      "testMethod": "run",
+      "restartPoints": [
+        {
+          "position": "after_table_create_fate_starvation",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_data_ingest_fate_starvation",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_flush_fate_starvation",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_compaction_loop_fate_starvation",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_offline_fate_starvation",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.FileNormalizationIT_RestartInjected",
+      "testMethod": "testSplits",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_ingest",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_flush",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_misnormalize",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_add_splits",
+          "targets": [
+            "manager",
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.FileNormalizationIT_RestartInjected",
+      "testMethod": "testCompaction",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_ingest",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_flush",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_misnormalize",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_compact",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH",
+            "DELAYED_CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.FileNormalizationIT_RestartInjected",
+      "testMethod": "testMerge",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_ingest",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_flush",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_add_splits",
+          "targets": [
+            "manager",
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_compact",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH",
+            "DELAYED_CRASH"
+          ]
+        },
+        {
+          "position": "after_misnormalize",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_merge",
+          "targets": [
+            "manager",
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.FlushNoFileIT_RestartInjected",
+      "testMethod": "test",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_first_write",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_first_flush",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_second_write",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_second_flush",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.GarbageCollectorIT_RestartInjected",
+      "testMethod": "gcTest",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_ingest",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_compact",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH",
+            "DELAYED_CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.GarbageCollectorIT_RestartInjected",
+      "testMethod": "testInvalidDelete",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_write",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_flush",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_invalid_metadata_entries",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.GarbageCollectorIT_RestartInjected",
+      "testMethod": "gcLotsOfCandidatesIT",
+      "restartPoints": [
+        {
+          "position": "after_add_entries",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.GarbageCollectorTrashDefaultIT_RestartInjected",
+      "testMethod": "testTrashHadoopDisabledAccumuloEnabled",
+      "restartPoints": [
+        {
+          "position": "after_trash_setup",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_load_data",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH",
+            "DELAYED_CRASH"
+          ]
+        },
+        {
+          "position": "after_compact",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "before_gc_verification",
+          "targets": [
+            "garbage_collector"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.GarbageCollectorTrashEnabledIT_RestartInjected",
+      "testMethod": "testTrashHadoopEnabledAccumuloEnabled",
+      "restartPoints": [
+        {
+          "position": "after_trash_setup",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_load_data",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH",
+            "DELAYED_CRASH"
+          ]
+        },
+        {
+          "position": "after_compact",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "before_gc_verification",
+          "targets": [
+            "garbage_collector"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.GarbageCollectorTrashEnabledIT_RestartInjected",
+      "testMethod": "testTrashHadoopEnabledAccumuloEnabled",
+      "restartPoints": [
+        {
+          "position": "after_trash_setup",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_load_data",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH",
+            "DELAYED_CRASH"
+          ]
+        },
+        {
+          "position": "after_compact",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "before_gc_verification",
+          "targets": [
+            "garbage_collector"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.GarbageCollectorTrashEnabledCustomPolicyIT_RestartInjected",
+      "testMethod": "testTrashHadoopEnabledAccumuloEnabled",
+      "restartPoints": [
+        {
+          "position": "after_trash_setup",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_initial_flush",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH",
+            "DELAYED_CRASH"
+          ]
+        },
+        {
+          "position": "after_first_compact",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_second_compact",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "before_trash_verification",
+          "targets": [
+            "garbage_collector"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.GracefulShutdownIT_RestartInjected",
+      "testMethod": "testGracefulShutdown",
+      "restartPoints": [
+        {
+          "position": "after_data_insertion",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH",
+            "DELAYED_CRASH"
+          ]
+        },
+        {
+          "position": "after_gc_restart",
+          "targets": [
+            "garbage_collector"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_tablet_server_restart",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_manager_restart",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_compaction_start",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_compactor_shutdown",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.HalfClosedTablet2IT_RestartInjected",
+      "testMethod": "testInvalidContextCausesVolumeChooserFailure",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH",
+            "DELAYED_CRASH"
+          ]
+        },
+        {
+          "position": "after_set_invalid_context",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_flush_with_invalid_context",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_minc_completion",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.HalfClosedTabletIT_RestartInjected",
+      "testMethod": "testSplitWithInvalidContext",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH",
+            "DELAYED_CRASH"
+          ]
+        },
+        {
+          "position": "after_split",
+          "targets": [
+            "tablet_server",
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.HalfClosedTabletIT_RestartInjected",
+      "testMethod": "testIteratorThrowingTransientError",
+      "restartPoints": [
+        {
+          "position": "after_table_create_test2",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_iterator_attach_test2",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_compact_test2",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.HalfClosedTabletIT_RestartInjected",
+      "testMethod": "testBadIteratorOnStack",
+      "restartPoints": [
+        {
+          "position": "after_table_create_test3",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_bad_iterator_attach_test3",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_failed_offline_test3",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_iterator_remove_test3",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.HalfDeadServerWatcherIT_RestartInjected",
+      "testMethod": "testOne",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_add_splits",
+          "targets": [
+            "manager",
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table_delete",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_lock_delete",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.HalfDeadServerWatcherIT_RestartInjected",
+      "testMethod": "testTwo",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_add_splits",
+          "targets": [
+            "manager",
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table_delete",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_lock_delete",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.HalfDeadTServerIT_RestartInjected",
+      "testMethod": "testRecover",
+      "restartPoints": [
+        {
+          "position": "after_kill_regular_tserver",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_start_ingest",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "before_io_block",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_io_block",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.HalfDeadTServerIT_RestartInjected",
+      "testMethod": "testTimeout",
+      "restartPoints": [
+        {
+          "position": "after_kill_regular_tserver",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_start_ingest",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "before_io_block",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_io_block",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.IdleProcessMetricsIT_RestartInjected",
+      "testMethod": "testIdleStopMetrics",
+      "restartPoints": [
+        {
+          "position": "after_start_coordinator",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_start_compactors",
+          "targets": [
+            "compactor"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_start_scan_server",
+          "targets": [
+            "scan_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_start_tablet_server",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "before_metric_check",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.IdleProcessMetricsIT_RestartInjected",
+      "testMethod": "idleCompactorTest",
+      "restartPoints": [
+        {
+          "position": "after_start_coordinator_and_compactors",
+          "targets": [
+            "compactor"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_compactor_idle",
+          "targets": [
+            "compactor"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_table_create_and_write",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_iterator_attach",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_start_compaction",
+          "targets": [
+            "compactor"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_compactor_busy",
+          "targets": [
+            "compactor"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_compaction_complete",
+          "targets": [
+            "compactor"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.IdleProcessMetricsIT_RestartInjected",
+      "testMethod": "idleScanServerTest",
+      "restartPoints": [
+        {
+          "position": "after_start_scan_server",
+          "targets": [
+            "scan_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_sserver_idle",
+          "targets": [
+            "scan_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_table_create_and_write",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_iterator_attach",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_scan",
+          "targets": [
+            "scan_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_sserver_busy",
+          "targets": [
+            "scan_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_scan_complete",
+          "targets": [
+            "scan_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.IteratorMincClassCastBugIT_RestartInjected",
+      "testMethod": "test",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_write_mutations",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_flush",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.LargeRowIT_RestartInjected",
+      "testMethod": "run",
+      "restartPoints": [
+        {
+          "position": "after_create_regular_table",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_create_presplit_table",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_basic_test_reg",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_set_split_threshold",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_split_check",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_write_large_rows",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_flush_nonblocking",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_flush_blocking",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_final_verify",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.LateLastContactIT_RestartInjected",
+      "testMethod": "test",
+      "restartPoints": [
+        {
+          "position": "after_start_zombie_tserver",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.LogicalTimeIT_RestartInjected",
+      "testMethod": "run",
+      "restartPoints": [
+        {
+          "position": "after_table_create_logical",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_initial_batch_write",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_merge",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_final_mutation",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.ManagerApiIT_RestartInjected",
+      "testMethod": "testPermissions_initiateFlush",
+      "restartPoints": [
+        {
+          "position": "after_user_creation",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_table_create_initiate_flush",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_grant_permissions_initiate_flush",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.ManagerApiIT_RestartInjected",
+      "testMethod": "testPermissions_waitForFlush",
+      "restartPoints": [
+        {
+          "position": "after_user_creation",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_table_create_wait_flush",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_grant_permissions_wait_flush",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_initiate_flush_wait_flush",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.ManagerAssignmentIT_RestartInjected",
+      "testMethod": "test",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_flush",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_offline",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_online",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.ManagerAssignmentIT_RestartInjected",
+      "testMethod": "testShutdownOnlyTServerWithUserTable",
+      "restartPoints": [
+        {
+          "position": "after_start_single_tserver",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_table_create_shutdown_test",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_batch_write_shutdown_test",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_flush_shutdown_test",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.ManagerAssignmentIT_RestartInjected",
+      "testMethod": "testShutdownOnlyTServerWithoutUserTable",
+      "restartPoints": [
+        {
+          "position": "after_start_single_tserver_no_user_table",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_wait_for_balance",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.ManagerFailoverIT_RestartInjected",
+      "testMethod": "test",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_ingest",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_manager_restart",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_rename",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.ManyWriteAheadLogsIT_RestartInjected",
+      "testMethod": "testMany",
+      "restartPoints": [
+        {
+          "position": "after_many_wals_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_roll_wals_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_initial_wal_tracking",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "at_25_percent_write_progress",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "at_50_percent_write_progress",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "at_75_percent_write_progress",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_write_loop_complete",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_wal_count_verification",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "before_wal_shrinkage_wait",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.ScanIdIT_RestartInjected",
+      "testMethod": "testScanId",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_add_splits",
+          "targets": [
+            "manager",
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_generate_data",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_attach_iterator",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_scanners_created",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_all_scanners_reported",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_scan_ids_verified",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "before_wait_for_scans_stop",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.ScanIdIT_RestartInjected",
+      "testMethod": "testScanId",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_add_splits",
+          "targets": [
+            "manager",
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_generate_data",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_attach_iterator",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_scanners_created",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_all_scanners_reported",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_scan_ids_verified",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "before_wait_for_scans_stop",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.ScanIdIT_RestartInjected",
+      "testMethod": "testScanId",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_add_splits",
+          "targets": [
+            "manager",
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_generate_data",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_attach_iterator",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_scanners_created",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_all_scanners_reported",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_scan_ids_verified",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "before_wait_for_scans_stop",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.ScanIdIT_RestartInjected",
+      "testMethod": "testScanId",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_add_splits",
+          "targets": [
+            "manager",
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_generate_data",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_attach_iterator",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_scanners_created",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_all_scanners_reported",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_scan_ids_verified",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "before_wait_for_scans_stop",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.SparseColumnFamilyIT_RestartInjected",
+      "testMethod": "sparceColumnFamily",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_first_batch_mutations",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH",
+            "DELAYED_CRASH"
+          ]
+        },
+        {
+          "position": "after_first_batch_flush",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_first_table_flush",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_second_batch_mutations",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH",
+            "DELAYED_CRASH"
+          ]
+        },
+        {
+          "position": "after_second_table_flush",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "during_scan",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.SplitIT_RestartInjected",
+      "testMethod": "tabletShouldSplit",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_ingest",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_verify_ingest",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_splits_occur",
+          "targets": [
+            "manager",
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_metadata_scan",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_metadata_check",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.SplitIT_RestartInjected",
+      "testMethod": "interleaveSplit",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_interleave_test",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_splits_complete",
+          "targets": [
+            "manager",
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.SplitIT_RestartInjected",
+      "testMethod": "deleteSplit",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_delete_test",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_flush",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_splits_complete",
+          "targets": [
+            "manager",
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.SplitIT_RestartInjected",
+      "testMethod": "bulkImportThatCantSplitHangsCompaction",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_rfile_creation",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ]
+        },
+        {
+          "position": "after_bulk_import",
+          "targets": [
+            "tablet_server",
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_compact",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.SslIT_RestartInjected",
+      "testMethod": "binary",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_binary_test",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.SslIT_RestartInjected",
+      "testMethod": "concurrency",
+      "restartPoints": [
+        {
+          "position": "after_concurrency_test",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.SslIT_RestartInjected",
+      "testMethod": "adminStop",
+      "restartPoints": [
+        {
+          "position": "after_admin_stop_test",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.SslIT_RestartInjected",
+      "testMethod": "bulk",
+      "restartPoints": [
+        {
+          "position": "after_bulk_test",
+          "targets": [
+            "tablet_server",
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.SslIT_RestartInjected",
+      "testMethod": "mapReduce",
+      "restartPoints": [
+        {
+          "position": "after_mapreduce_test",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.StartIT_RestartInjected",
+      "testMethod": "test",
+      "restartPoints": [
+        {
+          "position": "after_exception_exec",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_success_exec",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_empty_exec",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.SummaryIT_RestartInjected",
+      "testMethod": "basicSummaryTest",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_write_data",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_flush",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_first_compact",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_add_splits",
+          "targets": [
+            "manager",
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_second_compact",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_final_compact",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.SummaryIT_RestartInjected",
+      "testMethod": "selectionTest",
+      "restartPoints": [
+        {
+          "position": "after_table_create_selection",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_write_close",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_flush_selection",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.SummaryIT_RestartInjected",
+      "testMethod": "testPermissions",
+      "restartPoints": [
+        {
+          "position": "after_table_create_permissions",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_flush_permissions",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_user_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_grant_permission",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.TableIT_RestartInjected",
+      "testMethod": "test",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_ingest",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_flush",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table_delete",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_second_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_second_ingest",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_second_table_delete",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.TabletIT_RestartInjected",
+      "testMethod": "createTableTest",
+      "restartPoints": [
+        {
+          "position": "after_table_create_with_splits",
+          "targets": [
+            "manager",
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH",
+            "DELAYED_CRASH"
+          ]
+        },
+        {
+          "position": "before_scan",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.TabletMetadataIT_RestartInjected",
+      "testMethod": "getLiveTServersTest",
+      "restartPoints": [
+        {
+          "position": "after_initial_tserver_count",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "before_kill_tserver",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_tserver_killed",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_final_tserver_count",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.ThriftMaxFrameSizeIT_RestartInjected",
+      "testMethod": "testFrameSizeLessThanConfiguredMax",
+      "restartPoints": [
+        {
+          "position": "after_ingest",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_verify",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.ThriftMaxFrameSizeIT_RestartInjected",
+      "testMethod": "testFrameSizeGreaterThanConfiguredMax",
+      "restartPoints": [
+        {
+          "position": "after_ingest",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_verify",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.TimeoutIT_RestartInjected",
+      "testMethod": "run",
+      "restartPoints": [
+        {
+          "position": "after_table_create_for_bw_timeout",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_constraint_added",
+          "targets": [
+            "manager",
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_mutation_added",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table_create_for_bs_timeout",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH",
+            "DELAYED_CRASH"
+          ]
+        },
+        {
+          "position": "after_iterator_added",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.VisibilityIT_RestartInjected",
+      "testMethod": "run",
+      "restartPoints": [
+        {
+          "position": "after_table1_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table2_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_property_set",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_insert_data",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH",
+            "DELAYED_CRASH"
+          ]
+        },
+        {
+          "position": "after_query_data",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_delete_data",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH",
+            "DELAYED_CRASH"
+          ]
+        },
+        {
+          "position": "after_insert_default_data",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH",
+            "DELAYED_CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.WALSunnyDayIT_RestartInjected",
+      "testMethod": "test",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_first_batch_write",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH",
+            "DELAYED_CRASH"
+          ]
+        },
+        {
+          "position": "after_wal_roll_write",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH",
+            "DELAYED_CRASH"
+          ]
+        },
+        {
+          "position": "after_flush",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_gc_start",
+          "targets": [
+            "garbage_collector"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_tserver_restart",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_normal_mode",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_recovery_write",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH",
+            "DELAYED_CRASH"
+          ]
+        },
+        {
+          "position": "after_second_gc_start",
+          "targets": [
+            "garbage_collector"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.GarbageCollectWALIT_RestartInjected",
+      "testMethod": "test",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_gc_start",
+          "targets": [
+            "garbage_collector"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_tserver_restart",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_metadata_scan",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.GCRunIT_RestartInjected",
+      "testMethod": "goPath",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_first_compact",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH",
+            "DELAYED_CRASH"
+          ]
+        },
+        {
+          "position": "after_flush",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_clone",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_second_compact",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table_delete",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_metadata_root_flush",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_fill_metadata",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_scan_references",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.GCRunIT_RestartInjected",
+      "testMethod": "forceMissingDirTest",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_first_compact",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH",
+            "DELAYED_CRASH"
+          ]
+        },
+        {
+          "position": "after_flush",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_clone",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_second_compact",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table_delete",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_metadata_root_flush",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_fill_metadata",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_grant_permission",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_metadata_write",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH",
+            "DELAYED_CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.ImportExportIT_RestartInjected",
+      "testMethod": "testExportImportThenScan",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH",
+            "DELAYED_CRASH"
+          ]
+        },
+        {
+          "position": "after_compact",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_offline",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_export",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_import",
+          "targets": [
+            "manager",
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.ImportExportIT_RestartInjected",
+      "testMethod": "testExportImportSameTableNameThenScan",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH",
+            "DELAYED_CRASH"
+          ]
+        },
+        {
+          "position": "after_compact",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_offline",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_export",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_import",
+          "targets": [
+            "manager",
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.ImportExportIT_RestartInjected",
+      "testMethod": "testExportImportOffline",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_compact",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_offline",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_export",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.InterruptibleScannersIT_RestartInjected",
+      "testMethod": "test",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.IsolationAndDeepCopyIT_RestartInjected",
+      "testMethod": "testBugFix",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH",
+            "DELAYED_CRASH"
+          ]
+        },
+        {
+          "position": "after_flush",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.IteratorEnvIT_RestartInjected",
+      "testMethod": "test",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH",
+            "DELAYED_CRASH"
+          ]
+        },
+        {
+          "position": "after_compact",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_flush",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_offline",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.KeyValueEqualityIT_RestartInjected",
+      "testMethod": "testEquality",
+      "restartPoints": [
+        {
+          "position": "after_table1_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table2_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH",
+            "DELAYED_CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.LargeReadIT_RestartInjected",
+      "testMethod": "testLargeMemoryLG",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH",
+            "DELAYED_CRASH"
+          ]
+        },
+        {
+          "position": "after_flush",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.LargeReadIT_RestartInjected",
+      "testMethod": "testLargeMemoryRange",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH",
+            "DELAYED_CRASH"
+          ]
+        },
+        {
+          "position": "after_flush",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.LargeSplitRowIT_RestartInjected",
+      "testMethod": "userAddedSplit",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH",
+            "DELAYED_CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.LargeSplitRowIT_RestartInjected",
+      "testMethod": "automaticSplitWith250Same",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH",
+            "DELAYED_CRASH"
+          ]
+        },
+        {
+          "position": "after_flush",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.LargeSplitRowIT_RestartInjected",
+      "testMethod": "automaticSplitWithGaps",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH",
+            "DELAYED_CRASH"
+          ]
+        },
+        {
+          "position": "after_flush",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.LargeSplitRowIT_RestartInjected",
+      "testMethod": "automaticSplitWithoutGaps",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH",
+            "DELAYED_CRASH"
+          ]
+        },
+        {
+          "position": "after_flush",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.LargeSplitRowIT_RestartInjected",
+      "testMethod": "automaticSplitLater",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH",
+            "DELAYED_CRASH"
+          ]
+        },
+        {
+          "position": "after_flush",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_second_batch_write",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH",
+            "DELAYED_CRASH"
+          ]
+        },
+        {
+          "position": "after_second_flush",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.LocatorIT_RestartInjected",
+      "testMethod": "testBasic",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_first_locate",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_second_locate",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_add_splits",
+          "targets": [
+            "manager",
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_locate_with_splits",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table_offline",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.manager.SuspendedTabletsIT_RestartInjected",
+      "testMethod": "crashAndResumeTserver",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_balance_complete",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_kill_tservers",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_suspended_verified",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table_offline",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_tserver_restart",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.manager.SuspendedTabletsIT_RestartInjected",
+      "testMethod": "crashAndOffline",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_balance_complete",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_kill_tservers",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_suspended_verified",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table_offline",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_tserver_restart",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.manager.SuspendedTabletsIT_RestartInjected",
+      "testMethod": "shutdownAndResumeTserver",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_balance_complete",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_kill_tservers",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_suspended_verified",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table_offline",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_tserver_restart",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.manager.SuspendedTabletsIT_RestartInjected",
+      "testMethod": "shutdownAndOffline",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_balance_complete",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_kill_tservers",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_suspended_verified",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table_offline",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_tserver_restart",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.MultiTableBatchWriterIT_RestartInjected",
+      "testMethod": "testTableRenameDataValidation",
+      "restartPoints": [
+        {
+          "position": "after_table1_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_first_mutation",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_table_rename",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.MultiTableBatchWriterIT_RestartInjected",
+      "testMethod": "testTableRenameSameWriters",
+      "restartPoints": [
+        {
+          "position": "after_tables_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_mutations",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_tables_rename",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.MultiTableBatchWriterIT_RestartInjected",
+      "testMethod": "testTableRenameNewWriters",
+      "restartPoints": [
+        {
+          "position": "after_tables_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_mutations",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_tables_rename",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.MultiTableBatchWriterIT_RestartInjected",
+      "testMethod": "testTableRenameNewWritersNoCaching",
+      "restartPoints": [
+        {
+          "position": "after_tables_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.MultiTableBatchWriterIT_RestartInjected",
+      "testMethod": "testTableDelete",
+      "restartPoints": [
+        {
+          "position": "after_tables_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_mutations",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_tables_delete",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.MultiTableBatchWriterIT_RestartInjected",
+      "testMethod": "testOfflineTable",
+      "restartPoints": [
+        {
+          "position": "after_tables_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_mutations",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        },
+        {
+          "position": "after_tables_offline",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL",
+            "CRASH"
+          ]
+        }
+      ]
+    }
+    ,
+    {
+      "testClass": "org.apache.accumulo.test.MultiTableRecoveryIT_RestartInjected",
+      "testMethod": "testRecoveryOverMultipleTables",
+      "restartPoints": [
+        {
+          "position": "after_tables_and_writers_create",
+          "targets": ["manager", "tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_agitator_start",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "during_writes_25_percent",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "during_writes_50_percent",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "during_writes_75_percent",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "after_writers_close",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_agitator_stop",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "before_verification",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "during_verification_after_table1",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    }
+    ,
+    {
+      "testClass": "org.apache.accumulo.test.NamespacesIT_RestartInjected",
+      "testMethod": "createTableInDefaultNamespace",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.NamespacesIT_RestartInjected",
+      "testMethod": "createNamespaceWithNamespaceLengthLimit",
+      "restartPoints": [
+        {
+          "position": "after_namespace_create_n0",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_namespace_create_n1",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.NamespacesIT_RestartInjected",
+      "testMethod": "createNamespaceWithSystemUser",
+      "restartPoints": [
+        {
+          "position": "after_namespace_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.NamespacesIT_RestartInjected",
+      "testMethod": "createAndDeleteNamespace",
+      "restartPoints": [
+        {
+          "position": "after_namespace_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_table1_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_table2_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_table1_delete",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_table2_delete",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_namespace_delete",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.NamespacesIT_RestartInjected",
+      "testMethod": "deleteNonEmptyNamespace",
+      "restartPoints": [
+        {
+          "position": "after_namespace_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.NamespacesIT_RestartInjected",
+      "testMethod": "setProperties",
+      "restartPoints": [
+        {
+          "position": "after_namespace_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_property_set",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    }
+    ,
+    {
+      "testClass": "org.apache.accumulo.test.NewTableConfigurationIT_RestartInjected",
+      "testMethod": "testSetPropertiesOverwriteOlderProperties",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.NewTableConfigurationIT_RestartInjected",
+      "testMethod": "testSimpleLocalityGroupCreation",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.NewTableConfigurationIT_RestartInjected",
+      "testMethod": "testMulitpleCallsToSetLocalityGroups",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.NewTableConfigurationIT_RestartInjected",
+      "testMethod": "testSetPropertiesAndGroups",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.NewTableConfigurationIT_RestartInjected",
+      "testMethod": "testSetGroupsWithoutDefaultIterators",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    }
+    ,
+    {
+      "testClass": "org.apache.accumulo.test.OrIteratorIT_RestartInjected",
+      "testMethod": "testMultipleRowsInTablet",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.OrIteratorIT_RestartInjected",
+      "testMethod": "testMultipleTablets",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "after_add_splits",
+          "targets": ["manager", "tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.OrIteratorIT_RestartInjected",
+      "testMethod": "testSingleLargeRow",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_property_set",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.OrIteratorIT_RestartInjected",
+      "testMethod": "testNoMatchesForTable",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.OrIteratorIT_RestartInjected",
+      "testMethod": "testNoMatchesInSingleTablet",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "after_add_splits",
+          "targets": ["manager", "tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.OrIteratorIT_RestartInjected",
+      "testMethod": "testResultOrder",
+      "restartPoints": [
+        {
+          "position": "after_table_create",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_batch_write",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    }
+
+  ]
+}

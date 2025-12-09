@@ -1,0 +1,86 @@
+{
+  "tests": [
+    {
+      "testClass": "org.apache.accumulo.test.functional.ScannerIT_RestartInjected",
+      "testMethod": "testScannerReadaheadConfiguration",
+      "restartPoints": [
+        {
+          "position": "after_table_create_readahead",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_batch_write_readahead",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "after_scanner_setup_no_readahead",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_scanner_iteration_no_readahead",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_scanner_setup_with_readahead",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_scanner_iteration_with_readahead",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.test.functional.ScannerIT_RestartInjected",
+      "testMethod": "testSessionCleanup",
+      "restartPoints": [
+        {
+          "position": "after_scan_server_start",
+          "targets": ["scan_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_table_create_session",
+          "targets": ["manager"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_batch_write_session",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH", "DELAYED_CRASH"]
+        },
+        {
+          "position": "after_flush_session",
+          "targets": ["tablet_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_scanner_partial_read",
+          "targets": ["tablet_server", "scan_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_batchscanner_partial_read",
+          "targets": ["tablet_server", "scan_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_scanner_full_read",
+          "targets": ["tablet_server", "scan_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        },
+        {
+          "position": "after_batchscanner_full_read",
+          "targets": ["tablet_server", "scan_server"],
+          "modes": ["GRACEFUL", "CRASH"]
+        }
+      ]
+    }
+  ]
+}
