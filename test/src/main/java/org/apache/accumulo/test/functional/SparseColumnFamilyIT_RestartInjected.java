@@ -53,12 +53,8 @@ public class SparseColumnFamilyIT_RestartInjected extends AccumuloClusterHarness
     try (AccumuloClient c = Accumulo.newClient().from(getClientProps()).build()) {
       c.tableOperations().create(scftt);
 
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       try (BatchWriter bw = c.createBatchWriter(scftt)) {
 
@@ -70,64 +66,40 @@ public class SparseColumnFamilyIT_RestartInjected extends AccumuloClusterHarness
         }
         bw.addMutation(nm(99999 * 2, 1, 99999));
 
-        RestartFramework.at("after_first_batch_mutations")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_first_batch_mutations").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         bw.flush();
 
-        RestartFramework.at("after_first_batch_flush")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_first_batch_flush").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         c.tableOperations().flush(scftt, null, null, true);
 
-        RestartFramework.at("after_first_table_flush")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_first_table_flush").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         // create a file that has column family 1 and 0 interleaved
         for (int i = 0; i < 100000; i++) {
           bw.addMutation(nm(i * 2 + 1, i % 2 == 0 ? 0 : 1, i));
         }
 
-        RestartFramework.at("after_second_batch_mutations")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_second_batch_mutations").on(getCluster())
+            .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       }
 
       c.tableOperations().flush(scftt, null, null, true);
 
-      RestartFramework.at("after_second_table_flush")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_second_table_flush").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (Scanner scanner = c.createScanner(scftt, Authorizations.EMPTY)) {
 
         for (int i = 0; i < 200; i++) {
 
           if (i == 100) {
-            RestartFramework.at("during_scan")
-                .on(cluster)
-                .restart("tablet_server")
-                .withIndex(0)
-                .withMode(RestartMode.GRACEFUL)
-                .execute();
+            RestartFramework.at("during_scan").on(getCluster()).restart("tablet_server")
+                .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
           }
 
           // every time we search for column family 1, it will scan the entire file

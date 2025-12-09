@@ -76,12 +76,8 @@ public class UnusedWALIT_RestartInjected extends ConfigurableMacBase {
     // don't want this bad boy cleaning up walog entries
     getCluster().getClusterControl().stop(ServerType.GARBAGE_COLLECTOR);
 
-    RestartFramework.at("after_gc_stop")
-        .on(getCluster())
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_gc_stop").on(getCluster()).restart("tablet_server").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     // make two tables
     String[] tableNames = getUniqueNames(2);
@@ -91,12 +87,8 @@ public class UnusedWALIT_RestartInjected extends ConfigurableMacBase {
       c.tableOperations().create(bigTable);
       c.tableOperations().create(lilTable);
 
-      RestartFramework.at("after_table_creates")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_creates").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       ServerContext context = getServerContext();
 
@@ -106,74 +98,46 @@ public class UnusedWALIT_RestartInjected extends ConfigurableMacBase {
       writeSomeData(c, lilTable, 0, 1, 0, 1);
       scanSomeData(c, lilTable, 0, 1, 0, 1);
 
-      RestartFramework.at("after_initial_writes")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_initial_writes").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       assertEquals(2, getWALCount(context));
 
-      RestartFramework.at("after_first_wal_count")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_first_wal_count").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // roll the logs by pushing data into bigTable
       writeSomeData(c, bigTable, 0, 3000, 0, 1000);
 
-      RestartFramework.at("after_roll_logs")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_roll_logs").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       assertEquals(3, getWALCount(context));
 
-      RestartFramework.at("after_second_wal_count")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_second_wal_count").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // put some data in the latest log
       writeSomeData(c, lilTable, 1, 10, 0, 10);
       scanSomeData(c, lilTable, 1, 10, 0, 10);
 
-      RestartFramework.at("after_second_writes")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_second_writes").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // bounce the tserver
       getCluster().getClusterControl().stop(ServerType.TABLET_SERVER);
       getCluster().getClusterControl().start(ServerType.TABLET_SERVER);
 
-      RestartFramework.at("after_tserver_restart")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_tserver_restart").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // wait for the metadata table to be online
       try (Scanner scanner = c.createScanner(MetadataTable.NAME, Authorizations.EMPTY)) {
         scanner.forEach((k, v) -> {});
       }
 
-      RestartFramework.at("after_metadata_online")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_metadata_online").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       // check our two sets of data in different logs
       scanSomeData(c, lilTable, 0, 1, 0, 1);

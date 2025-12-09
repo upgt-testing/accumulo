@@ -67,39 +67,23 @@ public class CompactionConfigChangeIT_RestartInjected extends AccumuloClusterHar
               + "{'name':'medium','type':'internal','maxSize':'128M','numThreads':2},"
               + "{'name':'large','type':'internal','numThreads':2}]").replaceAll("'", "\""));
 
-      RestartFramework.at("after_property_setup")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_property_setup").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       createTable(client, table, "cs1", 100);
 
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       ExternalCompactionTestUtils.writeData(client, table, MAX_DATA);
 
-      RestartFramework.at("after_write_data")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_write_data").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       client.tableOperations().flush(table, null, null, true);
 
-      RestartFramework.at("after_flush")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_flush").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       assertEquals(100, countFiles(client, table, "F"));
 
@@ -113,12 +97,8 @@ public class CompactionConfigChangeIT_RestartInjected extends AccumuloClusterHar
 
       client.tableOperations().compact(table, compactionConfig);
 
-      RestartFramework.at("after_compact_start")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_compact_start").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // give some time for compactions to start running
       Wait.waitFor(() -> countFiles(client, table, "F") < 95);
@@ -132,12 +112,8 @@ public class CompactionConfigChangeIT_RestartInjected extends AccumuloClusterHar
           ("[{'name':'little','type':'internal','maxSize':'128M','numThreads':8},"
               + "{'name':'big','type':'internal','numThreads':2}]").replaceAll("'", "\""));
 
-      RestartFramework.at("after_config_change")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_config_change").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       Wait.waitFor(() -> countFiles(client, table, "F") == 0, 60000);
 

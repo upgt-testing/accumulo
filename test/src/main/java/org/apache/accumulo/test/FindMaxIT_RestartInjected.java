@@ -59,12 +59,8 @@ public class FindMaxIT_RestartInjected extends AccumuloClusterHarness {
 
       client.tableOperations().create(tableName);
 
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       try (BatchWriter bw = client.createBatchWriter(tableName)) {
         bw.addMutation(nm(new byte[] {0}));
@@ -82,12 +78,8 @@ public class FindMaxIT_RestartInjected extends AccumuloClusterHarness {
         }
       }
 
-      RestartFramework.at("after_batch_write")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (Scanner scanner = client.createScanner(tableName, Authorizations.EMPTY)) {
 

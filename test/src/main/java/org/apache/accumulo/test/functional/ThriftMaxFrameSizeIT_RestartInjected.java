@@ -107,19 +107,11 @@ public class ThriftMaxFrameSizeIT_RestartInjected {
       try (var accumuloClient = Accumulo.newClient().from(cluster.getClientProperties()).build()) {
         String table = getUniqueNames(1)[0] + "_" + serverType.name();
         ReadWriteIT.ingest(accumuloClient, 1, 1, testSize, 0, table);
-        RestartFramework.at("after_ingest")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_ingest").on(getCluster()).restart("tablet_server").withIndex(0)
+            .withMode(RestartMode.GRACEFUL).execute();
         ReadWriteIT.verify(accumuloClient, 1, 1, testSize, 0, table);
-        RestartFramework.at("after_verify")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_verify").on(getCluster()).restart("tablet_server").withIndex(0)
+            .withMode(RestartMode.GRACEFUL).execute();
       }
     }
 

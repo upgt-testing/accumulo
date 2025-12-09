@@ -84,20 +84,12 @@ public class ShellCreateNamespaceIT_RestartInjected extends SharedMiniClusterBas
   public void createSimpleTest() throws Exception {
     final String namespace = getUniqueNames(1)[0];
     ts.exec("createnamespace " + namespace, true);
-    RestartFramework.at("after_namespace_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_namespace_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     try (AccumuloClient accumuloClient = Accumulo.newClient().from(getClientProps()).build()) {
       assertTrue(accumuloClient.namespaceOperations().exists(namespace));
-      RestartFramework.at("before_namespace_delete")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("before_namespace_delete").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       ts.exec("deletenamespace -f " + namespace);
     }
   }
@@ -117,28 +109,16 @@ public class ShellCreateNamespaceIT_RestartInjected extends SharedMiniClusterBas
     final String ns2 = names[1];
 
     ts.exec("createnamespace " + ns1, true);
-    RestartFramework.at("after_ns1_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_ns1_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec("config -s " + sysPropName + "=" + sysPropVal1);
     ts.exec("config -s " + nsPropName + "=" + nsPropVal1 + " -ns " + ns1);
-    RestartFramework.at("after_config_set")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_config_set").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     ts.exec("createnamespace -cc " + ns1 + " " + ns2, true);
-    RestartFramework.at("after_ns2_create_with_copy")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_ns2_create_with_copy").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     ts.exec("config -s " + sysPropName + "=" + sysPropVal2);
 
@@ -157,12 +137,8 @@ public class ShellCreateNamespaceIT_RestartInjected extends SharedMiniClusterBas
       // p2 will have configuration props in addition to custom prop
       assertTrue(p2.size() > p1.size());
 
-      RestartFramework.at("before_ns_delete")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("before_ns_delete").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       ts.exec("deletenamespace -f " + ns1);
       ts.exec("deletenamespace -f " + ns2);
     }
@@ -183,28 +159,16 @@ public class ShellCreateNamespaceIT_RestartInjected extends SharedMiniClusterBas
     final String destNs = names[1];
 
     ts.exec("createnamespace " + srcNs, true);
-    RestartFramework.at("after_src_ns_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_src_ns_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec("config -s " + sysPropName + "=" + sysPropVal1);
     ts.exec("config -s " + nsPropName + "=" + nsPropVal1 + " -ns " + srcNs);
-    RestartFramework.at("after_property_set")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_property_set").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     ts.exec("createnamespace --exclude-parent-properties -cc " + srcNs + " " + destNs, true);
-    RestartFramework.at("after_dest_ns_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_dest_ns_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     ts.exec("config -s " + sysPropName + "=" + sysPropVal2);
 
@@ -230,12 +194,8 @@ public class ShellCreateNamespaceIT_RestartInjected extends SharedMiniClusterBas
       // because not copied, dest ns sees system change
       assertEquals(sysPropVal2, config.get(sysPropName));
 
-      RestartFramework.at("before_namespaces_delete")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("before_namespaces_delete").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       ts.exec("deletenamespace -f " + srcNs);
       ts.exec("deletenamespace -f " + destNs);
     }
@@ -246,19 +206,11 @@ public class ShellCreateNamespaceIT_RestartInjected extends SharedMiniClusterBas
     String[] names = getUniqueNames(2);
 
     ts.exec("createnamespace " + names[0]);
-    RestartFramework.at("after_first_ns_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_first_ns_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec("createnamespace " + names[1]);
-    RestartFramework.at("after_second_ns_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_second_ns_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     // test --exclude-parent requires -cc option - expect this fail
     ts.exec("createnamespace --exclude-parent-properties " + names[0] + " " + names[1], false);
@@ -283,19 +235,11 @@ public class ShellCreateNamespaceIT_RestartInjected extends SharedMiniClusterBas
     String[] names = getUniqueNames(2);
 
     ts.exec("createnamespace " + names[0]);
-    RestartFramework.at("after_ns0_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_ns0_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec("createnamespace " + names[1]);
-    RestartFramework.at("after_ns1_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_ns1_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     // expect to fail because target already exists
     ts.exec("createnamespace -cp " + names[0] + " " + names[1], false);
   }
@@ -305,12 +249,8 @@ public class ShellCreateNamespaceIT_RestartInjected extends SharedMiniClusterBas
     String[] names = getUniqueNames(2);
 
     ts.exec("createnamespace " + names[0]);
-    RestartFramework.at("after_namespace_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_namespace_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     // expect to fail because target already exists
     ts.exec("createnamespace " + names[0], false);
   }

@@ -66,12 +66,8 @@ public class DumpConfigIT_RestartInjected extends ConfigurableMacBase {
     assertFalse(siteFileBackup.exists());
     assertEquals(0, exec(Admin.class, "dumpConfig", "-a", "-d", folder.getPath()).waitFor());
 
-    RestartFramework.at("after_dump_config")
-        .on(cluster)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_dump_config").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     assertTrue(siteFileBackup.exists());
     String site = FunctionalTestUtils.readAll(new FileInputStream(siteFileBackup));

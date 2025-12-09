@@ -101,12 +101,8 @@ public class HalfClosedTabletIT_RestartInjected extends SharedMiniClusterBase {
       final var tops = client.tableOperations();
       tops.create(tableName);
       TableId tableId = TableId.of(tops.tableIdMap().get(tableName));
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       try (final var bw = client.createBatchWriter(tableName)) {
         final var m1 = new Mutation("a");
         final var m2 = new Mutation("b");
@@ -115,12 +111,8 @@ public class HalfClosedTabletIT_RestartInjected extends SharedMiniClusterBase {
         bw.addMutation(m1);
         bw.addMutation(m2);
       }
-      RestartFramework.at("after_batch_write")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       setInvalidClassLoaderContextPropertyWithoutValidation(getCluster().getServerContext(),
           tableId);
@@ -144,12 +136,8 @@ public class HalfClosedTabletIT_RestartInjected extends SharedMiniClusterBase {
       // expect that split took at least 3 seconds because that is the time it takes to fix the
       // config
       assertTrue(TimeUnit.NANOSECONDS.toMillis(t2 - t1) >= 3000);
-      RestartFramework.at("after_split")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_split").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       // offline the table which will unload the tablets. If the context property is not
       // removed above, then this test will fail because the tablets will not be able to be
@@ -174,12 +162,8 @@ public class HalfClosedTabletIT_RestartInjected extends SharedMiniClusterBase {
 
       tops.create(tableName);
       final var tid = TableId.of(tops.tableIdMap().get(tableName));
-      RestartFramework.at("after_table_create_test2")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_test2").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (BatchWriter bw = c.createBatchWriter(tableName)) {
         Mutation m = new Mutation(new Text("r1"));
@@ -190,19 +174,11 @@ public class HalfClosedTabletIT_RestartInjected extends SharedMiniClusterBase {
       IteratorSetting setting = new IteratorSetting(50, "error", ErrorThrowingIterator.class);
       setting.addOption(ErrorThrowingIterator.TIMES, "3");
       c.tableOperations().attachIterator(tableName, setting, EnumSet.of(IteratorScope.minc));
-      RestartFramework.at("after_iterator_attach_test2")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_iterator_attach_test2").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       c.tableOperations().compact(tableName, new CompactionConfig().setWait(true).setFlush(true));
-      RestartFramework.at("after_compact_test2")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_compact_test2").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // Taking the table offline should succeed normally
       tops.offline(tableName);
@@ -240,21 +216,13 @@ public class HalfClosedTabletIT_RestartInjected extends SharedMiniClusterBase {
 
       tops.create(tableName);
       final var tid = TableId.of(tops.tableIdMap().get(tableName));
-      RestartFramework.at("after_table_create_test3")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_test3").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       IteratorSetting is = new IteratorSetting(30, BadIterator.class);
       c.tableOperations().attachIterator(tableName, is, EnumSet.of(IteratorScope.minc));
-      RestartFramework.at("after_bad_iterator_attach_test3")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_bad_iterator_attach_test3").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (BatchWriter bw = c.createBatchWriter(tableName)) {
         Mutation m = new Mutation(new Text("r1"));
@@ -281,23 +249,15 @@ public class HalfClosedTabletIT_RestartInjected extends SharedMiniClusterBase {
 
       // minc should fail, so there should be no files
       FunctionalTestUtils.checkRFiles(c, tableName, 1, 1, 0, 0);
-      RestartFramework.at("after_failed_offline_test3")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_failed_offline_test3").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // remove the bad iterator. The failing minc task is in a backoff retry loop
       // and should pick up this change on the next try
       c.tableOperations().removeIterator(tableName, BadIterator.class.getSimpleName(),
           EnumSet.of(IteratorScope.minc));
-      RestartFramework.at("after_iterator_remove_test3")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_iterator_remove_test3").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // Minc should have completed successfully
       Wait.waitFor(() -> tabletHasExpectedRFiles(c, tableName, 1, 1, 1, 1), 340_000);

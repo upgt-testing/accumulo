@@ -46,7 +46,8 @@ import com.google.common.collect.Iterables;
 
 // ACCUMULO-3967
 public class BulkImportSequentialRowsIT_RestartInjected extends AccumuloClusterHarness {
-  private static final Logger log = LoggerFactory.getLogger(BulkImportSequentialRowsIT_RestartInjected.class);
+  private static final Logger log =
+      LoggerFactory.getLogger(BulkImportSequentialRowsIT_RestartInjected.class);
 
   private static final long NR = 24;
   private static final long NV = 42000;
@@ -72,12 +73,8 @@ public class BulkImportSequentialRowsIT_RestartInjected extends AccumuloClusterH
       TableOperations to = client.tableOperations();
       to.create(tableName);
 
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       FileSystem fs = getFileSystem();
       Path rootPath = new Path(cluster.getTemporaryPath(), getClass().getSimpleName());
@@ -109,12 +106,8 @@ public class BulkImportSequentialRowsIT_RestartInjected extends AccumuloClusterH
       // Add some splits
       to.addSplits(tableName, getSplits());
 
-      RestartFramework.at("after_add_splits")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_add_splits").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       // Then import a single rfile to all the tablets, hoping that we get a failure to import
       // because
@@ -122,12 +115,8 @@ public class BulkImportSequentialRowsIT_RestartInjected extends AccumuloClusterH
       // and then we get to verify that the bug is actually fixed.
       to.importDirectory(bulk.toString()).to(tableName).load();
 
-      RestartFramework.at("after_bulk_import")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_bulk_import").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // The bug is that some tablets don't get imported into.
       assertEquals(NR * NV, Iterables.size(client.createScanner(tableName, Authorizations.EMPTY)));

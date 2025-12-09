@@ -106,13 +106,10 @@ public class LargeReadIT_RestartInjected extends AccumuloClusterHarness {
       String tableName = getUniqueNames(1)[0];
 
       client.tableOperations().create(tableName, config);
-      org.apache.accumulo.miniclusterImpl.MiniAccumuloClusterImpl mac = (org.apache.accumulo.miniclusterImpl.MiniAccumuloClusterImpl) getCluster();
-      RestartFramework.at("after_table_create")
-          .on(mac)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      org.apache.accumulo.miniclusterImpl.MiniAccumuloClusterImpl mac =
+          (org.apache.accumulo.miniclusterImpl.MiniAccumuloClusterImpl) getCluster();
+      RestartFramework.at("after_table_create").on(mac).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       try (var writer = client.createBatchWriter(tableName)) {
         var bigValue = new Mutation("000");
@@ -131,12 +128,8 @@ public class LargeReadIT_RestartInjected extends AccumuloClusterHarness {
           writer.addMutation(smallValue);
         }
       }
-      RestartFramework.at("after_batch_write")
-          .on(mac)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write").on(mac).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       final int numThreads = 64;
       var executor = Executors.newFixedThreadPool(numThreads);
@@ -166,12 +159,8 @@ public class LargeReadIT_RestartInjected extends AccumuloClusterHarness {
 
       // flush data and verify
       client.tableOperations().flush(tableName, null, null, true);
-      RestartFramework.at("after_flush")
-          .on(mac)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_flush").on(mac).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       try (var tablets = ctx.getAmple().readTablets().forTable(ctx.getTableId(tableName))
           .fetch(TabletMetadata.ColumnType.FILES).build()) {
         assertEquals(1, tablets.stream().count());

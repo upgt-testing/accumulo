@@ -53,7 +53,8 @@ import org.slf4j.LoggerFactory;
 
 public class ManyWriteAheadLogsIT_RestartInjected extends AccumuloClusterHarness {
 
-  private static final Logger log = LoggerFactory.getLogger(ManyWriteAheadLogsIT_RestartInjected.class);
+  private static final Logger log =
+      LoggerFactory.getLogger(ManyWriteAheadLogsIT_RestartInjected.class);
 
   private String majcDelay, walSize;
 
@@ -128,32 +129,20 @@ public class ManyWriteAheadLogsIT_RestartInjected extends AccumuloClusterHarness
       NewTableConfiguration ntc = new NewTableConfiguration().withSplits(splits);
       c.tableOperations().create(manyWALsTable, ntc);
 
-      RestartFramework.at("after_many_wals_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_many_wals_table_create").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       c.tableOperations().create(rollWALsTable);
 
-      RestartFramework.at("after_roll_wals_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_roll_wals_table_create").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       Set<String> allWalsSeen = new HashSet<>();
 
       addOpenWals(context, allWalsSeen);
 
-      RestartFramework.at("after_initial_wal_tracking")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_initial_wal_tracking").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // This test creates the table manyWALsTable with a lot of tablets and writes a little bit to
       // each tablet. In between writing a little bit to each tablet a lot of data is written to
@@ -198,60 +187,36 @@ public class ManyWriteAheadLogsIT_RestartInjected extends AccumuloClusterHarness
           addOpenWals(context, allWalsSeen);
 
           if (i == 25) {
-            RestartFramework.at("at_25_percent_write_progress")
-                .on(getCluster())
-                .restart("tablet_server")
-                .withIndex(0)
-                .withMode(RestartMode.GRACEFUL)
-                .execute();
+            RestartFramework.at("at_25_percent_write_progress").on(getCluster())
+                .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
           }
 
           if (i == 50) {
-            RestartFramework.at("at_50_percent_write_progress")
-                .on(getCluster())
-                .restart("tablet_server")
-                .withIndex(0)
-                .withMode(RestartMode.GRACEFUL)
-                .execute();
+            RestartFramework.at("at_50_percent_write_progress").on(getCluster())
+                .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
           }
 
           if (i == 75) {
-            RestartFramework.at("at_75_percent_write_progress")
-                .on(getCluster())
-                .restart("tablet_server")
-                .withIndex(0)
-                .withMode(RestartMode.GRACEFUL)
-                .execute();
+            RestartFramework.at("at_75_percent_write_progress").on(getCluster())
+                .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
           }
         }
       }
 
-      RestartFramework.at("after_write_loop_complete")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_write_loop_complete").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       assertTrue(allWalsSeen.size() >= 50,
           "Number of WALs seen was less than expected " + allWalsSeen.size());
 
-      RestartFramework.at("after_wal_count_verification")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_wal_count_verification").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // the total number of closed write ahead logs should get small
       int closedLogs = countClosedWals(context);
 
-      RestartFramework.at("before_wal_shrinkage_wait")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("before_wal_shrinkage_wait").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       while (closedLogs > 3) {
         log.debug("Waiting for wals to shrink " + closedLogs);
         Thread.sleep(250);

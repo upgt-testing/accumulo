@@ -271,7 +271,7 @@ public class ScanConsistencyIT extends AccumuloClusterHarness {
     }
   }
 
-  private static Stream<Key> toKeys(Mutation m) {
+  public static Stream<Key> toKeys(Mutation m) {
     return m.getUpdates().stream().map(cu -> new Key(m.getRow(), cu.getColumnFamily(),
         cu.getColumnQualifier(), cu.getColumnVisibility(), 0L, cu.isDeleted(), false));
   }

@@ -171,12 +171,8 @@ public class NamespacesIT_RestartInjected extends SharedMiniClusterBase {
   public void createTableInDefaultNamespace() throws Exception {
     String tableName = "1";
     c.tableOperations().create(tableName);
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     assertTrue(c.tableOperations().exists(tableName));
   }
 
@@ -212,22 +208,14 @@ public class NamespacesIT_RestartInjected extends SharedMiniClusterBase {
     NamespaceOperations nsOps = c.namespaceOperations();
     String n0 = StringUtils.repeat('a', MAX_NAMESPACE_LEN - 1);
     nsOps.create(n0);
-    RestartFramework.at("after_namespace_create_n0")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_namespace_create_n0").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     assertTrue(nsOps.exists(n0));
 
     String n1 = StringUtils.repeat('b', MAX_NAMESPACE_LEN);
     nsOps.create(n1);
-    RestartFramework.at("after_namespace_create_n1")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_namespace_create_n1").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     assertTrue(nsOps.exists(n1));
 
     String n2 = StringUtils.repeat('c', MAX_NAMESPACE_LEN + 1);
@@ -240,12 +228,8 @@ public class NamespacesIT_RestartInjected extends SharedMiniClusterBase {
     String testNamespace = "ns_" + getUniqueNames(1)[0];
     AccumuloClient client = getCluster().getServerContext();
     client.namespaceOperations().create(testNamespace);
-    RestartFramework.at("after_namespace_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_namespace_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
   }
 
   @Test
@@ -259,62 +243,38 @@ public class NamespacesIT_RestartInjected extends SharedMiniClusterBase {
     var e = assertThrows(TableNotFoundException.class, () -> c.tableOperations().delete(t1));
     assertEquals(NamespaceNotFoundException.class, e.getCause().getClass());
     c.namespaceOperations().create(namespace);
-    RestartFramework.at("after_namespace_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_namespace_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     assertTrue(c.namespaceOperations().exists(namespace));
     assertFalse(c.tableOperations().exists(t1));
     assertFalse(c.tableOperations().exists(t2));
     c.tableOperations().create(t1);
-    RestartFramework.at("after_table1_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table1_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     assertTrue(c.namespaceOperations().exists(namespace));
     assertTrue(c.tableOperations().exists(t1));
     assertFalse(c.tableOperations().exists(t2));
     c.tableOperations().create(t2);
-    RestartFramework.at("after_table2_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table2_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     assertTrue(c.namespaceOperations().exists(namespace));
     assertTrue(c.tableOperations().exists(t1));
     assertTrue(c.tableOperations().exists(t2));
     c.tableOperations().delete(t1);
-    RestartFramework.at("after_table1_delete")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table1_delete").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     assertTrue(c.namespaceOperations().exists(namespace));
     assertFalse(c.tableOperations().exists(t1));
     assertTrue(c.tableOperations().exists(t2));
     c.tableOperations().delete(t2);
-    RestartFramework.at("after_table2_delete")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table2_delete").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     assertTrue(c.namespaceOperations().exists(namespace));
     assertFalse(c.tableOperations().exists(t1));
     assertFalse(c.tableOperations().exists(t2));
     c.namespaceOperations().delete(namespace);
-    RestartFramework.at("after_namespace_delete")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_namespace_delete").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     assertFalse(c.namespaceOperations().exists(namespace));
     assertFalse(c.tableOperations().exists(t1));
     assertFalse(c.tableOperations().exists(t2));
@@ -326,19 +286,11 @@ public class NamespacesIT_RestartInjected extends SharedMiniClusterBase {
     assertFalse(c.namespaceOperations().exists(namespace));
     assertFalse(c.tableOperations().exists(tableName1));
     c.namespaceOperations().create(namespace);
-    RestartFramework.at("after_namespace_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_namespace_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     c.tableOperations().create(tableName1);
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     assertTrue(c.namespaceOperations().exists(namespace));
     assertTrue(c.tableOperations().exists(tableName1));
     assertThrows(NamespaceNotEmptyException.class, () -> c.namespaceOperations().delete(namespace));
@@ -347,21 +299,13 @@ public class NamespacesIT_RestartInjected extends SharedMiniClusterBase {
   @Test
   public void setProperties() throws Exception {
     c.namespaceOperations().create(namespace);
-    RestartFramework.at("after_namespace_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_namespace_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     Property prop = Property.TABLE_BLOOM_ENABLED;
     c.namespaceOperations().setProperty(namespace, prop.getKey(), "true");
-    RestartFramework.at("after_property_set")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_property_set").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     assertTrue(checkNamespaceHasProp(namespace, prop.getKey(), "true"));
     assertThrows(AccumuloException.class,
         () -> c.namespaceOperations().setProperty(namespace, prop.getKey(), "foo"));

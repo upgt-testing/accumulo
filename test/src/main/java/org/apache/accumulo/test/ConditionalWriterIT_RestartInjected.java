@@ -110,7 +110,8 @@ import org.slf4j.LoggerFactory;
 
 public class ConditionalWriterIT_RestartInjected extends SharedMiniClusterBase {
 
-  private static final Logger log = LoggerFactory.getLogger(ConditionalWriterIT_RestartInjected.class);
+  private static final Logger log =
+      LoggerFactory.getLogger(ConditionalWriterIT_RestartInjected.class);
 
   @Override
   protected Duration defaultTimeout() {
@@ -163,12 +164,8 @@ public class ConditionalWriterIT_RestartInjected extends SharedMiniClusterBase {
 
       client.tableOperations().create(tableName);
 
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       try (ConditionalWriter cw = client.createConditionalWriter(tableName);
           Scanner scanner = client.createScanner(tableName, Authorizations.EMPTY)) {
@@ -180,12 +177,8 @@ public class ConditionalWriterIT_RestartInjected extends SharedMiniClusterBase {
         cm0.put("tx", "seq", "1");
         assertEquals(Status.ACCEPTED, cw.write(cm0).getStatus());
 
-        RestartFramework.at("after_first_conditional_write")
-            .on(getCluster())
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_first_conditional_write").on(getCluster())
+            .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         assertEquals(Status.REJECTED, cw.write(cm0).getStatus());
 
@@ -240,12 +233,8 @@ public class ConditionalWriterIT_RestartInjected extends SharedMiniClusterBase {
         cm6.put("tx", "seq", "3");
         assertEquals(Status.ACCEPTED, cw.write(cm6).getStatus());
 
-        RestartFramework.at("after_two_condition_write")
-            .on(getCluster())
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_two_condition_write").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         entry = getOnlyElement(scanner);
         assertEquals("DOE", entry.getValue().toString());
@@ -258,12 +247,8 @@ public class ConditionalWriterIT_RestartInjected extends SharedMiniClusterBase {
         cm7.putDelete("tx", "seq");
         assertEquals(Status.ACCEPTED, cw.write(cm7).getStatus());
 
-        RestartFramework.at("after_conditional_delete")
-            .on(getCluster())
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_conditional_delete").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         assertFalse(scanner.iterator().hasNext(), "Did not expect to find any results");
 
@@ -296,32 +281,20 @@ public class ConditionalWriterIT_RestartInjected extends SharedMiniClusterBase {
 
       client1.securityOperations().changeUserAuthorizations(user, auths);
 
-      RestartFramework.at("after_user_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_user_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       client1.securityOperations().grantSystemPermission(user, SystemPermission.CREATE_TABLE);
 
-      RestartFramework.at("after_grant_permission")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_grant_permission").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       try (AccumuloClient client2 =
           Accumulo.newClient().from(client1.properties()).as(user, user1.getToken()).build()) {
         client2.tableOperations().create(tableName);
 
-        RestartFramework.at("after_table_create_with_auth")
-            .on(getCluster())
-            .restart("manager")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_table_create_with_auth").on(getCluster()).restart("manager")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         try (
             ConditionalWriter cw = client2.createConditionalWriter(tableName,
@@ -338,12 +311,8 @@ public class ConditionalWriterIT_RestartInjected extends SharedMiniClusterBase {
           cm0.put("tx", "seq", cva, "1");
           assertEquals(Status.ACCEPTED, cw.write(cm0).getStatus());
 
-          RestartFramework.at("after_conditional_write_with_visibility")
-              .on(getCluster())
-              .restart("tablet_server")
-              .withIndex(0)
-              .withMode(RestartMode.GRACEFUL)
-              .execute();
+          RestartFramework.at("after_conditional_write_with_visibility").on(getCluster())
+              .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
           scanner.setRange(new Range("99006"));
 
@@ -553,22 +522,14 @@ public class ConditionalWriterIT_RestartInjected extends SharedMiniClusterBase {
       client.tableOperations().create(tableName);
       client.tableOperations().addConstraint(tableName, AlphaNumKeyConstraint.class.getName());
 
-      RestartFramework.at("after_add_constraint")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_add_constraint").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       client.tableOperations().clone(tableName, tableName + "_clone", true, new HashMap<>(),
           new HashSet<>());
 
-      RestartFramework.at("after_table_clone")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_clone").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       try (ConditionalWriter cw = client.createConditionalWriter(tableName + "_clone");
           Scanner scanner = client.createScanner(tableName + "_clone", new Authorizations())) {
@@ -599,12 +560,8 @@ public class ConditionalWriterIT_RestartInjected extends SharedMiniClusterBase {
       client.tableOperations().create(tableName,
           new NewTableConfiguration().withoutDefaultIterators());
 
-      RestartFramework.at("after_table_create_without_iterators")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_without_iterators").on(getCluster())
+          .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (BatchWriter bw = client.createBatchWriter(tableName)) {
 
@@ -625,12 +582,8 @@ public class ConditionalWriterIT_RestartInjected extends SharedMiniClusterBase {
         bw.addMutation(m);
       }
 
-      RestartFramework.at("after_batch_write")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       IteratorSetting iterConfig = new IteratorSetting(10, SummingCombiner.class);
       SummingCombiner.setEncodingType(iterConfig, Type.STRING);
@@ -855,12 +808,8 @@ public class ConditionalWriterIT_RestartInjected extends SharedMiniClusterBase {
 
       client.tableOperations().create(tableName);
 
-      RestartFramework.at("after_table_create_batch")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_batch").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       client.securityOperations().changeUserAuthorizations(getAdminPrincipal(),
           new Authorizations("A", "B"));
@@ -904,12 +853,8 @@ public class ConditionalWriterIT_RestartInjected extends SharedMiniClusterBase {
 
         assertEquals(3, count);
 
-        RestartFramework.at("after_batch_conditional_write")
-            .on(getCluster())
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_batch_conditional_write").on(getCluster())
+            .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         scanner.fetchColumn("tx", "seq");
 
@@ -924,12 +869,8 @@ public class ConditionalWriterIT_RestartInjected extends SharedMiniClusterBase {
         splits.add(new Text("3"));
         client.tableOperations().addSplits(tableName, splits);
 
-        RestartFramework.at("after_add_splits")
-            .on(getCluster())
-            .restart("manager")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_add_splits").on(getCluster()).restart("manager").withIndex(0)
+            .withMode(RestartMode.GRACEFUL).execute();
 
         mutations.clear();
 
@@ -1450,12 +1391,8 @@ public class ConditionalWriterIT_RestartInjected extends SharedMiniClusterBase {
       client.tableOperations().create(table2);
       client.tableOperations().create(table3);
 
-      RestartFramework.at("after_create_three_tables")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_create_three_tables").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // Grant R on table1, W on table2, R/W on table3
       client.securityOperations().grantTablePermission(user, table1, TablePermission.READ);
@@ -1463,12 +1400,8 @@ public class ConditionalWriterIT_RestartInjected extends SharedMiniClusterBase {
       client.securityOperations().grantTablePermission(user, table3, TablePermission.READ);
       client.securityOperations().grantTablePermission(user, table3, TablePermission.WRITE);
 
-      RestartFramework.at("after_grant_table_permissions")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_grant_table_permissions").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       ConditionalMutation cm1 = new ConditionalMutation("r1", new Condition("tx", "seq"));
       cm1.put("tx", "seq", "1");
@@ -1565,12 +1498,8 @@ public class ConditionalWriterIT_RestartInjected extends SharedMiniClusterBase {
 
       client.tableOperations().create(table);
 
-      RestartFramework.at("after_table_create_delete_test")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_delete_test").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (ConditionalWriter cw = client.createConditionalWriter(table)) {
 
@@ -1600,12 +1529,8 @@ public class ConditionalWriterIT_RestartInjected extends SharedMiniClusterBase {
 
       client.tableOperations().create(table);
 
-      RestartFramework.at("after_table_create_offline_test")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_offline_test").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (ConditionalWriter cw = client.createConditionalWriter(table)) {
 

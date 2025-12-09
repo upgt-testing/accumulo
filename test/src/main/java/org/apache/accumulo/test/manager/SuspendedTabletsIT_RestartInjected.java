@@ -72,16 +72,17 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.restarttest.api.RestartFramework;
 import org.restarttest.core.RestartMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
 
 public class SuspendedTabletsIT_RestartInjected extends ConfigurableMacBase {
-  private static final Logger log = LoggerFactory.getLogger(SuspendedTabletsIT_RestartInjected.class);
+  private static final Logger log =
+      LoggerFactory.getLogger(SuspendedTabletsIT_RestartInjected.class);
   private static ExecutorService THREAD_POOL;
 
   public static final int TSERVERS = 3;
@@ -211,12 +212,8 @@ public class SuspendedTabletsIT_RestartInjected extends ConfigurableMacBase {
       ntc.setProperties(Map.of(Property.TABLE_SUSPEND_DURATION.getKey(), action.suspendTime));
       ctx.tableOperations().create(tableName, ntc);
 
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       // Wait for all of the tablets to hosted ...
       log.info("Waiting on hosting and balance");
@@ -239,12 +236,8 @@ public class SuspendedTabletsIT_RestartInjected extends ConfigurableMacBase {
       // the metadata table.
       assertEquals(TSERVERS - 1, ds.hosted.keySet().size());
 
-      RestartFramework.at("after_balance_complete")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_balance_complete").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // Kill two tablet servers hosting our tablets. This should put tablets into suspended state,
       // and thus halt balancing.
@@ -253,12 +246,8 @@ public class SuspendedTabletsIT_RestartInjected extends ConfigurableMacBase {
       log.info("Eliminating tablet servers");
       serverStopper.eliminateTabletServers(ctx, beforeDeathState, TSERVERS - 1);
 
-      RestartFramework.at("after_kill_tservers")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_kill_tservers").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       // All tablets should be either hosted or suspended.
       log.info("Waiting on suspended tablets");
@@ -280,22 +269,14 @@ public class SuspendedTabletsIT_RestartInjected extends ConfigurableMacBase {
 
       assertTrue(ds.suspendedCount > 0);
 
-      RestartFramework.at("after_suspended_verified")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_suspended_verified").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       if (action == AfterSuspendAction.OFFLINE) {
         client.tableOperations().offline(tableName, true);
 
-        RestartFramework.at("after_table_offline")
-            .on(cluster)
-            .restart("manager")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_table_offline").on(getCluster()).restart("manager").withIndex(0)
+            .withMode(RestartMode.GRACEFUL).execute();
 
         while (ds.suspendedCount > 0) {
           Thread.sleep(1000);
@@ -312,12 +293,8 @@ public class SuspendedTabletsIT_RestartInjected extends ConfigurableMacBase {
                     "" + restartedServer.getPort(), Property.TSERV_PORTSEARCH.getKey(), "false"),
                 1);
 
-        RestartFramework.at("after_tserver_restart")
-            .on(cluster)
-            .restart("manager")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_tserver_restart").on(getCluster()).restart("manager")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         // Eventually, the suspended tablets should be reassigned to the newly alive tserver.
         log.info("Awaiting tablet unsuspension for tablets belonging to " + restartedServer);

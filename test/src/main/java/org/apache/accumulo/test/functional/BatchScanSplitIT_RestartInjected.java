@@ -65,12 +65,8 @@ public class BatchScanSplitIT_RestartInjected extends AccumuloClusterHarness {
       String tableName = getUniqueNames(1)[0];
       c.tableOperations().create(tableName);
 
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       int numRows = 1 << 18;
 
@@ -81,31 +77,19 @@ public class BatchScanSplitIT_RestartInjected extends AccumuloClusterHarness {
           bw.addMutation(m);
         }
 
-        RestartFramework.at("after_batch_write")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_batch_write").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       }
 
       c.tableOperations().flush(tableName, null, null, true);
 
-      RestartFramework.at("after_flush")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_flush").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       c.tableOperations().setProperty(tableName, Property.TABLE_SPLIT_THRESHOLD.getKey(), "4K");
 
-      RestartFramework.at("after_split_threshold_set")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_split_threshold_set").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       Collection<Text> splits = c.tableOperations().listSplits(tableName);
       while (splits.size() < 2) {
@@ -113,12 +97,8 @@ public class BatchScanSplitIT_RestartInjected extends AccumuloClusterHarness {
         splits = c.tableOperations().listSplits(tableName);
       }
 
-      RestartFramework.at("after_splits_occur")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_splits_occur").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       System.out.println("splits : " + splits);
 
@@ -158,12 +138,8 @@ public class BatchScanSplitIT_RestartInjected extends AccumuloClusterHarness {
         }
 
         if (i == 10) {
-          RestartFramework.at("during_batch_scan")
-              .on(cluster)
-              .restart("tablet_server")
-              .withIndex(0)
-              .withMode(RestartMode.GRACEFUL)
-              .execute();
+          RestartFramework.at("during_batch_scan").on(getCluster()).restart("tablet_server")
+              .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
         }
       }
 

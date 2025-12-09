@@ -71,21 +71,13 @@ public class AccumuloConfigurationIT_RestartInjected extends SharedMiniClusterBa
       c.instanceOperations().setProperty(fakeProperty, "4");
     }
 
-    RestartFramework.at("after_property_set")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_property_set").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     ctx.getConfiguration().invalidateCache();
 
-    RestartFramework.at("after_cache_invalidation")
-        .on(getCluster())
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_cache_invalidation").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     int oldValueReturned = 0;
     while (ctx.getConfiguration().get(fakeProperty).equals(initialThreads)) {

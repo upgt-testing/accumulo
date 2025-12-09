@@ -58,19 +58,11 @@ public class TimeoutIT_RestartInjected extends AccumuloClusterHarness {
 
   public void testBatchWriterTimeout(AccumuloClient client, String tableName) throws Exception {
     client.tableOperations().create(tableName);
-    RestartFramework.at("after_table_create_for_bw_timeout")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create_for_bw_timeout").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     client.tableOperations().addConstraint(tableName, SlowConstraint.class.getName());
-    RestartFramework.at("after_constraint_added")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_constraint_added").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     // give constraint time to propagate through zookeeper
     sleepUninterruptibly(1, TimeUnit.SECONDS);
@@ -82,12 +74,8 @@ public class TimeoutIT_RestartInjected extends AccumuloClusterHarness {
     mut.put("cf1", "cq1", "v1");
 
     bw.addMutation(mut);
-    RestartFramework.at("after_mutation_added")
-        .on(getCluster())
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_mutation_added").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     var mre =
         assertThrows(MutationsRejectedException.class, bw::close, "batch writer did not timeout");
     if (mre.getCause() instanceof TimedOutException) {
@@ -98,12 +86,8 @@ public class TimeoutIT_RestartInjected extends AccumuloClusterHarness {
 
   public void testBatchScannerTimeout(AccumuloClient client, String tableName) throws Exception {
     client.tableOperations().create(tableName);
-    RestartFramework.at("after_table_create_for_bs_timeout")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create_for_bs_timeout").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     try (BatchWriter bw = client.createBatchWriter(tableName)) {
       Mutation m = new Mutation("r1");
@@ -113,12 +97,8 @@ public class TimeoutIT_RestartInjected extends AccumuloClusterHarness {
       m.put("cf1", "cq4", "v4");
       bw.addMutation(m);
     }
-    RestartFramework.at("after_batch_write")
-        .on(getCluster())
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_batch_write").on(getCluster()).restart("tablet_server").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     try (BatchScanner bs = client.createBatchScanner(tableName)) {
       bs.setRanges(Collections.singletonList(new Range()));
@@ -130,12 +110,8 @@ public class TimeoutIT_RestartInjected extends AccumuloClusterHarness {
       IteratorSetting iterSetting = new IteratorSetting(100, SlowIterator.class);
       iterSetting.addOption("sleepTime", 2000 + "");
       bs.addScanIterator(iterSetting);
-      RestartFramework.at("after_iterator_added")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_iterator_added").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       assertThrows(TimedOutException.class, () -> bs.iterator().next(),
           "batch scanner did not time out");

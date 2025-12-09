@@ -71,12 +71,8 @@ public class ScanServerMetadataEntriesCleanIT_RestartInjected extends SharedMini
 
     ctx.getAmple().putScanServerFileReferences(scanRefs);
 
-    RestartFramework.at("after_put_scan_refs")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_put_scan_refs").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     assertEquals(scanRefs.size(), ctx.getAmple().getScanServerFileReferences().count());
 
@@ -84,21 +80,13 @@ public class ScanServerMetadataEntriesCleanIT_RestartInjected extends SharedMini
         ctx.getAmple().getScanServerFileReferences().collect(Collectors.toSet());
     assertEquals(scanRefs, scanRefs2);
 
-    RestartFramework.at("after_get_scan_refs")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_get_scan_refs").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     ScanServerMetadataEntries.clean(ctx);
 
-    RestartFramework.at("after_clean")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_clean").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     assertFalse(ctx.getAmple().getScanServerFileReferences().findAny().isPresent());
   }
@@ -116,21 +104,13 @@ public class ScanServerMetadataEntriesCleanIT_RestartInjected extends SharedMini
     ServerContext ctx = getCluster().getServerContext();
     ctx.getAmple().putScanServerFileReferences(scanRefs);
 
-    RestartFramework.at("after_put_scan_refs")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_put_scan_refs").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     assertEquals(scanRefs.size(), ctx.getAmple().getScanServerFileReferences().count());
 
-    RestartFramework.at("after_first_verification")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_first_verification").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     // Add old scan server entries
     try (BatchWriter writer = ctx.createBatchWriter(Ample.DataLevel.USER.metaTable())) {
@@ -152,33 +132,21 @@ public class ScanServerMetadataEntriesCleanIT_RestartInjected extends SharedMini
           e);
     }
 
-    RestartFramework.at("after_batch_write_old_refs")
-        .on(getCluster())
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_batch_write_old_refs").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     // Ensure that ample returns all references from both ranges
     assertEquals(scanRefs.size() + 2, ctx.getAmple().getScanServerFileReferences().count());
 
-    RestartFramework.at("after_second_verification")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_second_verification").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     // Delete all references
     ctx.getAmple().deleteScanServerFileReferences(
         ctx.getAmple().getScanServerFileReferences().collect(Collectors.toSet()));
 
-    RestartFramework.at("after_delete_refs")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_delete_refs").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     assertEquals(0, ctx.getAmple().getScanServerFileReferences().count());
   }

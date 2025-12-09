@@ -113,42 +113,26 @@ public class ECAdminIT_RestartInjected extends SharedMiniClusterBase {
 
       createTable(client, tableName, "cs7");
 
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       IteratorSetting setting = new IteratorSetting(50, "sleepy", SlowIterator.class);
       setting.addOption("sleepTime", "3000");
       setting.addOption("seekSleepTime", "3000");
       client.tableOperations().attachIterator(tableName, setting, EnumSet.of(IteratorScope.majc));
 
-      RestartFramework.at("after_iterator_attach")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_iterator_attach").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       writeData(client, tableName);
 
-      RestartFramework.at("after_write_data")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_write_data").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       compact(client, tableName, 2, QUEUE7, false);
 
-      RestartFramework.at("after_start_compaction")
-          .on(getCluster())
-          .restart("compactor")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_start_compaction").on(getCluster()).restart("compactor")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // wait for the compaction to start
       TExternalCompactionList expected =

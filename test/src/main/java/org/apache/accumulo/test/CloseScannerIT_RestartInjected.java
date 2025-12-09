@@ -70,30 +70,18 @@ public class CloseScannerIT_RestartInjected extends AccumuloClusterHarness {
 
       client.tableOperations().create(tableName);
 
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       ReadWriteIT.ingest(client, ROWS, COLS, 50, 0, tableName);
 
-      RestartFramework.at("after_ingest")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_ingest").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       client.tableOperations().flush(tableName, null, null, true);
 
-      RestartFramework.at("after_flush")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_flush").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       Timer timer = Timer.startNew();
 

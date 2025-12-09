@@ -190,73 +190,41 @@ public class ExternalCompaction_1_IT_RestartInjected extends SharedMiniClusterBa
 
       String table1 = names[0];
       createTable(client, table1, "cs1");
-      RestartFramework.at("after_table1_create_ext1")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table1_create_ext1").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       String table2 = names[1];
       createTable(client, table2, "cs2");
-      RestartFramework.at("after_table2_create_ext1")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table2_create_ext1").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       writeData(client, table1);
-      RestartFramework.at("after_write_data_table1_ext1")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_write_data_table1_ext1").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       writeData(client, table2);
-      RestartFramework.at("after_write_data_table2_ext1")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_write_data_table2_ext1").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       getCluster().getClusterControl().startCoordinator(CompactionCoordinator.class);
       getCluster().getClusterControl().startCompactors(Compactor.class, 1, QUEUE1);
       getCluster().getClusterControl().startCompactors(Compactor.class, 1, QUEUE2);
-      RestartFramework.at("after_start_compactors_ext1")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_start_compactors_ext1").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       compact(client, table1, 2, QUEUE1, true);
-      RestartFramework.at("after_compact_table1_ext1")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_compact_table1_ext1").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       verify(client, table1, 2);
 
       SortedSet<Text> splits = new TreeSet<>();
       splits.add(new Text(row(MAX_DATA / 2)));
       client.tableOperations().addSplits(table2, splits);
-      RestartFramework.at("after_splits_table2_ext1")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_splits_table2_ext1").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       compact(client, table2, 3, QUEUE2, true);
-      RestartFramework.at("after_compact_table2_ext1")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_compact_table2_ext1").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       verify(client, table2, 3);
 
     }
@@ -279,36 +247,20 @@ public class ExternalCompaction_1_IT_RestartInjected extends SharedMiniClusterBa
       ProcessInfo tserverProcess = getCluster().exec(ExternalCompactionTServer.class);
 
       createTable(client, table1, "cs3", 2);
-      RestartFramework.at("after_table_create_extdies")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_extdies").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       writeData(client, table1);
-      RestartFramework.at("after_write_data_extdies")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_write_data_extdies").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       getCluster().getClusterControl().startCompactors(ExternalDoNothingCompactor.class, 1, QUEUE3);
       getCluster().getClusterControl().startCoordinator(CompactionCoordinator.class);
-      RestartFramework.at("after_start_compactors_extdies")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_start_compactors_extdies").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       compact(client, table1, 2, QUEUE3, false);
-      RestartFramework.at("after_compact_extdies")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_compact_extdies").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       TableId tid = getCluster().getServerContext().getTableId(table1);
 
       // Wait for the compaction to start by waiting for 1 external compaction column
@@ -346,37 +298,21 @@ public class ExternalCompaction_1_IT_RestartInjected extends SharedMiniClusterBa
         Accumulo.newClient().from(getCluster().getClientProperties()).build()) {
 
       createTable(client, table1, "cs4", 200);
-      RestartFramework.at("after_table_create_many")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_many").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       writeData(client, table1);
-      RestartFramework.at("after_write_data_many")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_write_data_many").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       getCluster().getClusterControl().startCompactors(Compactor.class, 2, QUEUE4);
       getCluster().getClusterControl().startCoordinator(CompactionCoordinator.class);
-      RestartFramework.at("after_start_compactors_many")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_start_compactors_many").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       compact(client, table1, 3, QUEUE4, true);
-      RestartFramework.at("after_compact_many")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_compact_many").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       verify(client, table1, 3);
     }
@@ -388,12 +324,8 @@ public class ExternalCompaction_1_IT_RestartInjected extends SharedMiniClusterBa
 
     getCluster().getClusterControl().startCompactors(Compactor.class, 1, QUEUE5);
     getCluster().getClusterControl().startCoordinator(CompactionCoordinator.class);
-    RestartFramework.at("after_start_compactors_config")
-        .on(cluster)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_start_compactors_config").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     try (AccumuloClient client =
         Accumulo.newClient().from(getCluster().getClientProperties()).build()) {
@@ -403,12 +335,8 @@ public class ExternalCompaction_1_IT_RestartInjected extends SharedMiniClusterBa
           "cs5", Property.TABLE_FILE_COMPRESSION_TYPE.getKey(), "none");
       NewTableConfiguration ntc = new NewTableConfiguration().setProperties(props);
       client.tableOperations().create(tableName, ntc);
-      RestartFramework.at("after_table_create_config")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_config").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       byte[] data = new byte[100000];
       Arrays.fill(data, (byte) 65);
@@ -419,19 +347,11 @@ public class ExternalCompaction_1_IT_RestartInjected extends SharedMiniClusterBa
           writer.addMutation(m);
         }
       }
-      RestartFramework.at("after_write_data_config")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_write_data_config").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       client.tableOperations().flush(tableName, null, null, true);
-      RestartFramework.at("after_flush_config")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_flush_config").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // without compression, expect file to be large
       long sizes = CompactionExecutorIT.getFileSizes(client, tableName);
@@ -443,12 +363,8 @@ public class ExternalCompaction_1_IT_RestartInjected extends SharedMiniClusterBa
               .setConfigurer(new PluginConfig(CompressionConfigurer.class.getName(),
                   Map.of(CompressionConfigurer.LARGE_FILE_COMPRESSION_TYPE, "gz",
                       CompressionConfigurer.LARGE_FILE_COMPRESSION_THRESHOLD, data.length + ""))));
-      RestartFramework.at("after_compact_with_compression_config")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_compact_with_compression_config").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // after compacting with compression, expect small file
       sizes = CompactionExecutorIT.getFileSizes(client, tableName);
@@ -456,12 +372,8 @@ public class ExternalCompaction_1_IT_RestartInjected extends SharedMiniClusterBa
           "Unexpected files sizes: data: " + data.length + ", file:" + sizes);
 
       client.tableOperations().compact(tableName, new CompactionConfig().setWait(true));
-      RestartFramework.at("after_compact_without_compression_config")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_compact_without_compression_config").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // after compacting without compression, expect big files again
       sizes = CompactionExecutorIT.getFileSizes(client, tableName);
@@ -497,45 +409,25 @@ public class ExternalCompaction_1_IT_RestartInjected extends SharedMiniClusterBa
     try (AccumuloClient client =
         Accumulo.newClient().from(getCluster().getClientProperties()).build()) {
       createTable(client, table1, "cs6");
-      RestartFramework.at("after_table_create_iter")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_iter").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       writeData(client, table1);
-      RestartFramework.at("after_write_data_iter")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_write_data_iter").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       getCluster().getClusterControl().startCompactors(Compactor.class, 1, QUEUE6);
       getCluster().getClusterControl().startCoordinator(CompactionCoordinator.class);
-      RestartFramework.at("after_start_compactors_iter")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_start_compactors_iter").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       compact(client, table1, 2, QUEUE6, true);
-      RestartFramework.at("after_first_compact_iter")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_first_compact_iter").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       verify(client, table1, 2);
 
       IteratorSetting setting = new IteratorSetting(50, "delete", ExtDevNull.class);
       client.tableOperations().attachIterator(table1, setting, EnumSet.of(IteratorScope.majc));
       client.tableOperations().compact(table1, new CompactionConfig().setWait(true));
-      RestartFramework.at("after_second_compact_iter")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_second_compact_iter").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (Scanner s = client.createScanner(table1)) {
         assertFalse(s.iterator().hasNext());
@@ -566,34 +458,18 @@ public class ExternalCompaction_1_IT_RestartInjected extends SharedMiniClusterBa
     try (final AccumuloClient client =
         Accumulo.newClient().from(getCluster().getClientProperties()).build()) {
       createTable(client, table3, "cs7");
-      RestartFramework.at("after_table_create_dead")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_dead").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       writeData(client, table3);
-      RestartFramework.at("after_write_data_dead")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_write_data_dead").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       getCluster().getClusterControl().startCompactors(Compactor.class, 1, QUEUE7);
       getCluster().getClusterControl().startCoordinator(CompactionCoordinator.class);
-      RestartFramework.at("after_start_compactors_dead")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_start_compactors_dead").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       compact(client, table3, 2, QUEUE7, false);
-      RestartFramework.at("after_compact_dead")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_compact_dead").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // ExternalCompactionTServer will not commit the compaction. Wait for the
       // metadata table entries to show up.
@@ -624,12 +500,8 @@ public class ExternalCompaction_1_IT_RestartInjected extends SharedMiniClusterBa
 
       // Force a flush on the metadata table before killing our tserver
       client.tableOperations().flush("accumulo.metadata");
-      RestartFramework.at("after_flush_metadata_dead")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_flush_metadata_dead").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // Stop our TabletServer. Need to perform a normal shutdown so that the WAL is closed
       // normally.
@@ -680,36 +552,20 @@ public class ExternalCompaction_1_IT_RestartInjected extends SharedMiniClusterBa
 
       getCluster().getClusterControl().startCompactors(Compactor.class, 1, QUEUE8);
       getCluster().getClusterControl().startCoordinator(CompactionCoordinator.class);
-      RestartFramework.at("after_start_compactors_partial")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_start_compactors_partial").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       createTable(client, tableName, "cs8");
-      RestartFramework.at("after_table_create_partial")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_partial").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       writeData(client, tableName);
-      RestartFramework.at("after_write_data_partial")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_write_data_partial").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       // This should create an A file
       compact(client, tableName, 17, QUEUE8, true);
-      RestartFramework.at("after_first_compact_partial")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_first_compact_partial").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       verify(client, tableName, 17);
 
       try (BatchWriter bw = client.createBatchWriter(tableName)) {
@@ -719,21 +575,13 @@ public class ExternalCompaction_1_IT_RestartInjected extends SharedMiniClusterBa
           bw.addMutation(m);
         }
       }
-      RestartFramework.at("after_second_write_partial")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_second_write_partial").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // this should create an F file
       client.tableOperations().flush(tableName);
-      RestartFramework.at("after_flush_partial")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_flush_partial").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // run a compaction that only compacts F files
       IteratorSetting iterSetting = new IteratorSetting(100, TestFilter.class);
@@ -744,12 +592,8 @@ public class ExternalCompaction_1_IT_RestartInjected extends SharedMiniClusterBa
       CompactionConfig config = new CompactionConfig().setIterators(List.of(iterSetting))
           .setWait(true).setSelector(new PluginConfig(FSelector.class.getName()));
       client.tableOperations().compact(tableName, config);
-      RestartFramework.at("after_second_compact_partial")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_second_compact_partial").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (Scanner scanner = client.createScanner(tableName)) {
         int count = 0;
@@ -789,20 +633,12 @@ public class ExternalCompaction_1_IT_RestartInjected extends SharedMiniClusterBa
 
       getCluster().getClusterControl().startCompactors(Compactor.class, 1, QUEUE8);
       getCluster().getClusterControl().startCoordinator(CompactionCoordinator.class);
-      RestartFramework.at("after_start_compactors_active")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_start_compactors_active").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       createTable(client, table1, "cs8");
-      RestartFramework.at("after_table_create_active")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_active").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (BatchWriter bw = client.createBatchWriter(table1)) {
         for (int i = 1; i <= MAX_DATA; i++) {
@@ -814,12 +650,8 @@ public class ExternalCompaction_1_IT_RestartInjected extends SharedMiniClusterBa
           client.tableOperations().flush(table1, null, null, true);
         }
       }
-      RestartFramework.at("after_write_and_flush_active")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_write_and_flush_active").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       final AtomicReference<Exception> error = new AtomicReference<>();
       final CountDownLatch started = new CountDownLatch(1);

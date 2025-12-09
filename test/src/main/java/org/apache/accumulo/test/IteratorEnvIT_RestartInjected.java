@@ -257,13 +257,10 @@ public class IteratorEnvIT_RestartInjected extends AccumuloClusterHarness {
     CompactionConfig config = new CompactionConfig();
     config.setIterators(Collections.singletonList(cfg));
     client.tableOperations().compact(tableName, config);
-    org.apache.accumulo.miniclusterImpl.MiniAccumuloClusterImpl mac = (org.apache.accumulo.miniclusterImpl.MiniAccumuloClusterImpl) getCluster();
-    RestartFramework.at("after_compact")
-        .on(mac)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    org.apache.accumulo.miniclusterImpl.MiniAccumuloClusterImpl mac =
+        (org.apache.accumulo.miniclusterImpl.MiniAccumuloClusterImpl) getCluster();
+    RestartFramework.at("after_compact").on(mac).restart("tablet_server").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     try (Scanner scan = client.createScanner(tableName)) {
       validateScanner(scan);
@@ -280,13 +277,10 @@ public class IteratorEnvIT_RestartInjected extends AccumuloClusterHarness {
     client.tableOperations().attachIterator(tableName, cfg, EnumSet.of(IteratorScope.minc));
 
     client.tableOperations().flush(tableName, null, null, true);
-    org.apache.accumulo.miniclusterImpl.MiniAccumuloClusterImpl mac = (org.apache.accumulo.miniclusterImpl.MiniAccumuloClusterImpl) getCluster();
-    RestartFramework.at("after_flush")
-        .on(mac)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    org.apache.accumulo.miniclusterImpl.MiniAccumuloClusterImpl mac =
+        (org.apache.accumulo.miniclusterImpl.MiniAccumuloClusterImpl) getCluster();
+    RestartFramework.at("after_flush").on(mac).restart("tablet_server").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     try (Scanner scan = client.createScanner(tableName)) {
       validateScanner(scan);
@@ -314,13 +308,10 @@ public class IteratorEnvIT_RestartInjected extends AccumuloClusterHarness {
 
     TableId tableId = TableId.of(client.tableOperations().tableIdMap().get(tableName));
     client.tableOperations().offline(tableName, true);
-    org.apache.accumulo.miniclusterImpl.MiniAccumuloClusterImpl mac = (org.apache.accumulo.miniclusterImpl.MiniAccumuloClusterImpl) getCluster();
-    RestartFramework.at("after_offline")
-        .on(mac)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    org.apache.accumulo.miniclusterImpl.MiniAccumuloClusterImpl mac =
+        (org.apache.accumulo.miniclusterImpl.MiniAccumuloClusterImpl) getCluster();
+    RestartFramework.at("after_offline").on(mac).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     IteratorSetting cfg = new IteratorSetting(1, iteratorClass);
     cfg.addOption(EXPECTED_TABLE_ID_OPT, tableId.canonical());
@@ -390,13 +381,10 @@ public class IteratorEnvIT_RestartInjected extends AccumuloClusterHarness {
 
   private void writeData(String tableName) throws Exception {
     client.tableOperations().create(tableName, getTableConfig());
-    org.apache.accumulo.miniclusterImpl.MiniAccumuloClusterImpl mac = (org.apache.accumulo.miniclusterImpl.MiniAccumuloClusterImpl) getCluster();
-    RestartFramework.at("after_table_create")
-        .on(mac)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    org.apache.accumulo.miniclusterImpl.MiniAccumuloClusterImpl mac =
+        (org.apache.accumulo.miniclusterImpl.MiniAccumuloClusterImpl) getCluster();
+    RestartFramework.at("after_table_create").on(mac).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     try (BatchWriter bw = client.createBatchWriter(tableName)) {
       for (Map.Entry<Key,Value> data : createTestData().entrySet()) {
@@ -407,11 +395,7 @@ public class IteratorEnvIT_RestartInjected extends AccumuloClusterHarness {
         bw.addMutation(m);
       }
     }
-    RestartFramework.at("after_batch_write")
-        .on(mac)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_batch_write").on(mac).restart("tablet_server").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
   }
 }

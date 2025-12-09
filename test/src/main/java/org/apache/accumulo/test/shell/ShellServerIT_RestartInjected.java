@@ -181,12 +181,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
 
       // exporttable / importtable
       ts.exec("createtable " + table + " -evc", true);
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       make10();
       ts.exec("addsplits row5", true);
       ts.exec("config -t " + table + " -s table.split.threshold=345M", true);
@@ -250,12 +246,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
       final String table = getUniqueNames(1)[0];
 
       ts.exec("createtable " + table + " -evc", true);
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       make10();
       ts.exec("addsplits row5", true);
 
@@ -281,12 +273,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
 
     // setscaniter, deletescaniter
     ts.exec("createtable " + table);
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec("insert a cf cq 1");
     ts.exec("insert a cf cq 1");
     ts.exec("insert a cf cq 1");
@@ -317,12 +305,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
 
     // egrep
     ts.exec("createtable " + table);
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     make10();
     String lines = ts.exec("egrep row[123]", true);
     assertEquals(3, lines.split("\n").length - 1);
@@ -342,12 +326,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
 
     ts.output.clear();
     ts.exec("createtable " + table);
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     make10();
     ts.exec("flush -t " + table + " -w");
     ts.exec("du " + table, true, " [" + table + "]", true);
@@ -399,12 +379,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
       ts.input.set("secret\nsecret\n");
       ts.exec("user xyzzy", true);
       ts.exec("createtable " + table, true, "xyzzy@", true);
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       ts.exec("insert row1 cf cq 1", true);
       ts.exec("scan", true, "row1", true);
       ts.exec("droptable -f " + table, true);
@@ -427,12 +403,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
   public void durability() throws Exception {
     final String table = getUniqueNames(1)[0];
     ts.exec("createtable " + table);
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec("insert -d none a cf cq randomGunkaASDFWEAQRd");
     ts.exec("insert -d foo a cf cq2 2", false, "foo", true);
     ts.exec("scan -r a", true, "randomGunkaASDFWEAQRd", true);
@@ -445,12 +417,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
 
     // setshelliter, listshelliter, deleteshelliter
     ts.exec("createtable " + table);
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec("insert a cf cq 1");
     ts.exec("insert a cf cq 1");
     ts.exec("insert a cf cq 1");
@@ -473,12 +441,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
     ts.exec("deletetable -f " + table);
     // list iter
     ts.exec("createtable " + table);
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec("insert a cf cq 1");
     ts.exec("insert a cf cq 1");
     ts.exec("insert a cf cq 1");
@@ -507,12 +471,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
       final String tableName0 = tableNames[0];
 
       ts.exec("createtable " + tableName0);
-    RestartFramework.at("after_tableName0_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+      RestartFramework.at("after_tableName0_create").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       ts.input.set("\n\n");
       // Setting a non-optiondescriber with no name should fail
       ts.exec("setiter -scan -class " + COLUMN_FAMILY_COUNTER_ITERATOR + " -p 30", false);
@@ -530,12 +490,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
       final String tableName1 = tableNames[1];
 
       ts.exec("createtable " + tableName1, true);
-    RestartFramework.at("after_tableName1_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+      RestartFramework.at("after_tableName1_create").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       ts.input.set("customcfcounter\n\n");
 
@@ -550,12 +506,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
       final String tableName2 = tableNames[2];
 
       ts.exec("createtable " + tableName2, true);
-    RestartFramework.at("after_tableName2_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+      RestartFramework.at("after_tableName2_create").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       ts.input.set("customcfcounter\nname1 value1\nname2 value2\n\n");
 
@@ -577,12 +529,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
       String tableName3 = tableNames[3];
 
       ts.exec("createtable " + tableName3, true);
-    RestartFramework.at("after_tableName3_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+      RestartFramework.at("after_tableName3_create").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       ts.input.set("\nname1 value1.1,value1.2,value1.3\nname2 value2\n\n");
 
@@ -617,12 +565,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
 
     // notable
     ts.exec("createtable " + table, true);
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec("scan", true, " " + table + ">", true);
     assertTrue(ts.output.get().contains(" " + table + ">"));
     ts.exec("notable", true);
@@ -646,12 +590,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
     final String table = getUniqueNames(1)[0];
     // addauths
     ts.exec("createtable " + table + " -evc");
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     boolean success = false;
     // Rely on the timeout rule in AccumuloIT
     while (!success) {
@@ -771,12 +711,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
 
     // clonetable
     ts.exec("createtable " + table + " -evc");
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec("config -t " + table + " -s table.split.threshold=123M", true);
     ts.exec("addsplits -t " + table + " a b c", true);
     ts.exec("insert a b c value");
@@ -806,12 +742,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
 
     // clonetable
     ts.exec("createtable " + table + " -evc");
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec("config -t " + table + " -s table.split.threshold=123M", true);
     ts.exec("addsplits -t " + table + " a b c", true);
     ts.exec("insert a b c value");
@@ -836,12 +768,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
         + Property.TABLE_SPLIT_THRESHOLD.getKey() + "=10K";
 
     ts.exec("createtable " + table + " -prop " + testProp, true);
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec("insert a b c value", true);
     ts.exec("scan", true, "value", true);
 
@@ -869,12 +797,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
 
     // compact
     ts.exec("createtable " + table);
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     String tableId = getTableId(table);
 
@@ -924,12 +848,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
     final String clone = table + "_clone";
 
     ts.exec("createtable " + table);
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec("insert a b c d");
     ts.exec("flush -w");
     ts.exec("insert x y z v");
@@ -1043,12 +963,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
     final String table = getUniqueNames(1)[0];
 
     ts.exec("createtable " + table);
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     // expect this to fail
     ts.exec("compact -t " + table + " -w --sf-ename F.* -s "
@@ -1061,12 +977,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
 
     // compact
     ts.exec("createtable " + table);
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     ts.exec("insert 9255 doc content 'abcde'");
     ts.exec("insert 9255 doc url file://foo.txt");
@@ -1122,12 +1034,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
     final String table = getUniqueNames(1)[0];
 
     ts.exec("createtable " + table);
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     ts.exec("insert 9255 doc content 'abcde'");
     ts.exec("insert 9255 doc url file://foo.txt");
@@ -1198,12 +1106,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
     // constraint
     ts.exec("constraint -l -t " + MetadataTable.NAME, true, "MetadataConstraints=1", true);
     ts.exec("createtable " + table + " -evc");
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     // Make sure the table is fully propagated through zoocache
     getTableId(table);
@@ -1222,12 +1126,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
 
     // deletemany
     ts.exec("createtable " + table);
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     make10();
     assertEquals(10, countkeys(table));
     ts.exec("deletemany -f -b row8");
@@ -1256,12 +1156,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
     final String table = getUniqueNames(1)[0];
 
     ts.exec("createtable " + table);
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     final String tableId = getTableId(table);
 
     // deleterows
@@ -1301,12 +1197,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
     final String table = getUniqueNames(1)[0];
 
     ts.exec("createtable " + table);
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec("setgroups -t " + table + " alpha=a,b,c num=3,2,1");
     ts.exec("getgroups -t " + table, true, "alpha=a,b,c", true);
     ts.exec("getgroups -t " + table, true, "num=1,2,3", true);
@@ -1316,12 +1208,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
   @Test
   public void formatter() {
     ts.exec("createtable formatter_test", true);
-    RestartFramework.at("after_formatter_test_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_formatter_test_create").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     ts.exec("table formatter_test", true);
     ts.exec("insert row cf cq 1234abcd", true);
     ts.exec("insert row cf1 cq1 9876fedc", true);
@@ -1454,12 +1342,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
     final String table = getUniqueNames(1)[0];
 
     ts.exec("createtable " + table, true);
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     make10();
     ts.exec("grep row[123]", true, "row1", false);
     ts.exec("grep row5", true, "row5", true);
@@ -1520,12 +1404,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
     String nonce = generateNonce();
     File importDir = createRFiles(conf, fs, table, nonce);
     ts.exec("createtable " + table, true);
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec("importdirectory " + importDir + " " + errorsDir + " true", true);
     ts.exec("scan -r 00000000", true, "0-->" + nonce, true);
     ts.exec("scan -r 00000099", true, "99-->" + nonce, true);
@@ -1540,12 +1420,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
     FileSystem fs = FileSystem.get(conf);
     File importDir = createRFiles(conf, fs, table, nonce);
     ts.exec("createtable " + table, true);
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec("importdirectory " + importDir + " true", true);
     ts.exec("scan -r 00000000", true, "0-->" + nonce, true);
     ts.exec("scan -r 00000099", true, "99-->" + nonce, true);
@@ -1562,12 +1438,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
     FileSystem fs = FileSystem.get(conf);
     File importDir = createRFiles(conf, fs, table, nonce);
     ts.exec("createtable " + table, true);
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec("notable", true);
     ts.exec("importdirectory -t " + table + " -i " + importDir + " true", true);
     ts.exec("scan -t " + table + " -b 0 -e 2", true, "0-->" + nonce, true);
@@ -1624,12 +1496,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
     final String table = getUniqueNames(1)[0];
 
     ts.exec("createtable " + table, true);
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec("interpreter -l", true, "HexScan", false);
     ts.exec("insert \\x02 cf cq value", true);
     ts.exec("scan -b 02", true, "value", false);
@@ -1647,12 +1515,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
     final String table = getUniqueNames(1)[0];
 
     ts.exec("createtable " + table, true);
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec(
         "config -t " + table
             + " -s table.iterator.minc.slow=30,org.apache.accumulo.test.functional.SlowIterator",
@@ -1677,12 +1541,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
     final String table = getUniqueNames(1)[0];
 
     ts.exec("createtable " + table, true);
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec("insert a cf cq value", true);
     ts.exec("insert b cf cq value", true);
     ts.exec("insert ccc cf cq value", true);
@@ -1698,12 +1558,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
     final String table = getUniqueNames(1)[0];
 
     ts.exec("createtable " + table);
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec("addsplits a m z");
     ts.exec("getsplits", true, "z", true);
     ts.exec("merge --all", true);
@@ -1739,12 +1595,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
     final String rename = tableNames[1];
 
     ts.exec("createtable " + table);
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec("insert this is a value");
     ts.exec("renametable " + table + " " + rename);
     ts.exec("tables", true, rename, true);
@@ -1760,19 +1612,11 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
     final String table1 = table + "_z";
     final String table2 = table + "_a";
     ts.exec("createtable " + table1);
-    RestartFramework.at("after_table1_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table1_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec("createtable " + table2);
-    RestartFramework.at("after_table2_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table2_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec("notable");
     String lst = ts.exec("tables -l");
     assertTrue(lst.indexOf(table2) < lst.indexOf(table1));
@@ -1793,12 +1637,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
     final String table = getUniqueNames(1)[0];
 
     ts.exec("createtable " + table, true);
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     // Should be about a 3 second scan
     for (int i = 0; i < 6; i++) {
@@ -1886,12 +1726,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
         + "," + fooConstraintJar.toURI(), true);
 
     ts.exec("createtable " + table, true);
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec("config -t " + table + " -s " + Property.TABLE_CLASSLOADER_CONTEXT.getKey() + "=cx1",
         true);
 
@@ -1958,12 +1794,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
 
     // can't delete a namespace that still contains tables, unless you do -f
     ts.exec("createtable " + ns_2 + "." + tableName, true);
-    RestartFramework.at("after_ns_2_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_ns_2_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec("deletenamespace " + ns_2);
     ts.exec("y");
     ts.exec("namespaces", true, ns_2, true);
@@ -1977,19 +1809,11 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
     ts.exec("compact -ns " + ns_2, true);
     ts.exec("createnamespace " + ns_3, true);
     ts.exec("createtable " + ns_3 + ".1", true);
-    RestartFramework.at("after_ns_3_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_ns_3_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec("createtable " + ns_3 + ".2", true);
-    RestartFramework.at("after_ns_3_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_ns_3_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec("deletetable -ns " + ns_3 + " -f", true);
     ts.exec("tables", true, ns_3 + ".1", false);
     ts.exec("namespaces", true, ns_3, true);
@@ -2026,12 +1850,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
     ts.exec("constraint -ns " + ns_4
         + " -a org.apache.accumulo.test.constraints.NumericValueConstraint", true);
     ts.exec("createtable " + ns_4 + ".constrained", true);
-    RestartFramework.at("after_ns_4_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_ns_4_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec("table " + ns_4 + ".constrained", true);
     ts.exec("constraint -d 1");
     // should fail
@@ -2050,12 +1870,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
   @Test
   public void scans() throws Exception {
     ts.exec("createtable t");
-    RestartFramework.at("after_t_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_t_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     make10();
     String result = ts.exec("scan -b row1 -e row1");
     assertEquals(2, result.split("\n").length);
@@ -2075,12 +1891,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
   @Test
   public void scansWithColon() throws Exception {
     ts.exec("createtable twithcolontest");
-    RestartFramework.at("after_twithcolontest_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_twithcolontest_create").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     ts.exec("insert row c:f cq value");
     ts.exec("scan -r row -cf c:f", true, "value");
     ts.exec("scan -b row -cf c:f  -cq cq -e row", true, "value");
@@ -2098,12 +1910,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
     final String tableName = getUniqueNames(1)[0];
 
     ts.exec("createtable " + tableName);
-    RestartFramework.at("after_tableName_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_tableName_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     // Assert that the TabletServer does not know anything about our class
     String result = ts.exec(
         "setiter -scan -n reverse -t " + tableName + " -p 21 -class " + VALUE_REVERSING_ITERATOR);
@@ -2189,12 +1997,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
 
     // create a table
     ts.exec("createtable " + table, true);
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     // add some data
     ts.exec("insert foo a b c", true);
@@ -2212,12 +2016,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
     // Repeat process but do it within the 'notable' context (after table creation and insertion)
     // create a table
     ts.exec("createtable " + table, true);
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     // add some data
     ts.exec("insert foo a b c", true);
@@ -2256,12 +2056,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
     ts.exec(String.format("table %s", table), false, "TableNotFoundException");
 
     ts.exec("createtable " + table, true);
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     // validate -t option is used.
     ts.exec(String.format("importdirectory -t %s %s %s false", table, importDir, errorsDir), true);
@@ -2404,12 +2200,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
   public void testSummaries() {
     String tableName = getUniqueNames(1)[0];
     ts.exec("createtable " + tableName);
-    RestartFramework.at("after_tableName_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_tableName_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec(
         "config -t " + tableName + " -s table.summarizer.del=" + DeletesSummarizer.class.getName());
     ts.exec(
@@ -2480,12 +2272,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
   public void testSummarySelection() {
     String tableName = getUniqueNames(1)[0];
     ts.exec("createtable " + tableName);
-    RestartFramework.at("after_tableName_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_tableName_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     // will create a few files and do not want them compacted
     ts.exec("config -t " + tableName + " -s " + Property.TABLE_MAJC_RATIO + "=10");
 
@@ -2545,12 +2333,8 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
         "file://" + getCluster().getConfig().getAccumuloPropsFile().getCanonicalPath());
     // compact
     ts.exec("createtable " + table);
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     // setup SlowIterator to sleep for 10 seconds
     ts.exec("config -t " + table
@@ -2605,20 +2389,12 @@ public class ShellServerIT_RestartInjected extends SharedMiniClusterBase {
     final String table2 = namespace1 + "." + names[2];
 
     ts.exec("createtable " + table1, true);
-    RestartFramework.at("after_table1_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table1_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec("createnamespace " + namespace1, true);
     ts.exec("createtable " + table2, true);
-    RestartFramework.at("after_table2_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table2_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     ts.exec("config -s table.class.loader.context=invalid", false,
         AccumuloException.class.getName(), true);

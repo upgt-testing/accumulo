@@ -82,12 +82,8 @@ public class ShellAuthenticatorIT_RestartInjected extends SharedMiniClusterBase 
     shell.setLogErrorsToConsole();
     assertTrue(shell.config("--config-file", getCluster().getClientPropsPath()));
 
-    RestartFramework.at("after_shell_config_with_file")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_shell_config_with_file").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
   }
 
   @Test
@@ -97,12 +93,8 @@ public class ShellAuthenticatorIT_RestartInjected extends SharedMiniClusterBase 
     assertTrue(shell.config("-u", getAdminPrincipal(), "-p", getRootPassword(), "-zi",
         getCluster().getInstanceName(), "-zh", getCluster().getZooKeepers()));
 
-    RestartFramework.at("after_shell_config_with_properties")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_shell_config_with_properties").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
   }
 
   @Test
@@ -110,12 +102,8 @@ public class ShellAuthenticatorIT_RestartInjected extends SharedMiniClusterBase 
     shell = new Shell(reader);
     shell.setLogErrorsToConsole();
 
-    RestartFramework.at("before_bad_password_test")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("before_bad_password_test").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     assertFalse(shell.config("-u", getAdminPrincipal(), "-p", "BADPW", "-zi",
         getCluster().getInstanceName(), "-zh", getCluster().getZooKeepers()));
@@ -134,21 +122,13 @@ public class ShellAuthenticatorIT_RestartInjected extends SharedMiniClusterBase 
     assertTrue(
         shell.config("--auth-timeout", "1", "--config-file", getCluster().getClientPropsPath()));
 
-    RestartFramework.at("after_auth_timeout_config")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_auth_timeout_config").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     Thread.sleep(90000);
 
-    RestartFramework.at("after_auth_timeout_sleep")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_auth_timeout_sleep").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     shell.execCommand("whoami", false, false);
     assertTrue(output.get().contains("root"));

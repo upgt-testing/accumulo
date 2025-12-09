@@ -60,7 +60,8 @@ import org.slf4j.LoggerFactory;
 
 // Accumulo3047
 public class BadDeleteMarkersCreatedIT_RestartInjected extends AccumuloClusterHarness {
-  private static final Logger log = LoggerFactory.getLogger(BadDeleteMarkersCreatedIT_RestartInjected.class);
+  private static final Logger log =
+      LoggerFactory.getLogger(BadDeleteMarkersCreatedIT_RestartInjected.class);
 
   @Override
   protected Duration defaultTimeout() {
@@ -155,12 +156,8 @@ public class BadDeleteMarkersCreatedIT_RestartInjected extends AccumuloClusterHa
       final String tableId = c.tableOperations().tableIdMap().get(tableName);
       assertNotNull(tableId, "Expected to find a tableId");
 
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       // add some splits
       SortedSet<Text> splits = new TreeSet<>();
@@ -169,22 +166,14 @@ public class BadDeleteMarkersCreatedIT_RestartInjected extends AccumuloClusterHa
       }
       c.tableOperations().addSplits(tableName, splits);
 
-      RestartFramework.at("after_add_splits")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_add_splits").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       // get rid of all the splits
       c.tableOperations().deleteRows(tableName, null, null);
 
-      RestartFramework.at("after_delete_rows")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_delete_rows").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // get rid of the table
       c.tableOperations().delete(tableName);

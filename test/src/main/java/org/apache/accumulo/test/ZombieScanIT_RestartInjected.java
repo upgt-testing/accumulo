@@ -152,12 +152,8 @@ public class ZombieScanIT_RestartInjected extends ConfigurableMacBase {
       splits.add(new Text("7"));
       var ntc = new NewTableConfiguration().withSplits(splits);
       c.tableOperations().create(table, ntc);
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       try (var writer = c.createBatchWriter(table)) {
         for (var row : List.of("2", "4", "6", "8")) {
@@ -170,12 +166,8 @@ public class ZombieScanIT_RestartInjected extends ConfigurableMacBase {
       // Flush the data otherwise when the tablet attempts to close with an active scan reading from
       // the in memory map it will wait for 15 seconds for the scan
       c.tableOperations().flush(table, null, null, true);
-      RestartFramework.at("after_flush")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_flush").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       var executor = Executors.newCachedThreadPool();
 
@@ -210,12 +202,8 @@ public class ZombieScanIT_RestartInjected extends ConfigurableMacBase {
 
       // should eventually see the four zombie scans running against four tablets
       Wait.waitFor(() -> countDistinctTabletsScans(table, c) == 4, 60_000);
-      RestartFramework.at("after_zombie_scans_detected")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_zombie_scans_detected").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       assertEquals(1, c.instanceOperations().getTabletServers().size());
 
@@ -227,21 +215,13 @@ public class ZombieScanIT_RestartInjected extends ConfigurableMacBase {
 
       // Wait for all tablets servers
       Wait.waitFor(() -> c.instanceOperations().getTabletServers().size() == 4, 60_000);
-      RestartFramework.at("after_new_tservers_started")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_new_tservers_started").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // The table should eventually balance across the 4 tablet servers
       Wait.waitFor(() -> countLocations(table, c) == 4, 60_000);
-      RestartFramework.at("after_balance_complete")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_balance_complete").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // The zombie scans should still be running
       assertTrue(futures.stream().noneMatch(Future::isDone));
@@ -259,12 +239,8 @@ public class ZombieScanIT_RestartInjected extends ConfigurableMacBase {
             .collect(Collectors.toSet());
         assertEquals(Set.of("2", "4", "6", "8"), rows);
       }
-      RestartFramework.at("after_normal_scans_verified")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_normal_scans_verified").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // The zombie scans should migrate with the tablets, taking up more scan threads in the
       // system.
@@ -277,12 +253,8 @@ public class ZombieScanIT_RestartInjected extends ConfigurableMacBase {
         }
       }
       assertEquals(4, tabletSeversWithZombieScans.size());
-      RestartFramework.at("after_zombie_scans_migration_verified")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_zombie_scans_migration_verified").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       executor.shutdownNow();
     }
@@ -313,21 +285,13 @@ public class ZombieScanIT_RestartInjected extends ConfigurableMacBase {
         // Scans will fall back to tablet servers when no scan servers are present. So wait for scan
         // servers to show up in zookeeper. Can remove this in 3.1.
         Wait.waitFor(() -> !c.instanceOperations().getScanServers().isEmpty(), 60_000);
-        RestartFramework.at("after_scan_server_setup")
-            .on(cluster)
-            .restart("manager")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_scan_server_setup").on(getCluster()).restart("manager")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       }
 
       c.tableOperations().create(table);
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       var executor = Executors.newCachedThreadPool();
 
@@ -350,12 +314,8 @@ public class ZombieScanIT_RestartInjected extends ConfigurableMacBase {
 
       // should eventually see the eight stuck scans running
       Wait.waitFor(() -> countActiveScans(c, serverType, table) == 8, 60_000);
-      RestartFramework.at("after_first_stuck_scans_detected")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_first_stuck_scans_detected").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // Cancel the scan threads. This will cause the sessions on the server side to timeout and
       // become inactive. The stuck threads on the server side related to the timed out sessions
@@ -371,12 +331,8 @@ public class ZombieScanIT_RestartInjected extends ConfigurableMacBase {
       Wait.waitFor(() -> getZombieScansMetric() == 4, 60_000);
 
       assertEquals(4, countActiveScans(c, serverType, table));
-      RestartFramework.at("after_first_zombie_verification")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_first_zombie_verification").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // start four more stuck scans with two that will ignore interrupts
       futures.clear();
@@ -386,12 +342,8 @@ public class ZombieScanIT_RestartInjected extends ConfigurableMacBase {
       futures.add(startStuckBatchScan(c, table, executor, "0", true, consistency));
 
       Wait.waitFor(() -> countActiveScans(c, serverType, table) == 8, 60_000);
-      RestartFramework.at("after_second_stuck_scans_detected")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_second_stuck_scans_detected").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // Cancel the client side scan threads. Should cause the server side threads to be
       // interrupted.
@@ -406,12 +358,8 @@ public class ZombieScanIT_RestartInjected extends ConfigurableMacBase {
       Wait.waitFor(() -> getZombieScansMetric() == 6, 60_000);
 
       assertEquals(6, countActiveScans(c, serverType, table));
-      RestartFramework.at("after_final_zombie_verification")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_final_zombie_verification").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       executor.shutdownNow();
     } finally {

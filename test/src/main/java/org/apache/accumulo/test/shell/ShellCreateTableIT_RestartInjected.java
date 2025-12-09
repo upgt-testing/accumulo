@@ -111,12 +111,8 @@ public class ShellCreateTableIT_RestartInjected extends SharedMiniClusterBase {
   public void testCreateTableWithLocalityGroups() throws Exception {
     final String table = getUniqueNames(1)[0];
     ts.exec("createtable " + table + " -l locg1=fam1,fam2", true);
-    RestartFramework.at("after_table_create_with_locality_groups")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create_with_locality_groups").on(getCluster())
+        .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     try (AccumuloClient accumuloClient = Accumulo.newClient().from(getClientProps()).build()) {
       Map<String,Set<Text>> lMap = accumuloClient.tableOperations().getLocalityGroups(table);
       Set<Text> expectedColFams = Set.of(new Text("fam1"), new Text("fam2"));
@@ -124,12 +120,8 @@ public class ShellCreateTableIT_RestartInjected extends SharedMiniClusterBase {
         assertEquals("locg1", entry.getKey());
         assertTrue(entry.getValue().containsAll(expectedColFams));
       }
-      RestartFramework.at("before_table_delete")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("before_table_delete").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       ts.exec("deletetable -f " + table);
     }
   }
@@ -143,12 +135,8 @@ public class ShellCreateTableIT_RestartInjected extends SharedMiniClusterBase {
   public void testCreateTableWithMultipleLocalityGroups() throws Exception {
     final String table = getUniqueNames(1)[0];
     ts.exec("createtable " + table + " -l locg1=fam1,fam2 locg2=colfam1", true);
-    RestartFramework.at("after_table_create_with_multiple_locality_groups")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create_with_multiple_locality_groups").on(getCluster())
+        .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     try (AccumuloClient accumuloClient = Accumulo.newClient().from(getClientProps()).build()) {
       Map<String,Set<Text>> lMap = accumuloClient.tableOperations().getLocalityGroups(table);
       assertTrue(lMap.containsKey("locg1"));
@@ -157,12 +145,8 @@ public class ShellCreateTableIT_RestartInjected extends SharedMiniClusterBase {
       Set<Text> expectedColFams2 = Set.of(new Text("colfam1"));
       assertTrue(lMap.get("locg1").containsAll(expectedColFams1));
       assertTrue(lMap.get("locg2").containsAll(expectedColFams2));
-      RestartFramework.at("before_table_delete")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("before_table_delete").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       ts.exec("deletetable -f " + table);
     }
   }
@@ -191,44 +175,28 @@ public class ShellCreateTableIT_RestartInjected extends SharedMiniClusterBase {
     // even though its command line help indicates that it is optional. Likely due to
     // the fact that setshelliter extends setiter, which does require a table argument.
     ts.exec("createtable " + tmpTable, true);
-    RestartFramework.at("after_tmp_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_tmp_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     String output = ts.exec("tables");
     assertTrue(output.contains(tmpTable));
 
     ts.input.set("\n5000\n\n");
     ts.exec("setshelliter -n itname -p 10 -pn profile1 -ageoff", true);
-    RestartFramework.at("after_iterator_profile_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_iterator_profile_create").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     output = ts.exec("listshelliter");
     assertTrue(output.contains("Profile : profile1"));
 
     // create table making use of the iterator profile
     ts.exec("createtable " + table + " -i profile1:scan,minc", true);
-    RestartFramework.at("after_table_create_with_iterator")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create_with_iterator").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     ts.exec("insert foo a b c", true);
     ts.exec("scan", true, "foo a:b []\tc");
     ts.exec("sleep 6", true);
     ts.exec("scan", true, "", true);
-    RestartFramework.at("before_tables_delete")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("before_tables_delete").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec("deletetable -f " + table);
     ts.exec("deletetable -f " + tmpTable);
   }
@@ -248,45 +216,29 @@ public class ShellCreateTableIT_RestartInjected extends SharedMiniClusterBase {
     // even though its command line help indicates that it is optional. Likely due to
     // the fact that setshelliter extends setiter, which does require a table argument.
     ts.exec("createtable " + tmpTable, true);
-    RestartFramework.at("after_tmp_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_tmp_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     String output = ts.exec("tables");
     assertTrue(output.contains(tmpTable));
 
     ts.input.set("\n5000\n\n");
     ts.exec("setshelliter -n itname -p 10 -pn profile1 -ageoff", true);
-    RestartFramework.at("after_profile1_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_profile1_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     output = ts.exec("listshelliter");
     assertTrue(output.contains("Profile : profile1"));
 
     ts.input.set("2\n");
     ts.exec("setshelliter -n iter2 -p 11 -pn profile2 -vers", true);
-    RestartFramework.at("after_profile2_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_profile2_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     output = ts.exec("listshelliter");
     assertTrue(output.contains("Profile : profile2"));
 
     // create table making use of the iterator profiles
     ts.exec("createtable " + table + " -i profile1:scan,minc profile2:all ", true);
-    RestartFramework.at("after_table_create_with_multiple_iterators")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create_with_multiple_iterators").on(getCluster())
+        .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     ts.exec("insert foo a b c", true);
     ts.exec("scan", true, "foo a:b []\tc");
     ts.exec("sleep 6", true);
@@ -298,12 +250,8 @@ public class ShellCreateTableIT_RestartInjected extends SharedMiniClusterBase {
     assertTrue(output.contains("Iterator iter2, scan scope options"));
     assertTrue(output.contains("Iterator iter2, minc scope options"));
     assertTrue(output.contains("Iterator iter2, majc scope options"));
-    RestartFramework.at("before_tables_delete")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("before_tables_delete").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec("deletetable -f " + table);
     ts.exec("deletetable -f " + tmpTable);
   }
@@ -313,22 +261,14 @@ public class ShellCreateTableIT_RestartInjected extends SharedMiniClusterBase {
     final String tmpTable = "tmpTable";
     final String table = getUniqueNames(1)[0];
     ts.exec("createtable " + tmpTable, true);
-    RestartFramework.at("after_tmp_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_tmp_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     String output = ts.exec("tables");
     assertTrue(output.contains(tmpTable));
     ts.input.set("\n5000\n\n");
     ts.exec("setshelliter -n itname -p 10 -pn profile1 -ageoff", true);
-    RestartFramework.at("after_iterator_profile_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_iterator_profile_create").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     output = ts.exec("listshelliter");
     assertTrue(output.contains("Profile : profile1"));
     // test various bad argument calls
@@ -363,31 +303,19 @@ public class ShellCreateTableIT_RestartInjected extends SharedMiniClusterBase {
   public void testCreateTableOffline() throws IOException {
     final String tableName = getUniqueNames(1)[0];
     ts.exec("createtable " + tableName + " -o", true);
-    RestartFramework.at("after_table_create_offline")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create_offline").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     String output = ts.exec("tables");
     assertTrue(output.contains(tableName));
     output = ts.exec("scan -t " + tableName, false, "is offline", true);
     assertTrue(output.contains("TableOfflineException"));
     ts.exec("table " + tableName, true);
     ts.exec("online", true);
-    RestartFramework.at("after_table_online")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_online").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec("scan", true);
-    RestartFramework.at("before_table_delete")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("before_table_delete").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec("deletetable -f " + tableName, true);
   }
 
@@ -402,21 +330,13 @@ public class ShellCreateTableIT_RestartInjected extends SharedMiniClusterBase {
     String splitsFile = System.getProperty("user.dir") + "/target/splitFile";
     try (AccumuloClient client = Accumulo.newClient().from(getClientProps()).build()) {
       generateSplitsFile(splitsFile, 1000, 12, false, false, true, false, false);
-      RestartFramework.at("after_splits_file_generated")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_splits_file_generated").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       SortedSet<Text> expectedSplits = readSplitsFromFile(splitsFile);
       final String tableName = getUniqueNames(1)[0];
       ts.exec("createtable " + tableName + " -sf " + splitsFile, true);
-      RestartFramework.at("after_table_create_with_splits")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_with_splits").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       Collection<Text> createdSplits = client.tableOperations().listSplits(tableName);
       assertEquals(expectedSplits, new TreeSet<>(createdSplits));
     } finally {
@@ -435,21 +355,13 @@ public class ShellCreateTableIT_RestartInjected extends SharedMiniClusterBase {
     String splitsFile = System.getProperty("user.dir") + "/target/splitFile";
     try (AccumuloClient client = Accumulo.newClient().from(getClientProps()).build()) {
       generateSplitsFile(splitsFile, 300, 12, false, false, false, false, false);
-      RestartFramework.at("after_splits_file_generated")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_splits_file_generated").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       SortedSet<Text> expectedSplits = readSplitsFromFile(splitsFile);
       final String tableName = getUniqueNames(1)[0];
       ts.exec("createtable " + tableName + " -sf " + splitsFile, true);
-      RestartFramework.at("after_table_create_with_splits")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_with_splits").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       Collection<Text> createdSplits = client.tableOperations().listSplits(tableName);
       assertEquals(expectedSplits, new TreeSet<>(createdSplits));
     } finally {
@@ -468,21 +380,13 @@ public class ShellCreateTableIT_RestartInjected extends SharedMiniClusterBase {
     String splitsFile = System.getProperty("user.dir") + "/target/splitFile";
     try (AccumuloClient client = Accumulo.newClient().from(getClientProps()).build()) {
       generateSplitsFile(splitsFile, 100, 23, false, true, true, false, false);
-      RestartFramework.at("after_splits_file_generated")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_splits_file_generated").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       SortedSet<Text> expectedSplits = readSplitsFromFile(splitsFile);
       final String tableName = getUniqueNames(1)[0];
       ts.exec("createtable " + tableName + " -sf " + splitsFile, true);
-      RestartFramework.at("after_table_create_with_splits")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_with_splits").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       Collection<Text> createdSplits = client.tableOperations().listSplits(tableName);
       assertEquals(expectedSplits, new TreeSet<>(createdSplits));
     } finally {
@@ -501,21 +405,13 @@ public class ShellCreateTableIT_RestartInjected extends SharedMiniClusterBase {
     String splitsFile = System.getProperty("user.dir") + "/target/splitFile";
     try (AccumuloClient client = Accumulo.newClient().from(getClientProps()).build()) {
       generateSplitsFile(splitsFile, 100, 31, false, false, true, true, false);
-      RestartFramework.at("after_splits_file_generated")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_splits_file_generated").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       SortedSet<Text> expectedSplits = readSplitsFromFile(splitsFile);
       final String tableName = getUniqueNames(1)[0];
       ts.exec("createtable " + tableName + " -sf " + splitsFile, true);
-      RestartFramework.at("after_table_create_with_splits")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_with_splits").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       Collection<Text> createdSplits = client.tableOperations().listSplits(tableName);
       assertEquals(expectedSplits, new TreeSet<>(createdSplits));
     } finally {
@@ -534,21 +430,13 @@ public class ShellCreateTableIT_RestartInjected extends SharedMiniClusterBase {
     String splitsFile = System.getProperty("user.dir") + "/target/splitFile";
     try (AccumuloClient client = Accumulo.newClient().from(getClientProps()).build()) {
       generateSplitsFile(splitsFile, 100, 32, false, false, true, false, true);
-      RestartFramework.at("after_splits_file_generated")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_splits_file_generated").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       SortedSet<Text> expectedSplits = readSplitsFromFile(splitsFile);
       final String tableName = getUniqueNames(1)[0];
       ts.exec("createtable " + tableName + " -sf " + splitsFile, true);
-      RestartFramework.at("after_table_create_with_splits")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_with_splits").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       Collection<Text> createdSplits = client.tableOperations().listSplits(tableName);
       assertEquals(expectedSplits, new TreeSet<>(createdSplits));
     } finally {
@@ -567,21 +455,13 @@ public class ShellCreateTableIT_RestartInjected extends SharedMiniClusterBase {
     String splitsFile = System.getProperty("user.dir") + "/target/splitFile";
     try (AccumuloClient client = Accumulo.newClient().from(getClientProps()).build()) {
       generateSplitsFile(splitsFile, 100, 12, false, false, false, true, true);
-      RestartFramework.at("after_splits_file_generated")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_splits_file_generated").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       SortedSet<Text> expectedSplits = readSplitsFromFile(splitsFile);
       final String tableName = getUniqueNames(1)[0];
       ts.exec("createtable " + tableName + " -sf " + splitsFile, true);
-      RestartFramework.at("after_table_create_with_splits")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_with_splits").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       Collection<Text> createdSplits = client.tableOperations().listSplits(tableName);
       assertEquals(expectedSplits, new TreeSet<>(createdSplits));
     } finally {
@@ -600,21 +480,13 @@ public class ShellCreateTableIT_RestartInjected extends SharedMiniClusterBase {
     String splitsFile = System.getProperty("user.dir") + "/target/splitFile";
     try (AccumuloClient client = Accumulo.newClient().from(getClientProps()).build()) {
       generateSplitsFile(splitsFile, 100, 12, false, false, true, true, true);
-      RestartFramework.at("after_splits_file_generated")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_splits_file_generated").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       SortedSet<Text> expectedSplits = readSplitsFromFile(splitsFile);
       final String tableName = getUniqueNames(1)[0];
       ts.exec("createtable " + tableName + " -sf " + splitsFile, true);
-      RestartFramework.at("after_table_create_with_splits")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_with_splits").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       Collection<Text> createdSplits = client.tableOperations().listSplits(tableName);
       assertEquals(expectedSplits, new TreeSet<>(createdSplits));
     } finally {
@@ -654,12 +526,8 @@ public class ShellCreateTableIT_RestartInjected extends SharedMiniClusterBase {
       final String tableName2 = tableNames[1];
 
       ts.exec("createtable " + tableName0, true);
-      RestartFramework.at("after_table0_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table0_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       String output = ts.exec("tables", true);
       assertTrue(output.contains(tableName0));
       ts.exec("table " + tableName0, true);
@@ -671,32 +539,20 @@ public class ShellCreateTableIT_RestartInjected extends SharedMiniClusterBase {
       splits.add(new Text("sssss"));
       ts.exec("addsplits " + splits.get(0) + " " + splits.get(1) + " " + splits.get(2) + " "
           + splits.get(3), true);
-      RestartFramework.at("after_splits_added")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_splits_added").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       // Now create a table that will used the previous tables splits and create them at table
       // creation
       ts.exec("createtable " + tableName2 + " --copy-splits " + tableName0, true);
-      RestartFramework.at("after_table2_create_with_copy_splits")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table2_create_with_copy_splits").on(getCluster())
+          .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       ts.exec("table " + tableName0, true);
       String tablesOutput = ts.exec("tables", true);
       assertTrue(tablesOutput.contains(tableName2));
       Collection<Text> createdSplits = client.tableOperations().listSplits(tableName2);
       assertEquals(new TreeSet<>(splits), new TreeSet<>(createdSplits));
-      RestartFramework.at("before_tables_delete")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("before_tables_delete").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       ts.exec("deletetable -f " + tableName0, true);
       ts.exec("deletetable -f " + tableName2, true);
     }
@@ -713,21 +569,13 @@ public class ShellCreateTableIT_RestartInjected extends SharedMiniClusterBase {
     String splitsFile = System.getProperty("user.dir") + "/target/splitFile";
     try (AccumuloClient client = Accumulo.newClient().from(getClientProps()).build()) {
       generateSplitsFile(splitsFile, 200, 12, true, true, true, false, false);
-      RestartFramework.at("after_splits_file_generated")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_splits_file_generated").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       SortedSet<Text> expectedSplits = readSplitsFromFile(splitsFile);
       final String tableName = getUniqueNames(1)[0];
       ts.exec("createtable " + tableName + " -sf " + splitsFile, true);
-      RestartFramework.at("after_table_create_with_splits")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_with_splits").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       Collection<Text> createdSplits = client.tableOperations().listSplits(tableName);
       assertEquals(expectedSplits, new TreeSet<>(createdSplits));
     } finally {
@@ -746,21 +594,13 @@ public class ShellCreateTableIT_RestartInjected extends SharedMiniClusterBase {
     String splitsFile = System.getProperty("user.dir") + "/target/splitFile";
     try (AccumuloClient client = Accumulo.newClient().from(getClientProps()).build()) {
       generateSplitsFile(splitsFile, 300, 12, true, true, false, false, false);
-      RestartFramework.at("after_splits_file_generated")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_splits_file_generated").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       SortedSet<Text> expectedSplits = readSplitsFromFile(splitsFile);
       final String tableName = getUniqueNames(1)[0];
       ts.exec("createtable " + tableName + " -sf " + splitsFile, true);
-      RestartFramework.at("after_table_create_with_splits")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_with_splits").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       Collection<Text> createdSplits = client.tableOperations().listSplits(tableName);
       assertEquals(expectedSplits, new TreeSet<>(createdSplits));
     } finally {
@@ -779,21 +619,13 @@ public class ShellCreateTableIT_RestartInjected extends SharedMiniClusterBase {
     String splitsFile = System.getProperty("user.dir") + "/target/splitFile";
     try (AccumuloClient client = Accumulo.newClient().from(getClientProps()).build()) {
       generateSplitsFile(splitsFile, 100, 23, true, true, true, false, false);
-      RestartFramework.at("after_splits_file_generated")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_splits_file_generated").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       SortedSet<Text> expectedSplits = readSplitsFromFile(splitsFile);
       final String tableName = getUniqueNames(1)[0];
       ts.exec("createtable " + tableName + " -sf " + splitsFile, true);
-      RestartFramework.at("after_table_create_with_splits")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_with_splits").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       Collection<Text> createdSplits = client.tableOperations().listSplits(tableName);
       assertEquals(expectedSplits, new TreeSet<>(createdSplits));
     } finally {
@@ -812,21 +644,13 @@ public class ShellCreateTableIT_RestartInjected extends SharedMiniClusterBase {
     String splitsFile = System.getProperty("user.dir") + "/target/splitFile";
     try (AccumuloClient client = Accumulo.newClient().from(getClientProps()).build()) {
       generateSplitsFile(splitsFile, 100, 31, true, true, true, true, false);
-      RestartFramework.at("after_splits_file_generated")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_splits_file_generated").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       SortedSet<Text> expectedSplits = readSplitsFromFile(splitsFile);
       final String tableName = getUniqueNames(1)[0];
       ts.exec("createtable " + tableName + " -sf " + splitsFile, true);
-      RestartFramework.at("after_table_create_with_splits")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_with_splits").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       Collection<Text> createdSplits = client.tableOperations().listSplits(tableName);
       assertEquals(expectedSplits, new TreeSet<>(createdSplits));
     } finally {
@@ -845,21 +669,13 @@ public class ShellCreateTableIT_RestartInjected extends SharedMiniClusterBase {
     String splitsFile = System.getProperty("user.dir") + "/target/splitFile";
     try (AccumuloClient client = Accumulo.newClient().from(getClientProps()).build()) {
       generateSplitsFile(splitsFile, 100, 32, true, true, true, false, true);
-      RestartFramework.at("after_splits_file_generated")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_splits_file_generated").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       SortedSet<Text> expectedSplits = readSplitsFromFile(splitsFile);
       final String tableName = getUniqueNames(1)[0];
       ts.exec("createtable " + tableName + " -sf " + splitsFile, true);
-      RestartFramework.at("after_table_create_with_splits")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_with_splits").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       Collection<Text> createdSplits = client.tableOperations().listSplits(tableName);
       assertEquals(expectedSplits, new TreeSet<>(createdSplits));
     } finally {
@@ -878,21 +694,13 @@ public class ShellCreateTableIT_RestartInjected extends SharedMiniClusterBase {
     String splitsFile = System.getProperty("user.dir") + "/target/splitFile";
     try (AccumuloClient client = Accumulo.newClient().from(getClientProps()).build()) {
       generateSplitsFile(splitsFile, 100, 12, true, true, false, true, true);
-      RestartFramework.at("after_splits_file_generated")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_splits_file_generated").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       SortedSet<Text> expectedSplits = readSplitsFromFile(splitsFile);
       final String tableName = getUniqueNames(1)[0];
       ts.exec("createtable " + tableName + " -sf " + splitsFile, true);
-      RestartFramework.at("after_table_create_with_splits")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_with_splits").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       Collection<Text> createdSplits = client.tableOperations().listSplits(tableName);
       assertEquals(expectedSplits, new TreeSet<>(createdSplits));
     } finally {
@@ -911,21 +719,13 @@ public class ShellCreateTableIT_RestartInjected extends SharedMiniClusterBase {
     String splitsFile = System.getProperty("user.dir") + "/target/splitFile";
     try (AccumuloClient client = Accumulo.newClient().from(getClientProps()).build()) {
       generateSplitsFile(splitsFile, 100, 12, true, true, true, true, true);
-      RestartFramework.at("after_splits_file_generated")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_splits_file_generated").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       SortedSet<Text> expectedSplits = readSplitsFromFile(splitsFile);
       final String tableName = getUniqueNames(1)[0];
       ts.exec("createtable " + tableName + " -sf " + splitsFile, true);
-      RestartFramework.at("after_table_create_with_splits")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_with_splits").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       Collection<Text> createdSplits = client.tableOperations().listSplits(tableName);
       assertEquals(expectedSplits, new TreeSet<>(createdSplits));
     } finally {
@@ -1009,42 +809,22 @@ public class ShellCreateTableIT_RestartInjected extends SharedMiniClusterBase {
     final String nsPropValue2 = "ns_value2";
 
     ts.exec("config -s " + sysPropName + "=" + sysPropValue1);
-    RestartFramework.at("after_sys_config_set")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_sys_config_set").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     ts.exec("createnamespace " + srcNS);
-    RestartFramework.at("after_namespace_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_namespace_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec("config -s " + nsPropName + "=" + nsPropValue1 + " -ns " + srcNS);
-    RestartFramework.at("after_namespace_config_set")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_namespace_config_set").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     ts.exec("createtable " + srcTable);
-    RestartFramework.at("after_src_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_src_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec("createtable -cc " + srcTable + " " + destTable);
-    RestartFramework.at("after_dest_table_create_with_copy_config")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_dest_table_create_with_copy_config").on(getCluster())
+        .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     try (AccumuloClient accumuloClient = Accumulo.newClient().from(getClientProps()).build()) {
       Map<String,String> tids = accumuloClient.tableOperations().tableIdMap();
@@ -1111,43 +891,23 @@ public class ShellCreateTableIT_RestartInjected extends SharedMiniClusterBase {
     final String nsPropValue2 = "ns_value2";
 
     ts.exec("config -s " + sysPropName + "=" + sysPropValue1);
-    RestartFramework.at("after_sys_config_set")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_sys_config_set").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     ts.exec("createnamespace " + srcNS);
-    RestartFramework.at("after_namespace_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_namespace_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec("config -s " + nsPropName + "=" + nsPropValue1 + " -ns " + srcNS);
-    RestartFramework.at("after_namespace_config_set")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_namespace_config_set").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     ts.exec("createtable " + srcTable);
-    RestartFramework.at("after_src_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_src_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec("createtable --exclude-parent-properties --copy-config " + srcTable + " " + destTable,
         true);
-    RestartFramework.at("after_dest_table_create_exclude_parent")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_dest_table_create_exclude_parent").on(getCluster())
+        .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     try (AccumuloClient accumuloClient = Accumulo.newClient().from(getClientProps()).build()) {
       Map<String,String> tids = accumuloClient.tableOperations().tableIdMap();
@@ -1193,19 +953,11 @@ public class ShellCreateTableIT_RestartInjected extends SharedMiniClusterBase {
     String[] names = getUniqueNames(2);
 
     ts.exec("createtable " + names[0]);
-    RestartFramework.at("after_table0_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table0_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec("createtable " + names[1]);
-    RestartFramework.at("after_table1_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table1_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     // test --expect-parent requires-cc expect this fail
     ts.exec("createtable --exclude-parent " + names[0] + "dest", false);
@@ -1230,19 +982,11 @@ public class ShellCreateTableIT_RestartInjected extends SharedMiniClusterBase {
     String[] names = getUniqueNames(2);
 
     ts.exec("createtable " + names[0]);
-    RestartFramework.at("after_table0_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table0_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec("createtable " + names[1]);
-    RestartFramework.at("after_table1_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table1_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     // expect to fail because target already exists
     ts.exec("createtable -cc " + names[0] + " " + names[1], false);
@@ -1253,27 +997,15 @@ public class ShellCreateTableIT_RestartInjected extends SharedMiniClusterBase {
     String[] names = getUniqueNames(3);
 
     ts.exec("createtable " + names[0]);
-    RestartFramework.at("after_table0_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table0_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     ts.exec("createtable --exclude-parent --copy-config " + names[0] + " " + names[1], true);
-    RestartFramework.at("after_table1_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table1_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     ts.exec("createtable --copy-config " + names[0] + " --exclude-parent " + names[2], true);
-    RestartFramework.at("after_table2_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table2_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
   }
 
   private Collection<Text> generateNonBinarySplits(final int numItems, final int len) {

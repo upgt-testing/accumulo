@@ -58,19 +58,11 @@ public class SslIT_RestartInjected extends ConfigurableMacBase {
     try (AccumuloClient client = Accumulo.newClient().from(getClientProperties()).build()) {
       String tableName = getUniqueNames(1)[0];
       client.tableOperations().create(tableName);
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       BinaryIT.runTest(client, tableName);
-      RestartFramework.at("after_binary_test")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_binary_test").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     }
   }
 
@@ -79,12 +71,8 @@ public class SslIT_RestartInjected extends ConfigurableMacBase {
   public void concurrency() throws Exception {
     try (AccumuloClient client = Accumulo.newClient().from(getClientProperties()).build()) {
       ConcurrencyIT.runTest(client, getUniqueNames(1)[0]);
-      RestartFramework.at("after_concurrency_test")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_concurrency_test").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     }
   }
 
@@ -93,12 +81,8 @@ public class SslIT_RestartInjected extends ConfigurableMacBase {
   public void adminStop() throws Exception {
     try (AccumuloClient client = Accumulo.newClient().from(getClientProperties()).build()) {
       ShutdownIT.runAdminStopTest(client, getCluster());
-      RestartFramework.at("after_admin_stop_test")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_admin_stop_test").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
     }
   }
 
@@ -110,12 +94,8 @@ public class SslIT_RestartInjected extends ConfigurableMacBase {
       BulkIT.runTest(client, cluster.getFileSystem(),
           new Path(getCluster().getConfig().getDir().getAbsolutePath(), "tmp"),
           getUniqueNames(1)[0], this.getClass().getName(), testName(), true);
-      RestartFramework.at("after_bulk_test")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_bulk_test").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
     }
   }
 
@@ -127,12 +107,8 @@ public class SslIT_RestartInjected extends ConfigurableMacBase {
       // testing old mapreduce code from core jar; the new mapreduce module should have its own test
       // case which checks functionality with ssl enabled
       org.apache.accumulo.test.mapreduce.MapReduceIT.runTest(client, getCluster());
-      RestartFramework.at("after_mapreduce_test")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_mapreduce_test").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     }
   }
 

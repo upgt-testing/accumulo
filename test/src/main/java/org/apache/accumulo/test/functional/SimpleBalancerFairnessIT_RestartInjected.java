@@ -65,79 +65,47 @@ public class SimpleBalancerFairnessIT_RestartInjected extends ConfigurableMacBas
     try (AccumuloClient c = Accumulo.newClient().from(getClientProperties()).build()) {
       c.tableOperations().create("test_ingest");
 
-      RestartFramework.at("after_test_ingest_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_test_ingest_table_create").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       c.tableOperations().setProperty("test_ingest", Property.TABLE_SPLIT_THRESHOLD.getKey(), "1K");
 
-      RestartFramework.at("after_split_threshold_set")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_split_threshold_set").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       c.tableOperations().create("unused");
 
-      RestartFramework.at("after_unused_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_unused_table_create").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       TreeSet<Text> splits = TestIngest.getSplitPoints(0, 10000000, NUM_SPLITS);
       log.info("Creating {} splits", splits.size());
       c.tableOperations().addSplits("unused", splits);
 
-      RestartFramework.at("after_add_splits")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_add_splits").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       List<String> tservers = c.instanceOperations().getTabletServers();
 
-      RestartFramework.at("after_get_tablet_servers")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_get_tablet_servers").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       TestIngest.IngestParams params = new TestIngest.IngestParams(getClientProperties());
       params.rows = 5000;
       TestIngest.ingest(c, params);
 
-      RestartFramework.at("after_ingest")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_ingest").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       c.tableOperations().flush("test_ingest", null, null, false);
 
-      RestartFramework.at("after_flush")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_flush").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       sleepUninterruptibly(45, TimeUnit.SECONDS);
 
-      RestartFramework.at("after_sleep_for_balance")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_sleep_for_balance").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       Credentials creds = new Credentials("root", new PasswordToken(ROOT_PASSWORD));
 
@@ -156,21 +124,13 @@ public class SimpleBalancerFairnessIT_RestartInjected extends ConfigurableMacBas
         }
       }
 
-      RestartFramework.at("after_wait_for_assignment")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_wait_for_assignment").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       assertEquals(0, unassignedTablets, "Unassigned tablets were not assigned within 60 seconds");
 
-      RestartFramework.at("after_assignment_verification")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_assignment_verification").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // Compute online tablets per tserver
       List<Integer> counts = new ArrayList<>();
@@ -182,12 +142,8 @@ public class SimpleBalancerFairnessIT_RestartInjected extends ConfigurableMacBas
         counts.add(count);
       }
 
-      RestartFramework.at("after_compute_counts")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_compute_counts").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       assertTrue(counts.size() > 1, "Expected to have at least two TabletServers");
       for (int i = 1; i < counts.size(); i++) {
@@ -197,12 +153,8 @@ public class SimpleBalancerFairnessIT_RestartInjected extends ConfigurableMacBas
                 + " but was " + diff + ". Counts " + counts);
       }
 
-      RestartFramework.at("after_fairness_verification")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_fairness_verification").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     }
   }
 

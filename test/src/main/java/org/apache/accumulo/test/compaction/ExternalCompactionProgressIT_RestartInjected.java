@@ -84,7 +84,8 @@ import org.slf4j.LoggerFactory;
  * control the length of time it takes to complete the compaction.
  */
 public class ExternalCompactionProgressIT_RestartInjected extends AccumuloClusterHarness {
-  private static final Logger log = LoggerFactory.getLogger(ExternalCompactionProgressIT_RestartInjected.class);
+  private static final Logger log =
+      LoggerFactory.getLogger(ExternalCompactionProgressIT_RestartInjected.class);
   private static final int ROWS = 10_000;
   public static final int CHECKER_THREAD_SLEEP_MS = 1_000;
 
@@ -132,28 +133,16 @@ public class ExternalCompactionProgressIT_RestartInjected extends AccumuloCluste
     try (AccumuloClient client =
         Accumulo.newClient().from(getCluster().getClientProperties()).build()) {
       createTable(client, table, "cs1");
-      RestartFramework.at("after_create_table_duration_1")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_create_table_duration_1").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       writeData(client, table, ROWS);
-      RestartFramework.at("after_write_data_duration_1")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_write_data_duration_1").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       cluster.getClusterControl().startCompactors(Compactor.class, 1, QUEUE1);
       cluster.getClusterControl().startCoordinator(CompactionCoordinator.class);
-      RestartFramework.at("after_start_compaction_services_duration_1")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_start_compaction_services_duration_1").on(getCluster())
+          .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       IteratorSetting setting = new IteratorSetting(50, "Slow", SlowIterator.class);
       SlowIterator.setSleepTime(setting, 5);
@@ -162,12 +151,8 @@ public class ExternalCompactionProgressIT_RestartInjected extends AccumuloCluste
 
       log.info("Compacting table");
       compact(client, table, 2, QUEUE1, false);
-      RestartFramework.at("after_compact_start_duration_1")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_compact_start_duration_1").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // Wait until the compaction starts
       Wait.waitFor(() -> {
@@ -250,28 +235,16 @@ public class ExternalCompactionProgressIT_RestartInjected extends AccumuloCluste
     try (AccumuloClient client =
         Accumulo.newClient().from(getCluster().getClientProperties()).build()) {
       createTable(client, table, "cs1");
-      RestartFramework.at("after_create_table_metrics_1")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_create_table_metrics_1").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       writeData(client, table, ROWS);
-      RestartFramework.at("after_write_data_metrics_1")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_write_data_metrics_1").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       cluster.getClusterControl().startCompactors(Compactor.class, 1, QUEUE1);
       cluster.getClusterControl().startCoordinator(CompactionCoordinator.class);
-      RestartFramework.at("after_start_compaction_services_metrics_1")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_start_compaction_services_metrics_1").on(getCluster())
+          .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       checkerThread.start();
 
@@ -282,12 +255,8 @@ public class ExternalCompactionProgressIT_RestartInjected extends AccumuloCluste
       log.info("Compacting table");
 
       compact(client, table, 2, QUEUE1, true);
-      RestartFramework.at("after_compact_metrics_1")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_compact_metrics_1").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       Wait.waitFor(() -> {
         if (totalEntriesRead.get() == expectedEntriesRead
@@ -363,28 +332,16 @@ public class ExternalCompactionProgressIT_RestartInjected extends AccumuloCluste
     try (AccumuloClient client =
         Accumulo.newClient().from(getCluster().getClientProperties()).build()) {
       createTable(client, table1, "cs1");
-      RestartFramework.at("after_create_table_progress_1")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_create_table_progress_1").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       writeData(client, table1, ROWS);
-      RestartFramework.at("after_write_data_progress_1")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_write_data_progress_1").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       cluster.getClusterControl().startCompactors(Compactor.class, 1, QUEUE1);
       cluster.getClusterControl().startCoordinator(CompactionCoordinator.class);
-      RestartFramework.at("after_start_compaction_services_progress_1")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_start_compaction_services_progress_1").on(getCluster())
+          .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       Thread checkerThread = startChecker();
       checkerThread.start();
@@ -395,12 +352,8 @@ public class ExternalCompactionProgressIT_RestartInjected extends AccumuloCluste
           EnumSet.of(IteratorUtil.IteratorScope.majc));
       log.info("Compacting table");
       compact(client, table1, 2, QUEUE1, true);
-      RestartFramework.at("after_compact_progress_1")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_compact_progress_1").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       verify(client, table1, 2, ROWS);
 
       log.info("Done Compacting table");
@@ -430,52 +383,32 @@ public class ExternalCompactionProgressIT_RestartInjected extends AccumuloCluste
       createTable(client, tableName1, "cs1");
       log.info("Creating table " + tableName2);
       createTable(client, tableName2, "cs1");
-      RestartFramework.at("after_create_tables_bulk_import_1")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_create_tables_bulk_import_1").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       log.info("Writing " + ROWS + " rows to table " + tableName1);
       writeData(client, tableName1, ROWS);
       log.info("Writing " + ROWS + " rows to table " + tableName2);
       writeData(client, tableName2, ROWS);
-      RestartFramework.at("after_write_data_bulk_import_1")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_write_data_bulk_import_1").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       // This is done to avoid system compactions
       client.tableOperations().setProperty(tableName1, Property.TABLE_MAJC_RATIO.getKey(), "1000");
       client.tableOperations().setProperty(tableName2, Property.TABLE_MAJC_RATIO.getKey(), "1000");
-      RestartFramework.at("after_set_properties_bulk_import_1")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_set_properties_bulk_import_1").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       getCluster().getClusterControl().startCoordinator(CompactionCoordinator.class);
       getCluster().getClusterControl().startCompactors(Compactor.class, 1, QUEUE1);
-      RestartFramework.at("after_start_compaction_services_bulk_import_1")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_start_compaction_services_bulk_import_1").on(getCluster())
+          .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       String dir = getDir(client, tableName1);
 
       log.info("Bulk importing files in dir " + dir + " to table " + tableName2);
       client.tableOperations().importDirectory(dir).to(tableName2).load();
       log.info("Finished bulk import");
-      RestartFramework.at("after_bulk_import_bulk_import_1")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_bulk_import_bulk_import_1").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       log.info("Starting a compaction progress checker thread");
       Thread checkerThread = startChecker();
@@ -488,12 +421,8 @@ public class ExternalCompactionProgressIT_RestartInjected extends AccumuloCluste
       log.info("Compacting table " + tableName2);
       client.tableOperations().compact(tableName2,
           new CompactionConfig().setWait(true).setIterators(List.of(setting)));
-      RestartFramework.at("after_compact_bulk_import_1")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_compact_bulk_import_1").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       log.info("Finished compacting table " + tableName2);
       stopCheckerThread.set(true);
 

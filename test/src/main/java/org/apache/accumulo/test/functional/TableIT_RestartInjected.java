@@ -69,28 +69,16 @@ public class TableIT_RestartInjected extends AccumuloClusterHarness {
       TableOperations to = c.tableOperations();
       String tableName = getUniqueNames(1)[0];
       to.create(tableName);
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       VerifyParams params = new VerifyParams(getClientProps(), tableName);
       TestIngest.ingest(c, params);
-      RestartFramework.at("after_ingest")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_ingest").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       to.flush(tableName, null, null, true);
-      RestartFramework.at("after_flush")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_flush").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       VerifyIngest.verifyIngest(c, params);
       TableId id = TableId.of(to.tableIdMap().get(tableName));
       try (Scanner s = c.createScanner(MetadataTable.NAME, Authorizations.EMPTY)) {
@@ -101,12 +89,8 @@ public class TableIT_RestartInjected extends AccumuloClusterHarness {
         FileSystem fs = getCluster().getFileSystem();
         assertTrue(fs.listStatus(new Path(rootPath + "/accumulo/tables/" + id)).length > 0);
         to.delete(tableName);
-        RestartFramework.at("after_table_delete")
-            .on(cluster)
-            .restart("manager")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_table_delete").on(getCluster()).restart("manager").withIndex(0)
+            .withMode(RestartMode.GRACEFUL).execute();
         assertTrue(s.stream().findAny().isEmpty());
 
         try {
@@ -116,27 +100,15 @@ public class TableIT_RestartInjected extends AccumuloClusterHarness {
         }
         assertNull(to.tableIdMap().get(tableName));
         to.create(tableName);
-        RestartFramework.at("after_second_table_create")
-            .on(cluster)
-            .restart("manager")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_second_table_create").on(getCluster()).restart("manager")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
         TestIngest.ingest(c, params);
-        RestartFramework.at("after_second_ingest")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_second_ingest").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
         VerifyIngest.verifyIngest(c, params);
         to.delete(tableName);
-        RestartFramework.at("after_second_table_delete")
-            .on(cluster)
-            .restart("manager")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_second_table_delete").on(getCluster()).restart("manager")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       }
     }
   }

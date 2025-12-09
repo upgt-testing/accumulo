@@ -67,22 +67,14 @@ public class SplitCancelsMajCIT_RestartInjected extends SharedMiniClusterBase {
     final String tableName = getUniqueNames(1)[0];
     try (AccumuloClient c = Accumulo.newClient().from(getClientProps()).build()) {
       c.tableOperations().create(tableName);
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       // majc should take 100 * .5 secs
       IteratorSetting it = new IteratorSetting(100, SlowIterator.class);
       SlowIterator.setSleepTime(it, 500);
       c.tableOperations().attachIterator(tableName, it, EnumSet.of(IteratorScope.majc));
-      RestartFramework.at("after_iterator_attach")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_iterator_attach").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       try (BatchWriter bw = c.createBatchWriter(tableName)) {
         for (int i = 0; i < 100; i++) {
           Mutation m = new Mutation("" + i);
@@ -91,12 +83,8 @@ public class SplitCancelsMajCIT_RestartInjected extends SharedMiniClusterBase {
         }
         bw.flush();
       }
-      RestartFramework.at("after_data_flush")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_data_flush").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       // start majc
       final AtomicReference<Exception> ex = new AtomicReference<>();
       Thread thread = new Thread(() -> {
@@ -107,12 +95,8 @@ public class SplitCancelsMajCIT_RestartInjected extends SharedMiniClusterBase {
         }
       });
       thread.start();
-      RestartFramework.at("after_compaction_start")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_compaction_start").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       long now = System.currentTimeMillis();
       sleepUninterruptibly(10, TimeUnit.SECONDS);
@@ -120,12 +104,8 @@ public class SplitCancelsMajCIT_RestartInjected extends SharedMiniClusterBase {
       SortedSet<Text> partitionKeys = new TreeSet<>();
       partitionKeys.add(new Text("10"));
       c.tableOperations().addSplits(tableName, partitionKeys);
-      RestartFramework.at("after_split")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_split").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       thread.join();
       // wait for the restarted compaction
       assertTrue(System.currentTimeMillis() - now > 59_000);

@@ -91,12 +91,8 @@ public class MiniAccumuloClusterImplTest_RestartInjected {
   public void testAccurateProcessListReturned() throws Exception {
     Map<ServerType,Collection<ProcessReference>> procs = accumulo.getProcesses();
 
-    RestartFramework.at("after_get_processes")
-        .on(accumulo)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_get_processes").on(accumulo).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     assertTrue(procs.containsKey(ServerType.GARBAGE_COLLECTOR));
 
@@ -127,12 +123,8 @@ public class MiniAccumuloClusterImplTest_RestartInjected {
       }
     }
 
-    RestartFramework.at("after_monitor_poll")
-        .on(accumulo)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_monitor_poll").on(accumulo).restart("tablet_server").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     List<ManagerState> validStates = Arrays.asList(ManagerState.values());
     List<ManagerGoalState> validGoals = Arrays.asList(ManagerGoalState.values());

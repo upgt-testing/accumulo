@@ -148,20 +148,12 @@ public class SummaryIT_RestartInjected extends SharedMiniClusterBase {
           SummarizerConfiguration.builder(BasicSummarizer.class.getName()).build();
       ntc.enableSummarization(sc1);
       c.tableOperations().create(table, ntc);
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       BatchWriter bw = writeData(table, c);
-      RestartFramework.at("after_write_data")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_write_data").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       Collection<Summary> summaries = c.tableOperations().summaries(table).flush(false).retrieve();
       assertEquals(0, summaries.size());
@@ -179,12 +171,8 @@ public class SummaryIT_RestartInjected extends SharedMiniClusterBase {
       bw.flush();
 
       c.tableOperations().flush(table, null, null, true);
-      RestartFramework.at("after_flush")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_flush").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       stats = getTimestampStats(table, c);
 
@@ -196,12 +184,8 @@ public class SummaryIT_RestartInjected extends SharedMiniClusterBase {
       bw.close();
 
       c.tableOperations().compact(table, new CompactionConfig().setWait(true));
-      RestartFramework.at("after_first_compact")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_first_compact").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       summaries = c.tableOperations().summaries(table).retrieve();
       checkSummaries(summaries, sc1, 1, 0, 0, TOTAL_STAT, 100_000L, MIN_TIMESTAMP_STAT,
@@ -210,12 +194,8 @@ public class SummaryIT_RestartInjected extends SharedMiniClusterBase {
       // split tablet into two
       String sp1 = String.format("r%09x", 50_000);
       addSplits(table, c, sp1);
-      RestartFramework.at("after_add_splits")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_add_splits").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       summaries = c.tableOperations().summaries(table).retrieve();
 
@@ -225,12 +205,8 @@ public class SummaryIT_RestartInjected extends SharedMiniClusterBase {
       // compact 2nd tablet
       c.tableOperations().compact(table,
           new CompactionConfig().setStartRow(new Text(sp1)).setWait(true));
-      RestartFramework.at("after_second_compact")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_second_compact").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       summaries = c.tableOperations().summaries(table).retrieve();
       checkSummaries(summaries, sc1, 2, 0, 1, TOTAL_STAT, 113_999L, MIN_TIMESTAMP_STAT,
@@ -244,12 +220,8 @@ public class SummaryIT_RestartInjected extends SharedMiniClusterBase {
 
       // compact all tablets and regenerate all summaries
       c.tableOperations().compact(table, new CompactionConfig());
-      RestartFramework.at("after_final_compact")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_final_compact").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       summaries = c.tableOperations().summaries(table).retrieve();
       stats = getTimestampStats(table, c);
@@ -368,29 +340,17 @@ public class SummaryIT_RestartInjected extends SharedMiniClusterBase {
           .addOption("maxLen", "512").build();
       ntc.enableSummarization(sc1, sc2);
       c.tableOperations().create(table, ntc);
-      RestartFramework.at("after_table_create_selection")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_selection").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       BatchWriter bw = writeData(table, c);
       bw.close();
-      RestartFramework.at("after_write_close")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_write_close").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       c.tableOperations().flush(table, null, null, true);
-      RestartFramework.at("after_flush_selection")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_flush_selection").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       LongSummaryStatistics stats = getTimestampStats(table, c);
 
@@ -685,12 +645,8 @@ public class SummaryIT_RestartInjected extends SharedMiniClusterBase {
       SummarizerConfiguration sc1 = SummarizerConfiguration.builder(FooCounter.class).build();
       ntc.enableSummarization(sc1);
       c.tableOperations().create(table, ntc);
-      RestartFramework.at("after_table_create_permissions")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_permissions").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (BatchWriter bw = c.createBatchWriter(table)) {
         write(bw, "bar1", "f1", "q1", "v1");
@@ -699,21 +655,13 @@ public class SummaryIT_RestartInjected extends SharedMiniClusterBase {
       }
 
       c.tableOperations().flush(table, null, null, true);
-      RestartFramework.at("after_flush_permissions")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_flush_permissions").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       PasswordToken passTok = new PasswordToken("letmesee");
       c.securityOperations().createLocalUser("user1", passTok);
-      RestartFramework.at("after_user_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_user_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       try (AccumuloClient c2 =
           Accumulo.newClient().from(c.properties()).as("user1", passTok).build()) {
@@ -723,12 +671,8 @@ public class SummaryIT_RestartInjected extends SharedMiniClusterBase {
         assertEquals(SecurityErrorCode.PERMISSION_DENIED, e.getSecurityErrorCode());
 
         c.securityOperations().grantTablePermission("user1", table, TablePermission.GET_SUMMARIES);
-        RestartFramework.at("after_grant_permission")
-            .on(getCluster())
-            .restart("manager")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_grant_permission").on(getCluster()).restart("manager")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         int tries = 0;
         while (tries < 10) {

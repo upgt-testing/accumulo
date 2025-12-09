@@ -66,12 +66,8 @@ public class ScannerIT_RestartInjected extends ConfigurableMacBase {
     try (AccumuloClient c = Accumulo.newClient().from(getClientProperties()).build()) {
       c.tableOperations().create(table);
 
-      RestartFramework.at("after_table_create_readahead")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_readahead").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (BatchWriter bw = c.createBatchWriter(table)) {
         Mutation m = new Mutation("a");
@@ -81,12 +77,8 @@ public class ScannerIT_RestartInjected extends ConfigurableMacBase {
         bw.addMutation(m);
       }
 
-      RestartFramework.at("after_batch_write_readahead")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write_readahead").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       IteratorSetting cfg;
       Iterator<Entry<Key,Value>> iterator;
@@ -103,12 +95,8 @@ public class ScannerIT_RestartInjected extends ConfigurableMacBase {
         s.setBatchSize(1);
         s.setRange(new Range());
 
-        RestartFramework.at("after_scanner_setup_no_readahead")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_scanner_setup_no_readahead").on(getCluster())
+            .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         iterator = s.iterator();
         long startTime = System.nanoTime();
@@ -122,12 +110,8 @@ public class ScannerIT_RestartInjected extends ConfigurableMacBase {
         }
         nanosWithWait += System.nanoTime() - startTime;
 
-        RestartFramework.at("after_scanner_iteration_no_readahead")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_scanner_iteration_no_readahead").on(getCluster())
+            .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       }
 
       long nanosWithNoWait = 0;
@@ -137,12 +121,8 @@ public class ScannerIT_RestartInjected extends ConfigurableMacBase {
         s.setBatchSize(1);
         s.setReadaheadThreshold(0L);
 
-        RestartFramework.at("after_scanner_setup_with_readahead")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_scanner_setup_with_readahead").on(getCluster())
+            .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         iterator = s.iterator();
         long startTime = System.nanoTime();
@@ -156,12 +136,8 @@ public class ScannerIT_RestartInjected extends ConfigurableMacBase {
         }
         nanosWithNoWait += System.nanoTime() - startTime;
 
-        RestartFramework.at("after_scanner_iteration_with_readahead")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_scanner_iteration_with_readahead").on(getCluster())
+            .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         // The "no-wait" time should be much less than the "wait-time"
         assertTrue(nanosWithNoWait < nanosWithWait,
@@ -188,22 +164,14 @@ public class ScannerIT_RestartInjected extends ConfigurableMacBase {
         // servers to show up in zookeeper. Can remove this in 3.1.
         Wait.waitFor(() -> !accumuloClient.instanceOperations().getScanServers().isEmpty());
 
-        RestartFramework.at("after_scan_server_start")
-            .on(cluster)
-            .restart("scan_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_scan_server_start").on(getCluster()).restart("scan_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       }
 
       accumuloClient.tableOperations().create(tableName);
 
-      RestartFramework.at("after_table_create_session")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_session").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (var writer = accumuloClient.createBatchWriter(tableName)) {
         for (int i = 0; i < 100000; i++) {
@@ -213,22 +181,14 @@ public class ScannerIT_RestartInjected extends ConfigurableMacBase {
         }
       }
 
-      RestartFramework.at("after_batch_write_session")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write_session").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       if (consistency == EVENTUAL) {
         accumuloClient.tableOperations().flush(tableName, null, null, true);
 
-        RestartFramework.at("after_flush_session")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_flush_session").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       }
 
       // The test assumes the session timeout is configured to 1 minute, validate this. Later in the
@@ -249,12 +209,9 @@ public class ScannerIT_RestartInjected extends ConfigurableMacBase {
           assertEquals(2, countActiveScans(accumuloClient, serverType, tableName));
         }
 
-        RestartFramework.at("after_scanner_partial_read")
-            .on(cluster)
-            .restart(serverType == SCAN_SERVER ? "scan_server" : "tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_scanner_partial_read").on(getCluster())
+            .restart(serverType == SCAN_SERVER ? "scan_server" : "tablet_server").withIndex(0)
+            .withMode(RestartMode.GRACEFUL).execute();
 
         // When close is called on on the scanner it should close the scan session. The session
         // cleanup is async on the server because task may still be running server side, but it
@@ -270,12 +227,9 @@ public class ScannerIT_RestartInjected extends ConfigurableMacBase {
           assertEquals(2, countActiveScans(accumuloClient, serverType, tableName));
         }
 
-        RestartFramework.at("after_batchscanner_partial_read")
-            .on(cluster)
-            .restart(serverType == SCAN_SERVER ? "scan_server" : "tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_batchscanner_partial_read").on(getCluster())
+            .restart(serverType == SCAN_SERVER ? "scan_server" : "tablet_server").withIndex(0)
+            .withMode(RestartMode.GRACEFUL).execute();
 
         Wait.waitFor(() -> countActiveScans(accumuloClient, serverType, tableName) == 0, 10000);
       }
@@ -293,12 +247,9 @@ public class ScannerIT_RestartInjected extends ConfigurableMacBase {
           assertEquals(0, countActiveScans(accumuloClient, serverType, tableName));
         }
 
-        RestartFramework.at("after_scanner_full_read")
-            .on(cluster)
-            .restart(serverType == SCAN_SERVER ? "scan_server" : "tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_scanner_full_read").on(getCluster())
+            .restart(serverType == SCAN_SERVER ? "scan_server" : "tablet_server").withIndex(0)
+            .withMode(RestartMode.GRACEFUL).execute();
 
         try (var scanner = accumuloClient.createBatchScanner(tableName)) {
           scanner.setConsistencyLevel(consistency);
@@ -308,12 +259,9 @@ public class ScannerIT_RestartInjected extends ConfigurableMacBase {
           assertEquals(0, countActiveScans(accumuloClient, serverType, tableName));
         }
 
-        RestartFramework.at("after_batchscanner_full_read")
-            .on(cluster)
-            .restart(serverType == SCAN_SERVER ? "scan_server" : "tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_batchscanner_full_read").on(getCluster())
+            .restart(serverType == SCAN_SERVER ? "scan_server" : "tablet_server").withIndex(0)
+            .withMode(RestartMode.GRACEFUL).execute();
       }
     } finally {
       if (serverType == SCAN_SERVER) {

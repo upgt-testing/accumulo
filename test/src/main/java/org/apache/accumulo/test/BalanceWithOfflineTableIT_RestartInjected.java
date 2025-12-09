@@ -57,12 +57,8 @@ public class BalanceWithOfflineTableIT_RestartInjected extends ConfigurableMacBa
       log.info("Creating table {}", tableName);
       c.tableOperations().create(tableName);
 
-      RestartFramework.at("after_table1_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table1_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       final SortedSet<Text> splits = new TreeSet<>();
       for (String split : "a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z".split(",")) {
@@ -71,12 +67,8 @@ public class BalanceWithOfflineTableIT_RestartInjected extends ConfigurableMacBa
       log.info("Splitting table {}", tableName);
       c.tableOperations().addSplits(tableName, splits);
 
-      RestartFramework.at("after_table1_splits")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table1_splits").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       log.info("Balancing");
       c.instanceOperations().waitForBalance();
@@ -87,33 +79,21 @@ public class BalanceWithOfflineTableIT_RestartInjected extends ConfigurableMacBa
       log.info("Creating table {}", table2);
       c.tableOperations().create(table2);
 
-      RestartFramework.at("after_table2_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table2_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       log.info("Creating splits {}", table2);
       c.tableOperations().addSplits(table2, splits);
 
-      RestartFramework.at("after_table2_splits")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table2_splits").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       // offline the table, hopefully while there are some migrations going on
       log.info("Offlining {}", table2);
       c.tableOperations().offline(table2, true);
 
-      RestartFramework.at("after_table_offline")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_offline").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       log.info("Offlined {}", table2);
 

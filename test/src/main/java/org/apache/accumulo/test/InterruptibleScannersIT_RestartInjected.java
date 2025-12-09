@@ -59,13 +59,10 @@ public class InterruptibleScannersIT_RestartInjected extends AccumuloClusterHarn
     final String tableName = getUniqueNames(1)[0];
     try (AccumuloClient client = Accumulo.newClient().from(getClientProps()).build()) {
       client.tableOperations().create(tableName);
-      org.apache.accumulo.miniclusterImpl.MiniAccumuloClusterImpl mac = (org.apache.accumulo.miniclusterImpl.MiniAccumuloClusterImpl) getCluster();
-      RestartFramework.at("after_table_create")
-          .on(mac)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      org.apache.accumulo.miniclusterImpl.MiniAccumuloClusterImpl mac =
+          (org.apache.accumulo.miniclusterImpl.MiniAccumuloClusterImpl) getCluster();
+      RestartFramework.at("after_table_create").on(mac).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       // make the world's slowest scanner
       try (Scanner scanner = client.createScanner(tableName, Authorizations.EMPTY)) {

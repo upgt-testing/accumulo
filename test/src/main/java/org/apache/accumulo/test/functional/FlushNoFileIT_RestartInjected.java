@@ -77,12 +77,8 @@ public class FlushNoFileIT_RestartInjected extends AccumuloClusterHarness {
       c.tableOperations().create(tableName, ntc);
       TableId tableId = TableId.of(c.tableOperations().tableIdMap().get(tableName));
 
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       try (BatchWriter bw = c.createBatchWriter(tableName)) {
         Mutation m = new Mutation(new Text("r1"));
@@ -90,23 +86,15 @@ public class FlushNoFileIT_RestartInjected extends AccumuloClusterHarness {
         bw.addMutation(m);
       }
 
-      RestartFramework.at("after_first_write")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_first_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       FunctionalTestUtils.checkRFiles(c, tableName, 3, 3, 0, 0);
 
       c.tableOperations().flush(tableName, null, null, true);
 
-      RestartFramework.at("after_first_flush")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_first_flush").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       FunctionalTestUtils.checkRFiles(c, tableName, 3, 3, 0, 0);
 
@@ -118,21 +106,13 @@ public class FlushNoFileIT_RestartInjected extends AccumuloClusterHarness {
         bw.addMutation(m);
       }
 
-      RestartFramework.at("after_second_write")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_second_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       c.tableOperations().flush(tableName, null, null, true);
 
-      RestartFramework.at("after_second_flush")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_second_flush").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       FunctionalTestUtils.checkRFiles(c, tableName, 3, 3, 0, 0);
 

@@ -60,12 +60,8 @@ public class DetectDeadTabletServersIT_RestartInjected extends ConfigurableMacBa
       assertEquals(0, stats.badTServers.size());
       assertEquals(0, stats.deadTabletServers.size());
 
-      RestartFramework.at("after_initial_verification")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_initial_verification").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       log.info("Killing a tablet server");
       getCluster().killProcess(TABLET_SERVER,

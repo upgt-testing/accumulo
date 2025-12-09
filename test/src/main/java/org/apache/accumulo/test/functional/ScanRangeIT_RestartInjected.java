@@ -57,12 +57,8 @@ public class ScanRangeIT_RestartInjected extends AccumuloClusterHarness {
       String table1 = tableNames[0];
       c.tableOperations().create(table1);
 
-      RestartFramework.at("after_table1_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table1_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       String table2 = tableNames[1];
       TreeSet<Text> splitRows = new TreeSet<>();
@@ -73,48 +69,28 @@ public class ScanRangeIT_RestartInjected extends AccumuloClusterHarness {
       NewTableConfiguration ntc = new NewTableConfiguration().withSplits(splitRows);
       c.tableOperations().create(table2, ntc);
 
-      RestartFramework.at("after_table2_create_with_splits")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table2_create_with_splits").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       insertData(c, table1);
 
-      RestartFramework.at("after_insertData_table1")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_insertData_table1").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       scanTable(c, table1);
 
-      RestartFramework.at("after_scanTable_table1")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_scanTable_table1").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       insertData(c, table2);
 
-      RestartFramework.at("after_insertData_table2")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_insertData_table2").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       scanTable(c, table2);
 
-      RestartFramework.at("after_scanTable_table2")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_scanTable_table2").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     }
   }
 

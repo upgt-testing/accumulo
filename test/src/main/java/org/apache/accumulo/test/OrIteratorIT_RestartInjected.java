@@ -66,12 +66,8 @@ public class OrIteratorIT_RestartInjected extends AccumuloClusterHarness {
       final String tableName = getUniqueNames(1)[0];
       client.tableOperations().create(tableName);
 
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       try (BatchWriter bw = client.createBatchWriter(tableName)) {
         Mutation m = new Mutation("row1");
@@ -88,12 +84,8 @@ public class OrIteratorIT_RestartInjected extends AccumuloClusterHarness {
         bw.addMutation(m);
       }
 
-      RestartFramework.at("after_batch_write")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       IteratorSetting is = new IteratorSetting(50, OrIterator.class);
       is.addOption(OrIterator.COLUMNS_KEY, "mort,frank");
@@ -122,12 +114,8 @@ public class OrIteratorIT_RestartInjected extends AccumuloClusterHarness {
       final String tableName = getUniqueNames(1)[0];
       client.tableOperations().create(tableName);
 
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       try (BatchWriter bw = client.createBatchWriter(tableName)) {
         Mutation m = new Mutation("row1");
@@ -151,22 +139,14 @@ public class OrIteratorIT_RestartInjected extends AccumuloClusterHarness {
         bw.addMutation(m);
       }
 
-      RestartFramework.at("after_batch_write")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       client.tableOperations().addSplits(tableName,
           new TreeSet<>(Arrays.asList(new Text("row2"), new Text("row3"))));
 
-      RestartFramework.at("after_add_splits")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_add_splits").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       IteratorSetting is = new IteratorSetting(50, OrIterator.class);
       is.addOption(OrIterator.COLUMNS_KEY, "mort,frank,nick");
@@ -195,21 +175,13 @@ public class OrIteratorIT_RestartInjected extends AccumuloClusterHarness {
       final String tableName = getUniqueNames(1)[0];
       client.tableOperations().create(tableName);
 
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       client.tableOperations().setProperty(tableName, Property.TABLE_SCAN_MAXMEM.getKey(), "1");
 
-      RestartFramework.at("after_property_set")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_property_set").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       try (BatchWriter bw = client.createBatchWriter(tableName)) {
         Mutation m = new Mutation("row1");
@@ -227,12 +199,8 @@ public class OrIteratorIT_RestartInjected extends AccumuloClusterHarness {
         bw.addMutation(m);
       }
 
-      RestartFramework.at("after_batch_write")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       IteratorSetting is = new IteratorSetting(50, OrIterator.class);
       is.addOption(OrIterator.COLUMNS_KEY, "richard,carl,frank,nick,eddie,zed");
@@ -265,12 +233,8 @@ public class OrIteratorIT_RestartInjected extends AccumuloClusterHarness {
       final String tableName = getUniqueNames(1)[0];
       client.tableOperations().create(tableName);
 
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       try (BatchWriter bw = client.createBatchWriter(tableName)) {
         Mutation m = new Mutation("row1");
@@ -288,12 +252,8 @@ public class OrIteratorIT_RestartInjected extends AccumuloClusterHarness {
         bw.addMutation(m);
       }
 
-      RestartFramework.at("after_batch_write")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       IteratorSetting is = new IteratorSetting(50, OrIterator.class);
       is.addOption(OrIterator.COLUMNS_KEY, "theresa,sally");
@@ -312,12 +272,8 @@ public class OrIteratorIT_RestartInjected extends AccumuloClusterHarness {
       final String tableName = getUniqueNames(1)[0];
       client.tableOperations().create(tableName);
 
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       try (BatchWriter bw = client.createBatchWriter(tableName)) {
         Mutation m = new Mutation("row1");
@@ -341,12 +297,8 @@ public class OrIteratorIT_RestartInjected extends AccumuloClusterHarness {
         bw.addMutation(m);
       }
 
-      RestartFramework.at("after_batch_write")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       IteratorSetting is = new IteratorSetting(50, OrIterator.class);
       is.addOption(OrIterator.COLUMNS_KEY, "bob,eddie,steve,zed");
@@ -360,12 +312,8 @@ public class OrIteratorIT_RestartInjected extends AccumuloClusterHarness {
       client.tableOperations().addSplits(tableName,
           new TreeSet<>(Arrays.asList(new Text("row2"), new Text("row3"))));
 
-      RestartFramework.at("after_add_splits")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_add_splits").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       try (BatchScanner bs = client.createBatchScanner(tableName)) {
         bs.setRanges(Collections.singleton(new Range()));
@@ -388,12 +336,8 @@ public class OrIteratorIT_RestartInjected extends AccumuloClusterHarness {
       final String tableName = getUniqueNames(1)[0];
       client.tableOperations().create(tableName);
 
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       try (BatchWriter bw = client.createBatchWriter(tableName)) {
         Mutation m = new Mutation("row1");
@@ -403,12 +347,8 @@ public class OrIteratorIT_RestartInjected extends AccumuloClusterHarness {
         bw.addMutation(m);
       }
 
-      RestartFramework.at("after_batch_write")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       IteratorSetting is = new IteratorSetting(50, OrIterator.class);
       is.addOption(OrIterator.COLUMNS_KEY, "bob,steve");

@@ -70,7 +70,8 @@ import org.slf4j.LoggerFactory;
 @Tag(SUNNY_DAY)
 public class PropStoreConfigIT_RestartInjected extends SharedMiniClusterBase {
 
-  private static final Logger log = LoggerFactory.getLogger(PropStoreConfigIT_RestartInjected.class);
+  private static final Logger log =
+      LoggerFactory.getLogger(PropStoreConfigIT_RestartInjected.class);
 
   @Override
   protected Duration defaultTimeout() {
@@ -103,12 +104,8 @@ public class PropStoreConfigIT_RestartInjected extends SharedMiniClusterBase {
 
       client.tableOperations().create(table);
 
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       log.debug("Tables: {}", client.tableOperations().list());
 
@@ -116,12 +113,8 @@ public class PropStoreConfigIT_RestartInjected extends SharedMiniClusterBase {
       client.instanceOperations().setProperty(Property.TABLE_BLOOM_ENABLED.getKey(), "true");
       client.tableOperations().setProperty(table, Property.TABLE_BLOOM_ENABLED.getKey(), "false");
 
-      RestartFramework.at("after_property_set")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_property_set").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       Wait.waitFor(() -> client.instanceOperations().getSystemConfiguration()
           .get(Property.TABLE_BLOOM_ENABLED.getKey()).equals("true"), 5000, 500);
@@ -132,12 +125,8 @@ public class PropStoreConfigIT_RestartInjected extends SharedMiniClusterBase {
       client.instanceOperations().removeProperty(Property.TABLE_BLOOM_ENABLED.getKey());
       client.tableOperations().setProperty(table, Property.TABLE_BLOOM_ENABLED.getKey(), "true");
 
-      RestartFramework.at("after_property_update")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_property_update").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       Wait.waitFor(() -> client.instanceOperations().getSystemConfiguration()
           .get(Property.TABLE_BLOOM_ENABLED.getKey()).equals("false"), 5000, 500);
@@ -157,32 +146,20 @@ public class PropStoreConfigIT_RestartInjected extends SharedMiniClusterBase {
 
       client.namespaceOperations().create(namespace);
 
-      RestartFramework.at("after_namespace_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_namespace_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       client.tableOperations().create(table);
 
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       log.info("Tables: {}", client.tableOperations().list());
 
       client.instanceOperations().setProperty(Property.TABLE_BLOOM_SIZE.getKey(), "12345");
 
-      RestartFramework.at("after_instance_property_set")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_instance_property_set").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       Wait.waitFor(() -> client.instanceOperations().getSystemConfiguration()
           .get(Property.TABLE_BLOOM_SIZE.getKey()).equals("12345"), 5000, 500);
@@ -192,12 +169,8 @@ public class PropStoreConfigIT_RestartInjected extends SharedMiniClusterBase {
       client.namespaceOperations().setProperty(namespace, Property.TABLE_BLOOM_SIZE.getKey(),
           "23456");
 
-      RestartFramework.at("after_namespace_property_set")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_namespace_property_set").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       Wait.waitFor(() -> client.namespaceOperations().getConfiguration(namespace)
           .get(Property.TABLE_BLOOM_SIZE.getKey()).equals("23456"), 5000, 500);
       assertEquals("23456",
@@ -205,12 +178,8 @@ public class PropStoreConfigIT_RestartInjected extends SharedMiniClusterBase {
 
       client.tableOperations().setProperty(table, Property.TABLE_BLOOM_SIZE.getKey(), "34567");
 
-      RestartFramework.at("after_table_property_set")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_property_set").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       Wait.waitFor(() -> client.tableOperations().getConfiguration(table)
           .get(Property.TABLE_BLOOM_SIZE.getKey()).equals("34567"), 5000, 500);
@@ -258,12 +227,8 @@ public class PropStoreConfigIT_RestartInjected extends SharedMiniClusterBase {
 
       client.instanceOperations().modifyProperties(Map::clear);
 
-      RestartFramework.at("after_property_clear")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_property_clear").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       Wait.waitFor(() -> getStoredConfiguration().size() == 0, 5000, 500);
 
@@ -275,12 +240,8 @@ public class PropStoreConfigIT_RestartInjected extends SharedMiniClusterBase {
         original.put(Property.TSERV_SCAN_MAX_OPENFILES.getKey(), maxOpenFiles);
       });
 
-      RestartFramework.at("after_property_set")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_property_set").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       // Verify system properties added
       Wait.waitFor(() -> getStoredConfiguration().size() > numProps, 5000, 500);
@@ -316,30 +277,18 @@ public class PropStoreConfigIT_RestartInjected extends SharedMiniClusterBase {
 
       client.namespaceOperations().create(namespace);
 
-      RestartFramework.at("after_namespace_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_namespace_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       client.tableOperations().create(table1);
 
-      RestartFramework.at("after_table1_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table1_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       client.tableOperations().create(table2);
 
-      RestartFramework.at("after_table2_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table2_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       Thread.sleep(SECONDS.toMillis(3L));
 
@@ -391,12 +340,8 @@ public class PropStoreConfigIT_RestartInjected extends SharedMiniClusterBase {
 
       client.instanceOperations().modifyProperties(Map::clear);
 
-      RestartFramework.at("after_property_clear")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_property_clear").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       Wait.waitFor(() -> getStoredConfiguration().size() == 0, 5000, 500);
 
@@ -412,12 +357,8 @@ public class PropStoreConfigIT_RestartInjected extends SharedMiniClusterBase {
         original.put(Property.TSERV_MAXMEM.getKey(), expectMaxMem);
       });
 
-      RestartFramework.at("after_property_set")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_property_set").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       // Verify system properties added
       Wait.waitFor(() -> getStoredConfiguration().size() > numProps, 5000, 500);
@@ -453,12 +394,8 @@ public class PropStoreConfigIT_RestartInjected extends SharedMiniClusterBase {
     try (var client = Accumulo.newClient().from(getClientProps()).build()) {
       client.tableOperations().create(table);
 
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       log.info("Tables: {}", client.tableOperations().list());
 
@@ -494,21 +431,13 @@ public class PropStoreConfigIT_RestartInjected extends SharedMiniClusterBase {
     try (var client = Accumulo.newClient().from(getClientProps()).build()) {
       client.namespaceOperations().create(namespace);
 
-      RestartFramework.at("after_namespace_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_namespace_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       client.tableOperations().create(table);
 
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       log.info("Tables: {}", client.tableOperations().list());
 
@@ -601,12 +530,8 @@ public class PropStoreConfigIT_RestartInjected extends SharedMiniClusterBase {
     try (var client = Accumulo.newClient().from(getClientProps()).build()) {
       client.tableOperations().create(table);
 
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       var propShim = new PropertyShim() {
 
@@ -632,12 +557,8 @@ public class PropStoreConfigIT_RestartInjected extends SharedMiniClusterBase {
     try (var client = Accumulo.newClient().from(getClientProps()).build()) {
       client.namespaceOperations().create(namespace);
 
-      RestartFramework.at("after_namespace_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_namespace_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       var propShim = new PropertyShim() {
 

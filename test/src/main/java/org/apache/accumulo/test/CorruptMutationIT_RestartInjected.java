@@ -66,12 +66,8 @@ public class CorruptMutationIT_RestartInjected extends AccumuloClusterHarness {
     try (AccumuloClient c = Accumulo.newClient().from(getClientProps()).build()) {
       c.tableOperations().create(table);
 
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       try (BatchWriter writer = c.createBatchWriter(table)) {
         Mutation m = new Mutation("1");
@@ -79,12 +75,8 @@ public class CorruptMutationIT_RestartInjected extends AccumuloClusterHarness {
         writer.addMutation(m);
       }
 
-      RestartFramework.at("after_batch_write")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       var ctx = (ClientContext) c;
       var tableId = ctx.getTableId(table);
@@ -142,12 +134,8 @@ public class CorruptMutationIT_RestartInjected extends AccumuloClusterHarness {
         writer.addMutation(m);
       }
 
-      RestartFramework.at("after_followon_batch_write")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_followon_batch_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (Scanner scanner = c.createScanner(table)) {
         var valuesSeen =
@@ -157,12 +145,8 @@ public class CorruptMutationIT_RestartInjected extends AccumuloClusterHarness {
 
       c.tableOperations().flush(table, null, null, true);
 
-      RestartFramework.at("after_flush")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_flush").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       try (Scanner scanner = c.createScanner(table)) {
         var valuesSeen =

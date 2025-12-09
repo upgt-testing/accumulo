@@ -52,7 +52,8 @@ import com.google.common.collect.Iterators;
  * @see BatchWriterIterator
  */
 public class BatchWriterInTabletServerIT_RestartInjected extends AccumuloClusterHarness {
-  private static final Logger log = LoggerFactory.getLogger(BatchWriterInTabletServerIT_RestartInjected.class);
+  private static final Logger log =
+      LoggerFactory.getLogger(BatchWriterInTabletServerIT_RestartInjected.class);
 
   @Override
   public boolean canRunTest(ClusterType type) {
@@ -99,12 +100,8 @@ public class BatchWriterInTabletServerIT_RestartInjected extends AccumuloCluster
     // Write an entry to t1
     c.tableOperations().create(t1);
 
-    RestartFramework.at("after_t1_create_" + testVariant)
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_t1_create_" + testVariant).on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     Key k = new Key(new Text("row"), new Text("cf"), new Text("cq"));
     Value v = new Value("1");
@@ -116,34 +113,22 @@ public class BatchWriterInTabletServerIT_RestartInjected extends AccumuloCluster
       writer.addMutation(m);
     }
 
-    RestartFramework.at("after_batch_write_" + testVariant)
-        .on(getCluster())
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_batch_write_" + testVariant).on(getCluster())
+        .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     // Create t2 with a combiner to count entries written to it
     c.tableOperations().create(t2);
 
-    RestartFramework.at("after_t2_create_" + testVariant)
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_t2_create_" + testVariant).on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     IteratorSetting summer = new IteratorSetting(2, "summer", SummingCombiner.class);
     LongCombiner.setEncodingType(summer, LongCombiner.Type.STRING);
     LongCombiner.setCombineAllColumns(summer, true);
     c.tableOperations().attachIterator(t2, summer);
 
-    RestartFramework.at("after_iterator_attach_" + testVariant)
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_iterator_attach_" + testVariant).on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     Map.Entry<Key,Value> actual;
     try (Scanner scanner = c.createScanner(t1, Authorizations.EMPTY)) {

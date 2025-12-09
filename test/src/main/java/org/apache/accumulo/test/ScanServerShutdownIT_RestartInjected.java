@@ -99,24 +99,16 @@ public class ScanServerShutdownIT_RestartInjected extends SharedMiniClusterBase 
     // Wait for the ScanServer to register in ZK
     Wait.waitFor(() -> zrw.getChildren(scanServerRoot).size() == 1);
 
-    RestartFramework.at("after_scan_server_start")
-        .on(getCluster())
-        .restart("scan_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_scan_server_start").on(getCluster()).restart("scan_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     try (AccumuloClient client = Accumulo.newClient().from(getClientProps()).build()) {
       final String tableName = getUniqueNames(1)[0];
 
       client.tableOperations().create(tableName);
 
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       // Make multiple files
       final int fileCount = 3;
@@ -124,12 +116,8 @@ public class ScanServerShutdownIT_RestartInjected extends SharedMiniClusterBase 
         ScanServerIT.ingest(client, tableName, 10, 10, 0, "colf", true);
       }
 
-      RestartFramework.at("after_ingest")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_ingest").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       assertEquals(0, ctx.getAmple().getScanServerFileReferences().count());
 
@@ -147,22 +135,14 @@ public class ScanServerShutdownIT_RestartInjected extends SharedMiniClusterBase 
         }
       }
 
-      RestartFramework.at("after_batch_scans")
-          .on(getCluster())
-          .restart("scan_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_scans").on(getCluster()).restart("scan_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       // ScanServer should stop after the 3rd batch scan closes
       Wait.waitFor(() -> ((ClientContext) client).getScanServers().size() == 0);
 
-      RestartFramework.at("after_scan_server_shutdown")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_scan_server_shutdown").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // The ScanServer should clean up the references on normal shutdown
       Wait.waitFor(() -> ctx.getAmple().getScanServerFileReferences().count() == 0);

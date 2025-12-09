@@ -65,19 +65,11 @@ public class TabletMetadataIT_RestartInjected extends ConfigurableMacBase {
       }
       Set<TServerInstance> servers = TabletMetadata.getLiveTServers((ClientContext) c);
       assertEquals(NUM_TSERVERS, servers.size());
-      RestartFramework.at("after_initial_tserver_count")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_initial_tserver_count").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
-      RestartFramework.at("before_kill_tserver")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("before_kill_tserver").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       // kill a tserver and see if its gone from the list
       getCluster().killProcess(TABLET_SERVER,
           getCluster().getProcesses().get(TABLET_SERVER).iterator().next());
@@ -86,20 +78,12 @@ public class TabletMetadataIT_RestartInjected extends ConfigurableMacBase {
         log.info("Waiting for a tserver to die...");
         sleepUninterruptibly(5, TimeUnit.SECONDS);
       }
-      RestartFramework.at("after_tserver_killed")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_tserver_killed").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       servers = TabletMetadata.getLiveTServers((ClientContext) c);
       assertEquals(NUM_TSERVERS - 1, servers.size());
-      RestartFramework.at("after_final_tserver_count")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_final_tserver_count").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     }
   }
 }

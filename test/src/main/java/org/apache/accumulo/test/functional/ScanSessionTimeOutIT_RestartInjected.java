@@ -53,7 +53,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ScanSessionTimeOutIT_RestartInjected extends AccumuloClusterHarness {
-  private static final Logger log = LoggerFactory.getLogger(ScanSessionTimeOutIT_RestartInjected.class);
+  private static final Logger log =
+      LoggerFactory.getLogger(ScanSessionTimeOutIT_RestartInjected.class);
 
   @Override
   protected Duration defaultTimeout() {
@@ -76,23 +77,15 @@ public class ScanSessionTimeOutIT_RestartInjected extends AccumuloClusterHarness
       sessionIdle = ops.getSystemConfiguration().get(Property.TSERV_SESSION_MAXIDLE.getKey());
       ops.setProperty(Property.TSERV_SESSION_MAXIDLE.getKey(), getMaxIdleTimeString());
 
-      RestartFramework.at("after_session_idle_property_set")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_session_idle_property_set").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       log.info("Waiting for existing session idle time to expire");
       Thread.sleep(ConfigurationTypeHelper.getTimeInMillis(sessionIdle));
       log.info("Finished waiting");
 
-      RestartFramework.at("after_session_idle_wait")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_session_idle_wait").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     }
   }
 
@@ -121,12 +114,8 @@ public class ScanSessionTimeOutIT_RestartInjected extends AccumuloClusterHarness
       String tableName = getUniqueNames(1)[0];
       c.tableOperations().create(tableName);
 
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       try (BatchWriter bw = c.createBatchWriter(tableName)) {
         for (int i = 0; i < 100000; i++) {
@@ -139,12 +128,8 @@ public class ScanSessionTimeOutIT_RestartInjected extends AccumuloClusterHarness
         }
       }
 
-      RestartFramework.at("after_batch_write")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (Scanner scanner = c.createScanner(tableName, new Authorizations())) {
         scanner.setBatchSize(1000);
@@ -155,58 +140,38 @@ public class ScanSessionTimeOutIT_RestartInjected extends AccumuloClusterHarness
         // There should be a scan session open since not all data was read from the iterator
         assertEquals(1L, countActiveScans(c, TABLET_SERVER, tableName));
 
-        RestartFramework.at("after_first_verify_with_active_session")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_first_verify_with_active_session").on(getCluster())
+            .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         // sleep three times the session timeout
         sleepUninterruptibly(9, TimeUnit.SECONDS);
         // The scan session should have timed out and the next read should create a new one
         assertEquals(0L, countActiveScans(c, TABLET_SERVER, tableName));
 
-        RestartFramework.at("after_session_timeout_verification")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_session_timeout_verification").on(getCluster())
+            .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         verify(iter, 200, 50000);
         // Reading part of the data in the range should cause a new scan session to be created
         assertEquals(1L, countActiveScans(c, TABLET_SERVER, tableName));
 
-        RestartFramework.at("after_second_verify_new_session")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_second_verify_new_session").on(getCluster())
+            .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         verify(iter, 50000, 100000);
         // Once all of the data in the range was read the scanner should automatically close the
         // scan session
         assertEquals(0L, countActiveScans(c, TABLET_SERVER, tableName));
 
-        RestartFramework.at("after_third_verify_session_closed")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_third_verify_session_closed").on(getCluster())
+            .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       }
 
       // Nothing should have created any ew scan sessions for the table
       assertEquals(0L, countActiveScans(c, TABLET_SERVER, tableName));
 
-      RestartFramework.at("after_final_scan_verification")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_final_scan_verification").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     }
   }
 

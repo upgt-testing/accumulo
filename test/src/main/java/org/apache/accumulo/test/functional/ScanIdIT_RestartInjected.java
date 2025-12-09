@@ -113,43 +113,27 @@ public class ScanIdIT_RestartInjected extends AccumuloClusterHarness {
     try (AccumuloClient client = Accumulo.newClient().from(getClientProps()).build()) {
       client.tableOperations().create(tableName);
 
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       addSplits(client, tableName);
 
-      RestartFramework.at("after_add_splits")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_add_splits").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       log.info("Splits added");
 
       generateSampleData(client, tableName);
 
-      RestartFramework.at("after_generate_data")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_generate_data").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       log.info("Generated data for {}", tableName);
 
       attachSlowIterator(client, tableName);
 
-      RestartFramework.at("after_attach_iterator")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_attach_iterator").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       CountDownLatch latch = new CountDownLatch(NUM_TOTAL_SCANNERS);
 
@@ -169,12 +153,8 @@ public class ScanIdIT_RestartInjected extends AccumuloClusterHarness {
         pool.execute(bst);
       }
 
-      RestartFramework.at("after_scanners_created")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_scanners_created").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // wait for scanners to report a result.
       while (testInProgress.get()) {
@@ -194,12 +174,8 @@ public class ScanIdIT_RestartInjected extends AccumuloClusterHarness {
 
       }
 
-      RestartFramework.at("after_all_scanners_reported")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_all_scanners_reported").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       Set<Long> scanIds = getScanIds(client);
       assertTrue(scanIds.size() >= NUM_TOTAL_SCANNERS,
@@ -207,23 +183,15 @@ public class ScanIdIT_RestartInjected extends AccumuloClusterHarness {
       // A scan id should have been set regardless of whether a Scanner or BatchScanner was used
       scanIds.forEach(scanId -> assertNotEquals(0L, scanId, "saw a scanId that was never set"));
 
-      RestartFramework.at("after_scan_ids_verified")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_scan_ids_verified").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // Close all scanners. All should be non-null, test should fail (NPE) otherwise
       scanThreadsToClose.forEach(st -> st.scanner.close());
       batchScanThreadsToClose.forEach(bst -> bst.bs.close());
 
-      RestartFramework.at("before_wait_for_scans_stop")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("before_wait_for_scans_stop").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       while (!getScanIds(client).isEmpty()) {
         log.debug("Waiting for active scans to stop...");

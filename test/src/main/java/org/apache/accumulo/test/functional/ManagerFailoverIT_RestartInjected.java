@@ -58,44 +58,28 @@ public class ManagerFailoverIT_RestartInjected extends AccumuloClusterHarness {
       String[] names = getUniqueNames(2);
       c.tableOperations().create(names[0]);
 
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       VerifyParams params = new VerifyParams(getClientProps(), names[0]);
       TestIngest.ingest(c, params);
 
-      RestartFramework.at("after_ingest")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_ingest").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       ClusterControl control = cluster.getClusterControl();
       control.stopAllServers(ServerType.MANAGER);
       // start up a new one
       control.startAllServers(ServerType.MANAGER);
 
-      RestartFramework.at("after_manager_restart")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_manager_restart").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       // talk to it
       c.tableOperations().rename(names[0], names[1]);
 
-      RestartFramework.at("after_rename")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_rename").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       params.tableName = names[1];
       VerifyIngest.verifyIngest(c, params);

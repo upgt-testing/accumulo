@@ -85,12 +85,8 @@ public class TabletIT_RestartInjected extends AccumuloClusterHarness {
           new NewTableConfiguration()
               .setProperties(singletonMap(Property.TABLE_SPLIT_THRESHOLD.getKey(), "200"))
               .withSplits(keys));
-      RestartFramework.at("after_table_create_with_splits")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_with_splits").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       try (BatchWriter b = accumuloClient.createBatchWriter(tableName)) {
         // populate
         for (int i = 0; i < N; i++) {
@@ -99,20 +95,12 @@ public class TabletIT_RestartInjected extends AccumuloClusterHarness {
           b.addMutation(m);
         }
       }
-      RestartFramework.at("after_batch_write")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     }
 
-    RestartFramework.at("before_scan")
-        .on(getCluster())
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("before_scan").on(getCluster()).restart("tablet_server").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     try (Scanner scanner = accumuloClient.createScanner(tableName, Authorizations.EMPTY)) {
       int count = 0;
       for (Entry<Key,Value> elt : scanner) {

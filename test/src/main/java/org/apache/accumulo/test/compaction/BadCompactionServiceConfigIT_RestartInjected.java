@@ -97,32 +97,20 @@ public class BadCompactionServiceConfigIT_RestartInjected extends AccumuloCluste
           Map.of(Property.TABLE_COMPACTION_DISPATCHER_OPTS.getKey() + "service", "cs1"));
       client.tableOperations().create(table, ntc);
 
-      RestartFramework.at("after_table_create_misconfig")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_misconfig").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (var writer = client.createBatchWriter(table)) {
         writer.addMutation(new Mutation("0").at().family("f").qualifier("q").put("v"));
       }
 
-      RestartFramework.at("after_batch_write_misconfig")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write_misconfig").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       client.tableOperations().flush(table, null, null, true);
 
-      RestartFramework.at("after_flush_misconfig")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_flush_misconfig").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (var scanner = client.createScanner(table)) {
         assertEquals("0", scanner.stream().map(e -> e.getKey().getRowData().toString())
@@ -159,12 +147,8 @@ public class BadCompactionServiceConfigIT_RestartInjected extends AccumuloCluste
 
       fixerFuture.get();
 
-      RestartFramework.at("after_fix_config_misconfig")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_fix_config_misconfig").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // misconfigure the service, test how going from good config to bad config works. The test
       // started with an initial state of bad config.
@@ -211,12 +195,8 @@ public class BadCompactionServiceConfigIT_RestartInjected extends AccumuloCluste
           Map.of(Property.TABLE_COMPACTION_DISPATCHER_OPTS.getKey() + "service", "cs5"));
       client.tableOperations().create(table, ntc);
 
-      RestartFramework.at("after_table_create_nonexistent")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_nonexistent").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // Add splits so that the tserver logs can manually be inspected to ensure they are not
       // spammed. Not sure how to check this automatically.
@@ -224,32 +204,20 @@ public class BadCompactionServiceConfigIT_RestartInjected extends AccumuloCluste
           .collect(Collectors.toCollection(TreeSet::new));
       client.tableOperations().addSplits(table, splits);
 
-      RestartFramework.at("after_add_splits_nonexistent")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_add_splits_nonexistent").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (var writer = client.createBatchWriter(table)) {
         writer.addMutation(new Mutation("0").at().family("f").qualifier("q").put("v"));
       }
 
-      RestartFramework.at("after_batch_write_nonexistent")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write_nonexistent").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       client.tableOperations().flush(table, null, null, true);
 
-      RestartFramework.at("after_flush_nonexistent")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_flush_nonexistent").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (var scanner = client.createScanner(table)) {
         assertEquals("0", scanner.stream().map(e -> e.getKey().getRowData().toString())
@@ -288,12 +256,8 @@ public class BadCompactionServiceConfigIT_RestartInjected extends AccumuloCluste
 
       fixerFuture.get();
 
-      RestartFramework.at("after_fix_config_nonexistent")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_fix_config_nonexistent").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     }
   }

@@ -217,33 +217,21 @@ public class AuditMessageIT_RestartInjected extends ConfigurableMacBase {
         getCluster().createAccumuloClient(AUDIT_USER_1, new PasswordToken(PASSWORD));
     auditAccumuloClient.tableOperations().create(OLD_TEST_TABLE_NAME);
 
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     auditAccumuloClient.tableOperations().rename(OLD_TEST_TABLE_NAME, NEW_TEST_TABLE_NAME);
 
-    RestartFramework.at("after_table_rename")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_rename").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     Map<String,String> emptyMap = Collections.emptyMap();
     Set<String> emptySet = Collections.emptySet();
     auditAccumuloClient.tableOperations().clone(NEW_TEST_TABLE_NAME, OLD_TEST_TABLE_NAME, true,
         emptyMap, emptySet);
 
-    RestartFramework.at("after_table_clone")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_clone").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     auditAccumuloClient.tableOperations().delete(OLD_TEST_TABLE_NAME);
     auditAccumuloClient.tableOperations().offline(NEW_TEST_TABLE_NAME);
@@ -283,12 +271,8 @@ public class AuditMessageIT_RestartInjected extends ConfigurableMacBase {
     auditAccumuloClient.securityOperations().createLocalUser(AUDIT_USER_2,
         new PasswordToken(PASSWORD));
 
-    RestartFramework.at("after_user_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_user_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     // It seems only root can grant stuff.
     client.securityOperations().grantSystemPermission(AUDIT_USER_2, SystemPermission.ALTER_TABLE);
@@ -432,12 +416,8 @@ public class AuditMessageIT_RestartInjected extends ConfigurableMacBase {
         getCluster().createAccumuloClient(AUDIT_USER_1, new PasswordToken(PASSWORD));
     auditAccumuloClient.tableOperations().create(OLD_TEST_TABLE_NAME);
 
-    RestartFramework.at("after_table_create_data")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create_data").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     // Insert some play data
     try (BatchWriter bw = auditAccumuloClient.createBatchWriter(OLD_TEST_TABLE_NAME)) {
@@ -447,12 +427,8 @@ public class AuditMessageIT_RestartInjected extends ConfigurableMacBase {
       bw.addMutation(m);
     }
 
-    RestartFramework.at("after_batch_write")
-        .on(getCluster())
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_batch_write").on(getCluster()).restart("tablet_server").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     // Start testing activities here
     // A regular scan

@@ -98,12 +98,8 @@ public class VolumeManagerIT_RestartInjected extends ConfigurableMacBase {
           + ".dfs.client.hedged.read.threadpool.size"));
       assertEquals("1", siteConfig.get(Property.INSTANCE_VOLUME_CONFIG_PREFIX.getKey() + vol2
           + ".dfs.client.hedged.read.threadpool.size"));
-      RestartFramework.at("after_config_verification")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_config_verification").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       String[] names = getUniqueNames(2);
       String t1 = names[0];
@@ -112,62 +108,34 @@ public class VolumeManagerIT_RestartInjected extends ConfigurableMacBase {
       NewTableConfiguration ntc1 = new NewTableConfiguration();
       ntc1.setProperties(Map.of("table.custom.volume.preferred", vol1));
       c.tableOperations().create(t1, ntc1);
-      RestartFramework.at("after_table1_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table1_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       ReadWriteIT.ingest(c, 10, 10, 100, 0, t1);
-      RestartFramework.at("after_table1_ingest")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table1_ingest").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       c.tableOperations().flush(t1, null, null, true);
-      RestartFramework.at("after_table1_flush")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table1_flush").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       NewTableConfiguration ntc2 = new NewTableConfiguration();
       ntc2.setProperties(Map.of("table.custom.volume.preferred", vol2));
       c.tableOperations().create(t2, ntc2);
-      RestartFramework.at("after_table2_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table2_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       ReadWriteIT.ingest(c, 10, 10, 100, 0, t2);
-      RestartFramework.at("after_table2_ingest")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table2_ingest").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       c.tableOperations().flush(t2, null, null, true);
-      RestartFramework.at("after_table2_flush")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table2_flush").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       String tid1 = c.tableOperations().tableIdMap().get(t1);
       String tid2 = c.tableOperations().tableIdMap().get(t2);
 
       assertNotNull(tid1);
       assertNotNull(tid2);
-      RestartFramework.at("after_get_table_ids")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_get_table_ids").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       // Confirm that table 1 has a block size of 10485760
       FileSystem fs = this.cluster.getMiniDfs().getFileSystem();
@@ -179,12 +147,8 @@ public class VolumeManagerIT_RestartInjected extends ConfigurableMacBase {
           assertEquals(10485760, stat.getBlockSize());
         }
       }
-      RestartFramework.at("after_verify_table1_blocksize")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_verify_table1_blocksize").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // Confirm that table 1 has a block size of 51200000
       RemoteIterator<LocatedFileStatus> iter2 =
@@ -195,12 +159,8 @@ public class VolumeManagerIT_RestartInjected extends ConfigurableMacBase {
           assertEquals(51200000, stat.getBlockSize());
         }
       }
-      RestartFramework.at("after_verify_table2_blocksize")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_verify_table2_blocksize").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     }
 

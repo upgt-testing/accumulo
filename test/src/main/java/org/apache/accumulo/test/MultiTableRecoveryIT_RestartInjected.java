@@ -81,22 +81,14 @@ public class MultiTableRecoveryIT_RestartInjected extends ConfigurableMacBase {
         writers[i] = c.createBatchWriter(tableName);
         i++;
       }
-      RestartFramework.at("after_tables_and_writers_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_tables_and_writers_create").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       System.out.println("Creating agitator");
       final AtomicBoolean stop = new AtomicBoolean(false);
       final Thread agitator = agitator(stop);
       agitator.start();
-      RestartFramework.at("after_agitator_start")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_agitator_start").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       System.out.println("writing");
       for (i = 0; i < 1_000_000; i++) {
         // make non-negative avoiding Math.abs, because that can still be negative
@@ -113,56 +105,32 @@ public class MultiTableRecoveryIT_RestartInjected extends ConfigurableMacBase {
           }
         }
         if (i == 250_000) {
-          RestartFramework.at("during_writes_25_percent")
-              .on(getCluster())
-              .restart("tablet_server")
-              .withIndex(0)
-              .withMode(RestartMode.GRACEFUL)
-              .execute();
+          RestartFramework.at("during_writes_25_percent").on(getCluster()).restart("tablet_server")
+              .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
         }
         if (i == 500_000) {
-          RestartFramework.at("during_writes_50_percent")
-              .on(getCluster())
-              .restart("tablet_server")
-              .withIndex(0)
-              .withMode(RestartMode.GRACEFUL)
-              .execute();
+          RestartFramework.at("during_writes_50_percent").on(getCluster()).restart("tablet_server")
+              .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
         }
         if (i == 750_000) {
-          RestartFramework.at("during_writes_75_percent")
-              .on(getCluster())
-              .restart("tablet_server")
-              .withIndex(0)
-              .withMode(RestartMode.GRACEFUL)
-              .execute();
+          RestartFramework.at("during_writes_75_percent").on(getCluster()).restart("tablet_server")
+              .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
         }
       }
       System.out.println("closing");
       for (int w = 0; w < N; w++) {
         writers[w].close();
       }
-      RestartFramework.at("after_writers_close")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_writers_close").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       System.out.println("stopping the agitator");
       stop.set(true);
       agitator.join();
-      RestartFramework.at("after_agitator_stop")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_agitator_stop").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       System.out.println("checking the data");
-      RestartFramework.at("before_verification")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("before_verification").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       long count = 0;
       for (int w = 0; w < N; w++) {
         try (Scanner scanner = c.createScanner(tables[w], Authorizations.EMPTY)) {
@@ -173,12 +141,8 @@ public class MultiTableRecoveryIT_RestartInjected extends ConfigurableMacBase {
           }
         }
         if (w == 0) {
-          RestartFramework.at("during_verification_after_table1")
-              .on(getCluster())
-              .restart("tablet_server")
-              .withIndex(0)
-              .withMode(RestartMode.GRACEFUL)
-              .execute();
+          RestartFramework.at("during_verification_after_table1").on(getCluster())
+              .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
         }
       }
       assertEquals(1_000_000, count);

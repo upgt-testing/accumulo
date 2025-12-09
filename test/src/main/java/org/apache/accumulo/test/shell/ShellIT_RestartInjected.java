@@ -222,28 +222,16 @@ public class ShellIT_RestartInjected extends SharedMiniClusterBase {
     Shell.log.debug("Starting addGetSplits test ----------------------------");
     exec("addsplits arg", false, "java.lang.IllegalStateException: Not in a table context");
     exec("createtable test", true);
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     exec("addsplits 1 \\x80", true);
-    RestartFramework.at("after_splits_add")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_splits_add").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     exec("getsplits", true, "1\n\\x80");
     exec("getsplits -m 1", true, "1");
     exec("getsplits -b64", true, "MQ==\ngA==");
-    RestartFramework.at("before_table_delete")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("before_table_delete").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     exec("deletetable test -f", true, "Table: [test] has been deleted");
   }
 
@@ -253,23 +241,15 @@ public class ShellIT_RestartInjected extends SharedMiniClusterBase {
     exec("insert r f q v", false, "java.lang.IllegalStateException: Not in a table context");
     exec("delete r f q", false, "java.lang.IllegalStateException: Not in a table context");
     exec("createtable test", true);
-    RestartFramework.at("after_test_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_test_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     exec("insert r f q v", true);
     exec("scan", true, "r f:q []\tv");
     exec("delete r f q", true);
     exec("scan", true, "r f:q []\tv", false);
     exec("insert \\x90 \\xa0 \\xb0 \\xc0\\xd0\\xe0\\xf0", true);
-    RestartFramework.at("after_data_insert")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_data_insert").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     exec("scan", true, "\\x90 \\xA0:\\xB0 []\t\\xC0\\xD0");
     exec("scan -f 2", true, "\\x90 \\xA0:\\xB0 []\t\\xC0\\xD0");
     exec("scan -f 2", true, "\\x90 \\xA0:\\xB0 []\t\\xC0\\xD0\\xE0", false);
@@ -281,31 +261,19 @@ public class ShellIT_RestartInjected extends SharedMiniClusterBase {
     exec("scan -e \\x8f", true, "\\x90 \\xA0:\\xB0 []\t\\xC0", false);
     exec("delete \\x90 \\xa0 \\xb0", true);
     exec("scan", true, "\\x90 \\xA0:\\xB0 []\t\\xC0", false);
-    RestartFramework.at("before_test_table_delete")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("before_test_table_delete").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     exec("deletetable test -f", true, "Table: [test] has been deleted");
     // Add tests to verify use of --table parameter
     exec("createtable test2", true);
-    RestartFramework.at("after_test2_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_test2_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     exec("notable", true);
     exec("insert r f q v", false, "java.lang.IllegalStateException: Not in a table context");
     exec("insert r1 f1 q1 v1 -t test2", true);
     exec("insert r2 f2 q2 v2 --table test2", true);
-    RestartFramework.at("after_test2_data_insert")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_test2_data_insert").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     exec("delete r1 f1 q1 -t", false,
         "org.apache.commons.cli.MissingArgumentException: Missing argument for option:");
     exec("delete r1 f1 q1 -t  test3", false,
@@ -317,12 +285,8 @@ public class ShellIT_RestartInjected extends SharedMiniClusterBase {
     exec("delete r2 f2 q2 --table test2", true);
     exec("scan -t test2", true, "r1 f1:q1 []\tv1", false);
     exec("scan -t test2", true, "r2 f2:q2 []\tv2", false);
-    RestartFramework.at("before_test2_table_delete")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("before_test2_table_delete").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     exec("deletetable test2 -f", true, "Table: [test2] has been deleted");
   }
 
@@ -331,30 +295,18 @@ public class ShellIT_RestartInjected extends SharedMiniClusterBase {
     Shell.log.debug("Starting insertIntoSpecifiedTableTest -----------------");
     // create two tables for insertion tests
     exec("createtable tab1", true);
-    RestartFramework.at("after_tab1_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_tab1_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     exec("createtable tab2", true);
-    RestartFramework.at("after_tab2_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_tab2_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     // insert data into tab2 while in tab2 context
     exec("insert row1 f q tab2", true);
     // insert another with the table and t argument to verify also works
     exec("insert row2 f q tab2 --table tab2", true);
     exec("insert row3 f q tab2 -t tab2", true);
-    RestartFramework.at("after_tab2_data_insert")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_tab2_data_insert").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     // leave all table contexts
     exec("notable", true);
     // without option cannot insert when not in a table context, also cannot add to a table
@@ -366,12 +318,8 @@ public class ShellIT_RestartInjected extends SharedMiniClusterBase {
     exec("table tab2", true);
     // can also insert into another table even if a different table context
     exec("insert row2 f q tab1 -t tab1", true);
-    RestartFramework.at("after_tab1_data_insert")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_tab1_data_insert").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     exec("notable", true);
     // must supply a tablename if option is used
     exec("insert row5 f q tab5 --table", false,
@@ -384,12 +332,8 @@ public class ShellIT_RestartInjected extends SharedMiniClusterBase {
         "row1 f:q []\ttab2\nrow2 f:q []\ttab2\nrow3 f:q []\ttab2\nrow4 f:q []\ttab2");
     // check that if in table context, inserting into a non-existent table does not change context
     exec("createtable tab3", true);
-    RestartFramework.at("after_tab3_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_tab3_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     exec("table tab3", true);
     exec("insert row1 f1 q1 tab3", true);
     exec("insert row2 f2 q2 tab3 --table idontexist", false,
@@ -397,21 +341,13 @@ public class ShellIT_RestartInjected extends SharedMiniClusterBase {
     exec("insert row2 f2 q2 tab3 -t idontexist", false,
         "org.apache.accumulo.core.client.TableNotFoundException:");
     exec("insert row3 f3 q3 tab3", true); // should be able to insert w/o changing tables
-    RestartFramework.at("after_tab3_data_insert")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_tab3_data_insert").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     // verify expected data is in tab3
     exec("scan", true, "row1 f1:q1 []\ttab3\nrow3 f3:q3 []\ttab3");
     // cleanup
-    RestartFramework.at("before_tables_delete")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("before_tables_delete").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     exec("deletetable tab1 -f", true, "Table: [tab1] has been deleted");
     exec("deletetable tab2 -f", true, "Table: [tab2] has been deleted");
     exec("deletetable tab3 -f", true, "Table: [tab3] has been deleted");
@@ -421,12 +357,8 @@ public class ShellIT_RestartInjected extends SharedMiniClusterBase {
   public void deleteManyTest() throws IOException {
     exec("deletemany", false, "java.lang.IllegalStateException: Not in a table context");
     exec("createtable test", true);
-    RestartFramework.at("after_test_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_test_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     exec("deletemany", true, "\n");
 
     exec("insert 0 0 0 0 -ts 0");
@@ -483,12 +415,8 @@ public class ShellIT_RestartInjected extends SharedMiniClusterBase {
   public void duContextTest() throws Exception {
     Shell.log.debug("Starting du context test --------------------------");
     exec("createtable t", true);
-    RestartFramework.at("after_t_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_t_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     exec("du", true, "0 [t]");
     exec("deletetable t -f", true, "Table: [t] has been deleted");
   }
@@ -497,12 +425,8 @@ public class ShellIT_RestartInjected extends SharedMiniClusterBase {
   public void duTest() throws IOException {
     Shell.log.debug("Starting DU test --------------------------");
     exec("createtable t", true);
-    RestartFramework.at("after_t_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_t_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     exec("du t", true, "0 [t]");
     exec("deletetable t -f", true, "Table: [t] has been deleted");
   }
@@ -511,26 +435,14 @@ public class ShellIT_RestartInjected extends SharedMiniClusterBase {
   public void duPatternTest() throws IOException {
     Shell.log.debug("Starting DU with pattern test --------------------------");
     exec("createtable t", true);
-    RestartFramework.at("after_t_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_t_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     exec("createtable tt", true);
-    RestartFramework.at("after_tt_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_tt_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     exec("du -p t.*", true, "0 [t, tt]");
-    RestartFramework.at("before_tables_delete")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("before_tables_delete").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     exec("deletetable t -f", true, "Table: [t] has been deleted");
     exec("deletetable tt -f", true, "Table: [tt] has been deleted");
@@ -541,28 +453,16 @@ public class ShellIT_RestartInjected extends SharedMiniClusterBase {
     String name = getUniqueNames(1)[0];
     Shell.log.debug("Starting scanTimestamp test ------------------------");
     exec("createtable " + name, true);
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     exec("insert r f q v -ts 0", true);
-    RestartFramework.at("after_data_insert")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_data_insert").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     exec("scan -st", true, "r f:q [] 0\tv");
     exec("scan -st -f 0", true, " : [] 0\t");
     exec("deletemany -f", true);
-    RestartFramework.at("before_table_delete")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("before_table_delete").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     exec("deletetable " + name + " -f", true, "Table: [" + name + "] has been deleted");
   }
 
@@ -571,21 +471,13 @@ public class ShellIT_RestartInjected extends SharedMiniClusterBase {
     Shell.log.debug("Starting scanFew test ------------------------");
     String name = getUniqueNames(1)[0];
     exec("createtable " + name, true);
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     // historically, showing few did not pertain to ColVis or Timestamp
     exec("insert 1 123 123456 -l '12345678' -ts 123456789 1234567890", true);
     exec("setauths -s 12345678", true);
-    RestartFramework.at("after_data_insert_and_auths")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_data_insert_and_auths").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     String expected = "1 123:123456 [12345678] 123456789\t1234567890";
     String expectedFew = "1 123:12345 [12345678] 123456789\t12345";
     exec("scan -st", true, expected);
@@ -595,12 +487,8 @@ public class ShellIT_RestartInjected extends SharedMiniClusterBase {
     exec("scan -st -f 5 -fm org.apache.accumulo.core.util.format.BinaryFormatter", true,
         expectedFew);
     exec("setauths -c", true);
-    RestartFramework.at("before_table_delete")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("before_table_delete").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     exec("deletetable " + name + " -f", true, "Table: [" + name + "] has been deleted");
   }
 
@@ -608,12 +496,8 @@ public class ShellIT_RestartInjected extends SharedMiniClusterBase {
   public void scanDateStringFormatterTest() throws IOException {
     Shell.log.debug("Starting scan dateStringFormatter test --------------------------");
     exec("createtable t", true);
-    RestartFramework.at("after_t_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_t_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     exec("insert r f q v -ts 0", true);
     @SuppressWarnings("deprecation")
     DateFormat dateFormat =
@@ -636,12 +520,8 @@ public class ShellIT_RestartInjected extends SharedMiniClusterBase {
     Shell.log.debug("Starting grep test --------------------------");
     exec("grep", false, "java.lang.IllegalStateException: Not in a table context");
     exec("createtable t", true);
-    RestartFramework.at("after_t_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_t_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     exec("setauths -s vis", true);
     exec("insert r f q v -ts 0 -l vis", true);
 
@@ -827,12 +707,8 @@ public class ShellIT_RestartInjected extends SharedMiniClusterBase {
   public void setIterTest() throws IOException {
     Shell.log.debug("Starting setiter test --------------------------");
     exec("createtable t", true);
-    RestartFramework.at("after_t_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_t_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     String cmdJustClass = "setiter -class VersioningIterator -p 1";
     exec(cmdJustClass, false, "java.lang.IllegalArgumentException", false);
@@ -937,12 +813,8 @@ public class ShellIT_RestartInjected extends SharedMiniClusterBase {
   public void testMaxSplitsOption() throws Exception {
     Shell.log.debug("Starting testMaxSplits test ------------------");
     exec("createtable maxtab", true);
-    RestartFramework.at("after_maxtab_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_maxtab_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     exec("addsplits 0 1 2 3 4 5 6 7 8 9 a b c d e f g h i j k l m n o p q r s t", true);
     exec("getsplits -m 31", true,
         "0\n1\n2\n3\n4\n5\n6\n7\n8\n9\na\nb\nc\nd\ne\nf\ng\nh\ni\nj\nk\nl\nm\nn\no\np\nq\nr\ns\nt\n");

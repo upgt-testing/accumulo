@@ -59,23 +59,15 @@ public class ServerSideErrorIT_RestartInjected extends AccumuloClusterHarness {
       String tableName = getUniqueNames(1)[0];
       c.tableOperations().create(tableName);
 
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       IteratorSetting is = new IteratorSetting(5, "Bad Aggregator", BadCombiner.class);
       Combiner.setColumns(is, Collections.singletonList(new IteratorSetting.Column("acf")));
       c.tableOperations().attachIterator(tableName, is);
 
-      RestartFramework.at("after_bad_iterator_attach")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_bad_iterator_attach").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (BatchWriter bw = c.createBatchWriter(tableName)) {
         Mutation m = new Mutation(new Text("r1"));
@@ -83,12 +75,8 @@ public class ServerSideErrorIT_RestartInjected extends AccumuloClusterHarness {
         bw.addMutation(m);
       }
 
-      RestartFramework.at("after_batch_write")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // try to scan table
       try (Scanner scanner = c.createScanner(tableName, Authorizations.EMPTY)) {
@@ -96,12 +84,8 @@ public class ServerSideErrorIT_RestartInjected extends AccumuloClusterHarness {
         assertThrows(RuntimeException.class, iterator::hasNext);
       }
 
-      RestartFramework.at("after_scanner_error_verification")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_scanner_error_verification").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // try to batch scan the table
       try (BatchScanner bs = c.createBatchScanner(tableName, Authorizations.EMPTY, 2)) {
@@ -110,12 +94,8 @@ public class ServerSideErrorIT_RestartInjected extends AccumuloClusterHarness {
         assertThrows(RuntimeException.class, iterator::hasNext);
       }
 
-      RestartFramework.at("after_batchscanner_error_verification")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batchscanner_error_verification").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // remove the bad agg so accumulo can shutdown
       TableOperations to = c.tableOperations();
@@ -126,52 +106,32 @@ public class ServerSideErrorIT_RestartInjected extends AccumuloClusterHarness {
         }
       });
 
-      RestartFramework.at("after_properties_removal")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_properties_removal").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       sleepUninterruptibly(500, TimeUnit.MILLISECONDS);
 
-      RestartFramework.at("after_sleep")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_sleep").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       // should be able to scan now
       try (Scanner scanner = c.createScanner(tableName, Authorizations.EMPTY)) {
         scanner.forEach((k, v) -> {});
 
-        RestartFramework.at("after_successful_scan")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_successful_scan").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         // set a nonexistent iterator, should cause scan to fail on server side
         scanner.addScanIterator(new IteratorSetting(100, "bogus", "com.bogus.iterator"));
 
-        RestartFramework.at("after_bogus_iterator_add")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_bogus_iterator_add").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         Iterator<Entry<Key,Value>> iterator = scanner.iterator();
         assertThrows(RuntimeException.class, iterator::hasNext);
 
-        RestartFramework.at("after_final_error_verification")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_final_error_verification").on(getCluster())
+            .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       }
     }
   }

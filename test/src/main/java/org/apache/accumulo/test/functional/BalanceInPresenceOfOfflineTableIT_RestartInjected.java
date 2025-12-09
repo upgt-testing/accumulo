@@ -52,11 +52,10 @@ import org.apache.hadoop.io.Text;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.restarttest.api.RestartFramework;
 import org.restarttest.core.RestartMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Start a new table, create many splits, and offline before they can rebalance. Then try to have a
@@ -114,44 +113,24 @@ public class BalanceInPresenceOfOfflineTableIT_RestartInjected extends AccumuloC
     // load into a table we won't use
 
     accumuloClient.tableOperations().create(UNUSED_TABLE);
-    RestartFramework.at("after_unused_table_create")
-        .on(cluster)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_unused_table_create").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     accumuloClient.tableOperations().addSplits(UNUSED_TABLE, splits);
-    RestartFramework.at("after_unused_table_splits")
-        .on(cluster)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_unused_table_splits").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     // mark the table offline before it can rebalance.
     accumuloClient.tableOperations().offline(UNUSED_TABLE);
-    RestartFramework.at("after_unused_table_offline")
-        .on(cluster)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_unused_table_offline").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     // actual test table
     accumuloClient.tableOperations().create(TEST_TABLE);
-    RestartFramework.at("after_test_table_create")
-        .on(cluster)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_test_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     accumuloClient.tableOperations().setProperty(TEST_TABLE,
         Property.TABLE_SPLIT_THRESHOLD.getKey(), "10K");
-    RestartFramework.at("after_test_table_property_set")
-        .on(cluster)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_test_table_property_set").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
   }
 
   @AfterEach
@@ -167,26 +146,14 @@ public class BalanceInPresenceOfOfflineTableIT_RestartInjected extends AccumuloC
 
     VerifyParams params = new VerifyParams(getClientProps(), TEST_TABLE, 200_000);
     TestIngest.ingest(accumuloClient, params);
-    RestartFramework.at("after_test_ingest")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_test_ingest").on(getCluster()).restart("tablet_server").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     accumuloClient.tableOperations().flush(TEST_TABLE, null, null, true);
-    RestartFramework.at("after_flush")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_flush").on(getCluster()).restart("tablet_server").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     VerifyIngest.verifyIngest(accumuloClient, params);
-    RestartFramework.at("after_verify_ingest")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_verify_ingest").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     log.debug("waiting for balancing, up to ~5 minutes to allow for migration cleanup.");
     final long startTime = System.currentTimeMillis();

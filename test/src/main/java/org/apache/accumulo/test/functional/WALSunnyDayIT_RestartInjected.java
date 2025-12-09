@@ -70,10 +70,10 @@ import org.apache.hadoop.io.Text;
 import org.apache.zookeeper.KeeperException.NoNodeException;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-
-import com.google.common.collect.Iterators;
 import org.restarttest.api.RestartFramework;
 import org.restarttest.core.RestartMode;
+
+import com.google.common.collect.Iterators;
 
 @Tag(SUNNY_DAY)
 public class WALSunnyDayIT_RestartInjected extends ConfigurableMacBase {
@@ -110,19 +110,11 @@ public class WALSunnyDayIT_RestartInjected extends ConfigurableMacBase {
     try (AccumuloClient c = Accumulo.newClient().from(getClientProperties()).build()) {
       String tableName = getUniqueNames(1)[0];
       c.tableOperations().create(tableName);
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       writeSomeData(c, tableName, 1, 1);
-      RestartFramework.at("after_first_batch_write")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_first_batch_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // wal markers are added lazily
       Map<String,WalState> wals = getWALsAndAssertCount(context, 2);
@@ -130,12 +122,8 @@ public class WALSunnyDayIT_RestartInjected extends ConfigurableMacBase {
 
       // roll log, get a new next
       writeSomeData(c, tableName, 1001, 50);
-      RestartFramework.at("after_wal_roll_write")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_wal_roll_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       Map<String,WalState> walsAfterRoll = getWALsAndAssertCount(context, 3);
       assertTrue(walsAfterRoll.keySet().containsAll(wals.keySet()),
           "new WALs should be a superset of the old WALs");
@@ -145,12 +133,8 @@ public class WALSunnyDayIT_RestartInjected extends ConfigurableMacBase {
       for (String table : new String[] {tableName, MetadataTable.NAME, RootTable.NAME}) {
         c.tableOperations().flush(table, null, null, true);
       }
-      RestartFramework.at("after_flush")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_flush").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       sleepUninterruptibly(1, TimeUnit.SECONDS);
       // rolled WAL is no longer in use, but needs to be GC'd
       Map<String,WalState> walsAfterflush = getWALsAndAssertCount(context, 3);
@@ -158,12 +142,8 @@ public class WALSunnyDayIT_RestartInjected extends ConfigurableMacBase {
 
       // let the GC run for a little bit
       control.start(GARBAGE_COLLECTOR);
-      RestartFramework.at("after_gc_start")
-          .on(cluster)
-          .restart("garbage_collector")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_gc_start").on(getCluster()).restart("garbage_collector")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       sleepUninterruptibly(5, TimeUnit.SECONDS);
       // make sure the unused WAL goes away
       getWALsAndAssertCount(context, 2);
@@ -173,12 +153,8 @@ public class WALSunnyDayIT_RestartInjected extends ConfigurableMacBase {
       // this delays recovery on the normal tables
       assertEquals(0, cluster.exec(SetGoalState.class, "SAFE_MODE").getProcess().waitFor());
       control.start(TABLET_SERVER);
-      RestartFramework.at("after_tserver_restart")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_tserver_restart").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // wait for the metadata table to go back online
       getRecoveryMarkers(c);
@@ -192,31 +168,19 @@ public class WALSunnyDayIT_RestartInjected extends ConfigurableMacBase {
 
       // put some data in the WAL
       assertEquals(0, cluster.exec(SetGoalState.class, "NORMAL").getProcess().waitFor());
-      RestartFramework.at("after_normal_mode")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_normal_mode").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       verifySomeData(c, tableName, 1001 * 50 + 1);
       writeSomeData(c, tableName, 100, 100);
-      RestartFramework.at("after_recovery_write")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_recovery_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       Map<String,WalState> walsAfterRestart = getWALsAndAssertCount(context, 4);
       // log.debug("wals after " + walsAfterRestart);
       assertEquals(4, countInUse(walsAfterRestart.values()), "used WALs after restart should be 4");
       control.start(GARBAGE_COLLECTOR);
-      RestartFramework.at("after_second_gc_start")
-          .on(cluster)
-          .restart("garbage_collector")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_second_gc_start").on(getCluster()).restart("garbage_collector")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       sleepUninterruptibly(5, TimeUnit.SECONDS);
       Map<String,WalState> walsAfterRestartAndGC = getWALsAndAssertCount(context, 2);
       assertEquals(2, countInUse(walsAfterRestartAndGC.values()), "logs in use should be 2");

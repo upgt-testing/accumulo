@@ -23,9 +23,6 @@ import static org.apache.accumulo.test.ScanServerIT.createTableAndIngest;
 import static org.apache.accumulo.test.ScanServerIT.ingest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.restarttest.api.RestartFramework;
-import org.restarttest.core.RestartMode;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -55,6 +52,8 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.restarttest.api.RestartFramework;
+import org.restarttest.core.RestartMode;
 
 import com.google.common.collect.Iterables;
 
@@ -111,12 +110,8 @@ public class ScanServerConcurrentTabletScanIT_RestartInjected extends SharedMini
     // Set the cache refresh to 50%, which is 5 minutes so a refresh won't be triggered
     startScanServer("10m", ".5");
 
-    RestartFramework.at("after_scan_server_start_refresh_not_triggered")
-        .on(getCluster())
-        .restart("scan_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_scan_server_start_refresh_not_triggered").on(getCluster())
+        .restart("scan_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     testScanSameTabletDifferentDataTabletMetadataCacheEnabled(false);
   }
@@ -128,12 +123,8 @@ public class ScanServerConcurrentTabletScanIT_RestartInjected extends SharedMini
     // .00001 * 10m (600000ms) = 6 ms
     startScanServer("10m", ".00001");
 
-    RestartFramework.at("after_scan_server_start_refresh_triggered")
-        .on(getCluster())
-        .restart("scan_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_scan_server_start_refresh_triggered").on(getCluster())
+        .restart("scan_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     testScanSameTabletDifferentDataTabletMetadataCacheEnabled(true);
   }
@@ -143,12 +134,8 @@ public class ScanServerConcurrentTabletScanIT_RestartInjected extends SharedMini
     // Set the cache time to 10 minutes so it won't expire and disable the refresh entirely
     startScanServer("5m", "0");
 
-    RestartFramework.at("after_scan_server_start_refresh_disabled")
-        .on(getCluster())
-        .restart("scan_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_scan_server_start_refresh_disabled").on(getCluster())
+        .restart("scan_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     testScanSameTabletDifferentDataTabletMetadataCacheEnabled(false);
   }
@@ -166,12 +153,8 @@ public class ScanServerConcurrentTabletScanIT_RestartInjected extends SharedMini
       final int firstBatchOfEntriesCount =
           createTableAndIngest(client, tableName, null, 10, 100, "COLA");
 
-      RestartFramework.at("after_table_create_and_first_ingest")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_and_first_ingest").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       Scanner scanner1 = client.createScanner(tableName, Authorizations.EMPTY);
       scanner1.setRange(new Range());
@@ -179,12 +162,8 @@ public class ScanServerConcurrentTabletScanIT_RestartInjected extends SharedMini
       scanner1.setReadaheadThreshold(0);
       scanner1.setConsistencyLevel(ConsistencyLevel.EVENTUAL);
 
-      RestartFramework.at("after_scanner_created")
-          .on(getCluster())
-          .restart("scan_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_scanner_created").on(getCluster()).restart("scan_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // iter1 should read 1000 k/v
       Iterator<Entry<Key,Value>> iter1 = scanner1.iterator();
@@ -196,22 +175,14 @@ public class ScanServerConcurrentTabletScanIT_RestartInjected extends SharedMini
         count1++;
       }
 
-      RestartFramework.at("after_partial_scan")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_partial_scan").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // Ingest another 100 k/v with a different column family
       final int secondBatchOfEntriesCount = ingest(client, tableName, 10, 10, 0, "COLB", true);
 
-      RestartFramework.at("after_second_ingest")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_second_ingest").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // Add a sleep that is long enough that the configured refresh interval passes if
       // the test has been set to use one.
@@ -224,12 +195,8 @@ public class ScanServerConcurrentTabletScanIT_RestartInjected extends SharedMini
       // won't be visible until the reload finishes
       Iterator<Entry<Key,Value>> iter2 = scanner1.iterator();
 
-      RestartFramework.at("after_iter2_created")
-          .on(getCluster())
-          .restart("scan_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_iter2_created").on(getCluster()).restart("scan_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       int count2 = 0;
       boolean useIter1 = true;
@@ -292,12 +259,8 @@ public class ScanServerConcurrentTabletScanIT_RestartInjected extends SharedMini
 
     startScanServer("0m", "0");
 
-    RestartFramework.at("after_scan_server_start_cache_disabled")
-        .on(getCluster())
-        .restart("scan_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_scan_server_start_cache_disabled").on(getCluster())
+        .restart("scan_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     Properties clientProperties = getClientProps();
     clientProperties.put(ClientProperty.SCANNER_BATCH_SIZE.getKey(), "100");
@@ -309,12 +272,8 @@ public class ScanServerConcurrentTabletScanIT_RestartInjected extends SharedMini
       final int firstBatchOfEntriesCount =
           createTableAndIngest(client, tableName, null, 10, 100, "COLA");
 
-      RestartFramework.at("after_table_create_and_ingest_cache_disabled")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_and_ingest_cache_disabled").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (Scanner scanner1 = client.createScanner(tableName, Authorizations.EMPTY)) {
         scanner1.setRange(new Range());
@@ -322,12 +281,8 @@ public class ScanServerConcurrentTabletScanIT_RestartInjected extends SharedMini
         scanner1.setReadaheadThreshold(0);
         scanner1.setConsistencyLevel(ConsistencyLevel.EVENTUAL);
 
-        RestartFramework.at("after_scanner_created_cache_disabled")
-            .on(getCluster())
-            .restart("scan_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_scanner_created_cache_disabled").on(getCluster())
+            .restart("scan_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         // iter1 should read 1000 k/v
         Iterator<Entry<Key,Value>> iter1 = scanner1.iterator();
@@ -339,32 +294,20 @@ public class ScanServerConcurrentTabletScanIT_RestartInjected extends SharedMini
           count1++;
         }
 
-        RestartFramework.at("after_partial_scan_cache_disabled")
-            .on(getCluster())
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_partial_scan_cache_disabled").on(getCluster())
+            .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         // Ingest another 100 k/v with a different column family
         final int secondBatchOfEntriesCount = ingest(client, tableName, 10, 10, 0, "COLB", true);
 
-        RestartFramework.at("after_second_ingest_cache_disabled")
-            .on(getCluster())
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_second_ingest_cache_disabled").on(getCluster())
+            .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         // iter2 should read 1100 k/v because the tablet metadata is not cached.
         Iterator<Entry<Key,Value>> iter2 = scanner1.iterator();
 
-        RestartFramework.at("after_iter2_created_cache_disabled")
-            .on(getCluster())
-            .restart("scan_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_iter2_created_cache_disabled").on(getCluster())
+            .restart("scan_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         int count2 = 0;
         boolean useIter1 = true;

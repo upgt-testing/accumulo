@@ -20,9 +20,6 @@ package org.apache.accumulo.test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.restarttest.api.RestartFramework;
-import org.restarttest.core.RestartMode;
-
 import java.util.Map;
 
 import org.apache.accumulo.core.Constants;
@@ -47,6 +44,8 @@ import org.apache.zookeeper.ZooKeeper;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.restarttest.api.RestartFramework;
+import org.restarttest.core.RestartMode;
 
 import com.google.common.collect.Iterables;
 
@@ -141,12 +140,8 @@ public class ScanServerGroupConfigurationIT_RestartInjected extends SharedMiniCl
           ScanServerIT.createTableAndIngest(client, tableName, null, 10, 10, "colf");
       assertEquals(100, ingestedEntryCount);
 
-      RestartFramework.at("after_table_create_and_ingest")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_and_ingest").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (Scanner scanner = client.createScanner(tableName, Authorizations.EMPTY)) {
         scanner.setRange(new Range());
@@ -155,12 +150,8 @@ public class ScanServerGroupConfigurationIT_RestartInjected extends SharedMiniCl
         assertEquals(ingestedEntryCount, Iterables.size(scanner),
             "The scanner should fall back to the tserver and should have seen all ingested and flushed entries");
 
-        RestartFramework.at("after_first_scanner_scan")
-            .on(getCluster())
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_first_scanner_scan").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         // Allow one scan server to be started at this time
         getCluster().getConfig().setNumScanServers(1);
@@ -172,12 +163,8 @@ public class ScanServerGroupConfigurationIT_RestartInjected extends SharedMiniCl
             (p) -> p.getSecond().equals(ScanServerSelector.DEFAULT_SCAN_SERVER_GROUP_NAME))
             == true);
 
-        RestartFramework.at("after_default_scan_server_start")
-            .on(getCluster())
-            .restart("scan_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_default_scan_server_start").on(getCluster())
+            .restart("scan_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         assertEquals(ingestedEntryCount, Iterables.size(scanner),
             "The scan server scanner should have seen all ingested and flushed entries");
@@ -187,12 +174,8 @@ public class ScanServerGroupConfigurationIT_RestartInjected extends SharedMiniCl
             ScanServerIT.ingest(client, tableName, 10, 10, 10, "colf", true);
         assertEquals(100, additionalIngest1);
 
-        RestartFramework.at("after_additional_ingest1")
-            .on(getCluster())
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_additional_ingest1").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         // Bump the number of scan serves that can run to start the GROUP1 scan server
         getCluster().getConfig().setNumScanServers(2);
@@ -205,47 +188,31 @@ public class ScanServerGroupConfigurationIT_RestartInjected extends SharedMiniCl
         Wait.waitFor(() -> ((ClientContext) client).getScanServers().values().stream()
             .anyMatch((p) -> p.getSecond().equals("GROUP1")) == true);
 
-        RestartFramework.at("after_group1_scan_server_start")
-            .on(getCluster())
-            .restart("scan_server")
-            .withIndex(1)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_group1_scan_server_start").on(getCluster())
+            .restart("scan_server").withIndex(1).withMode(RestartMode.GRACEFUL).execute();
 
         scanner.setExecutionHints(Map.of("scan_type", "use_group1"));
         assertEquals(ingestedEntryCount + additionalIngest1, Iterables.size(scanner),
             "The scan server scanner should have seen all ingested and flushed entries");
 
-        RestartFramework.at("after_group1_scan")
-            .on(getCluster())
-            .restart("scan_server")
-            .withIndex(1)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_group1_scan").on(getCluster()).restart("scan_server")
+            .withIndex(1).withMode(RestartMode.GRACEFUL).execute();
 
         // if scanning against tserver would see the following, but should not on scan server
         final int additionalIngest2 =
             ScanServerIT.ingest(client, tableName, 10, 10, 20, "colf", false);
         assertEquals(100, additionalIngest2);
 
-        RestartFramework.at("after_additional_ingest2")
-            .on(getCluster())
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_additional_ingest2").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         assertEquals(ingestedEntryCount + additionalIngest1, Iterables.size(scanner),
             "The scan server scanner should have seen all ingested and flushed entries");
 
         scanner.setConsistencyLevel(ConsistencyLevel.IMMEDIATE);
 
-        RestartFramework.at("after_consistency_level_change")
-            .on(getCluster())
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_consistency_level_change").on(getCluster())
+            .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         assertEquals(ingestedEntryCount + additionalIngest1 + additionalIngest2,
             Iterables.size(scanner),

@@ -114,12 +114,8 @@ public class CountNameNodeOpsBulkIT_RestartInjected extends ConfigurableMacBase 
       var ntc = new NewTableConfiguration().setProperties(props).withSplits(splits);
       c.tableOperations().create(tableName, ntc);
 
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       ManagerMonitorInfo stats = getCluster().getManagerMonitorInfo();
       assertEquals(1, stats.tServerInfo.size());
@@ -158,12 +154,8 @@ public class CountNameNodeOpsBulkIT_RestartInjected extends ConfigurableMacBase 
         dirs.add(f.get());
       }
 
-      RestartFramework.at("after_bulk_files_created")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_bulk_files_created").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       log.info("Importing");
       long startOps = getStat(getStats(), "FileInfoOps");
@@ -179,12 +171,8 @@ public class CountNameNodeOpsBulkIT_RestartInjected extends ConfigurableMacBase 
         err.get();
       }
 
-      RestartFramework.at("after_bulk_import")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_bulk_import").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       es.shutdown();
       es.awaitTermination(2, TimeUnit.MINUTES);

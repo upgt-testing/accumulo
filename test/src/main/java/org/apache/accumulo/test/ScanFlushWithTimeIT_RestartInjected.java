@@ -49,7 +49,8 @@ import org.slf4j.LoggerFactory;
 
 public class ScanFlushWithTimeIT_RestartInjected extends AccumuloClusterHarness {
 
-  private static final Logger log = LoggerFactory.getLogger(ScanFlushWithTimeIT_RestartInjected.class);
+  private static final Logger log =
+      LoggerFactory.getLogger(ScanFlushWithTimeIT_RestartInjected.class);
 
   @Override
   protected Duration defaultTimeout() {
@@ -62,17 +63,20 @@ public class ScanFlushWithTimeIT_RestartInjected extends AccumuloClusterHarness 
     String tableName = getUniqueNames(1)[0];
     try (AccumuloClient c = Accumulo.newClient().from(getClientProps()).build()) {
       c.tableOperations().create(tableName);
-      RestartFramework.at("after_table_create").on(cluster).restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       log.info("Adding slow iterator");
       IteratorSetting setting = new IteratorSetting(50, SlowIterator.class);
       SlowIterator.setSleepTime(setting, 1000);
       c.tableOperations().attachIterator(tableName, setting);
-      RestartFramework.at("after_iterator_attach").on(cluster).restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
+      RestartFramework.at("after_iterator_attach").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       log.info("Splitting the table");
       SortedSet<Text> partitionKeys = new TreeSet<>();
       partitionKeys.add(new Text("5"));
       c.tableOperations().addSplits(tableName, partitionKeys);
-      RestartFramework.at("after_splits").on(cluster).restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
+      RestartFramework.at("after_splits").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       log.info("waiting for zookeeper propagation");
       UtilWaitThread.sleep(5_000);
       log.info("Adding a few entries");
@@ -83,11 +87,13 @@ public class ScanFlushWithTimeIT_RestartInjected extends AccumuloClusterHarness 
           bw.addMutation(m);
         }
       }
-      RestartFramework.at("after_batch_write").on(cluster).restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
+      RestartFramework.at("after_batch_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       log.info("Fetching some entries: should timeout and return something");
 
       log.info("Scanner");
-      RestartFramework.at("before_scanner_test").on(cluster).restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
+      RestartFramework.at("before_scanner_test").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       try (Scanner s = c.createScanner(tableName, Authorizations.EMPTY)) {
         s.setBatchTimeout(500, TimeUnit.MILLISECONDS);
         testScanner(s, 1200);
@@ -100,7 +106,8 @@ public class ScanFlushWithTimeIT_RestartInjected extends AccumuloClusterHarness 
       }
 
       log.info("BatchScanner");
-      RestartFramework.at("before_batch_scanner_test").on(cluster).restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
+      RestartFramework.at("before_batch_scanner_test").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       try (BatchScanner bs = c.createBatchScanner(tableName, Authorizations.EMPTY, 5)) {
         bs.setBatchTimeout(500, TimeUnit.MILLISECONDS);
         bs.setRanges(Collections.singletonList(new Range()));

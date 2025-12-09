@@ -83,12 +83,8 @@ public class ConcurrentDeleteTableIT_RestartInjected extends AccumuloClusterHarn
         }
         count++;
 
-        RestartFramework.at("after_table_create_concurrent_delete")
-            .on(getCluster())
-            .restart("manager")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_table_create_concurrent_delete").on(getCluster())
+            .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         final CountDownLatch cdl = new CountDownLatch(numDeleteOps);
 
@@ -120,12 +116,8 @@ public class ConcurrentDeleteTableIT_RestartInjected extends AccumuloClusterHarn
 
         FunctionalTestUtils.assertNoDanglingFateLocks(getCluster());
 
-        RestartFramework.at("after_concurrent_delete_test1_complete")
-            .on(getCluster())
-            .restart("manager")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_concurrent_delete_test1_complete").on(getCluster())
+            .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       }
 
       es.shutdown();
@@ -152,12 +144,8 @@ public class ConcurrentDeleteTableIT_RestartInjected extends AccumuloClusterHarn
         }
         count++;
 
-        RestartFramework.at("after_table_create_concurrent_fate")
-            .on(getCluster())
-            .restart("manager")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_table_create_concurrent_fate").on(getCluster())
+            .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         // increment this for each test
         final CountDownLatch cdl = new CountDownLatch(numOperations);
@@ -239,12 +227,8 @@ public class ConcurrentDeleteTableIT_RestartInjected extends AccumuloClusterHarn
 
         FunctionalTestUtils.assertNoDanglingFateLocks(getCluster());
 
-        RestartFramework.at("after_concurrent_fate_test_complete")
-            .on(getCluster())
-            .restart("manager")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_concurrent_fate_test_complete").on(getCluster())
+            .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       }
 
       es.shutdown();

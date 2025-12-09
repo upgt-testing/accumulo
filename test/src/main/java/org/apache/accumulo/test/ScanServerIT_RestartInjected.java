@@ -107,12 +107,8 @@ public class ScanServerIT_RestartInjected extends SharedMiniClusterBase {
 
       final int ingestedEntryCount = createTableAndIngest(client, tableName, null, 10, 10, "colf");
 
-      RestartFramework.at("after_table_create_and_ingest")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_and_ingest").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (Scanner scanner = client.createScanner(tableName, Authorizations.EMPTY)) {
         scanner.setRange(new Range());
@@ -120,23 +116,15 @@ public class ScanServerIT_RestartInjected extends SharedMiniClusterBase {
         assertEquals(ingestedEntryCount, Iterables.size(scanner),
             "The scan server scanner should have seen all ingested and flushed entries");
 
-        RestartFramework.at("after_eventual_scan")
-            .on(getCluster())
-            .restart("scan_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_eventual_scan").on(getCluster()).restart("scan_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         // if scanning against tserver would see the following, but should not on scan server
         final int additionalIngestedEntryCount =
             ingest(client, tableName, 10, 10, 10, "colf", false);
 
-        RestartFramework.at("after_additional_ingest")
-            .on(getCluster())
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_additional_ingest").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         assertEquals(ingestedEntryCount, Iterables.size(scanner),
             "The scan server scanner should have seen all ingested and flushed entries");
@@ -144,12 +132,8 @@ public class ScanServerIT_RestartInjected extends SharedMiniClusterBase {
         assertEquals(ingestedEntryCount + additionalIngestedEntryCount, Iterables.size(scanner),
             "Scanning against tserver should have resulted in seeing all ingested entries");
 
-        RestartFramework.at("after_immediate_scan")
-            .on(getCluster())
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_immediate_scan").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       } // when the scanner is closed, all open sessions should be closed
     }
   }
@@ -162,12 +146,8 @@ public class ScanServerIT_RestartInjected extends SharedMiniClusterBase {
 
       final int ingestedEntryCount = createTableAndIngest(client, tableName, null, 10, 10, "colf");
 
-      RestartFramework.at("after_table_create_and_ingest")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_and_ingest").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (BatchScanner scanner = client.createBatchScanner(tableName, Authorizations.EMPTY)) {
         scanner.setRanges(Collections.singletonList(new Range()));
@@ -175,22 +155,14 @@ public class ScanServerIT_RestartInjected extends SharedMiniClusterBase {
         assertEquals(ingestedEntryCount, Iterables.size(scanner),
             "The scan server scanner should have seen all ingested and flushed entries");
 
-        RestartFramework.at("after_eventual_batch_scan")
-            .on(getCluster())
-            .restart("scan_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_eventual_batch_scan").on(getCluster()).restart("scan_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         final int additionalIngestedEntryCount =
             ingest(client, tableName, 10, 10, 10, "colf", false);
 
-        RestartFramework.at("after_additional_ingest")
-            .on(getCluster())
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_additional_ingest").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         assertEquals(ingestedEntryCount, Iterables.size(scanner),
             "The scan server scanner should have seen all ingested and flushed entries");
@@ -198,12 +170,8 @@ public class ScanServerIT_RestartInjected extends SharedMiniClusterBase {
         assertEquals(ingestedEntryCount + additionalIngestedEntryCount, Iterables.size(scanner),
             "Scanning against tserver should have resulted in seeing all ingested entries");
 
-        RestartFramework.at("after_immediate_batch_scan")
-            .on(getCluster())
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_immediate_batch_scan").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       } // when the scanner is closed, all open sessions should be closed
     }
   }
@@ -215,21 +183,13 @@ public class ScanServerIT_RestartInjected extends SharedMiniClusterBase {
 
       createTableAndIngest(client, tableName, null, 10, 10, "colf");
 
-      RestartFramework.at("after_table_create_and_ingest")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_and_ingest").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       client.tableOperations().offline(tableName, true);
 
-      RestartFramework.at("after_table_offline")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_offline").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       assertThrows(TableOfflineException.class, () -> {
         try (Scanner scanner = client.createScanner(tableName, Authorizations.EMPTY)) {
@@ -255,12 +215,8 @@ public class ScanServerIT_RestartInjected extends SharedMiniClusterBase {
     try (AccumuloClient client = Accumulo.newClient().from(props).build()) {
       createTableAndIngest(client, tableName, null, 10, 10, "colf");
 
-      RestartFramework.at("after_table_create_and_ingest")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_and_ingest").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (BatchScanner bs = client.createBatchScanner(tableName)) {
         bs.setRanges(Collections.singletonList(new Range()));
@@ -268,24 +224,16 @@ public class ScanServerIT_RestartInjected extends SharedMiniClusterBase {
         // should not timeout
         bs.stream().forEach(entry -> assertNotNull(entry.getKey()));
 
-        RestartFramework.at("after_first_scan")
-            .on(getCluster())
-            .restart("scan_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_first_scan").on(getCluster()).restart("scan_server").withIndex(0)
+            .withMode(RestartMode.GRACEFUL).execute();
 
         bs.setTimeout(5, TimeUnit.SECONDS);
         IteratorSetting iterSetting = new IteratorSetting(100, SlowIterator.class);
         iterSetting.addOption("sleepTime", 2000 + "");
         bs.addScanIterator(iterSetting);
 
-        RestartFramework.at("before_timeout_test")
-            .on(getCluster())
-            .restart("scan_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("before_timeout_test").on(getCluster()).restart("scan_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         assertThrows(TimedOutException.class, () -> bs.iterator().next(),
             "batch scanner did not time out");

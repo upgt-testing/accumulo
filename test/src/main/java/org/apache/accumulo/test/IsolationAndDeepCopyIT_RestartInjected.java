@@ -45,13 +45,10 @@ public class IsolationAndDeepCopyIT_RestartInjected extends AccumuloClusterHarne
     try (AccumuloClient client = Accumulo.newClient().from(getClientProps()).build()) {
 
       client.tableOperations().create(table);
-      org.apache.accumulo.miniclusterImpl.MiniAccumuloClusterImpl mac = (org.apache.accumulo.miniclusterImpl.MiniAccumuloClusterImpl) getCluster();
-      RestartFramework.at("after_table_create")
-          .on(mac)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      org.apache.accumulo.miniclusterImpl.MiniAccumuloClusterImpl mac =
+          (org.apache.accumulo.miniclusterImpl.MiniAccumuloClusterImpl) getCluster();
+      RestartFramework.at("after_table_create").on(mac).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       try (BatchWriter bw = client.createBatchWriter(table)) {
         addDocument(bw, "000A", "dog", "cat", "hamster", "iguana", "the");
@@ -59,21 +56,13 @@ public class IsolationAndDeepCopyIT_RestartInjected extends AccumuloClusterHarne
         addDocument(bw, "000C", "chrome", "firefox", "safari", "opera", "the");
         addDocument(bw, "000D", "logarithmic", "quadratic", "linear", "exponential", "the");
       }
-      RestartFramework.at("after_batch_write")
-          .on(mac)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write").on(mac).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       // its a bug when using rfiles, so flush
       client.tableOperations().flush(table, null, null, true);
-      RestartFramework.at("after_flush")
-          .on(mac)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_flush").on(mac).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       IteratorSetting iterCfg =
           new IteratorSetting(30, "ayeaye", IntersectingIterator.class.getName());

@@ -35,7 +35,6 @@ import org.apache.accumulo.core.security.Authorizations;
 import org.apache.accumulo.harness.AccumuloClusterHarness;
 import org.apache.hadoop.io.Text;
 import org.junit.jupiter.api.Test;
-
 import org.restarttest.api.RestartFramework;
 import org.restarttest.core.RestartMode;
 
@@ -53,12 +52,8 @@ public class BadLocalityGroupMincIT_RestartInjected extends AccumuloClusterHarne
       String tableName = getUniqueNames(1)[0];
 
       c.tableOperations().create(tableName);
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       // intentionally bad locality group config where two groups share a family
       c.tableOperations().setProperty(tableName,
@@ -66,50 +61,30 @@ public class BadLocalityGroupMincIT_RestartInjected extends AccumuloClusterHarne
       c.tableOperations().setProperty(tableName,
           Property.TABLE_LOCALITY_GROUP_PREFIX.getKey() + "g2", "fam2,fam3");
       c.tableOperations().setProperty(tableName, Property.TABLE_LOCALITY_GROUPS.getKey(), "g1,g2");
-      RestartFramework.at("after_locality_group_config")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_locality_group_config").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       c.tableOperations().offline(tableName, true);
-      RestartFramework.at("after_table_offline")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_offline").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       c.tableOperations().online(tableName, true);
-      RestartFramework.at("after_table_online")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_online").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       try (BatchWriter bw = c.createBatchWriter(tableName)) {
         Mutation m = new Mutation(new Text("r1"));
         m.put("acf", tableName, "1");
         bw.addMutation(m);
       }
-      RestartFramework.at("after_batch_write")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       FunctionalTestUtils.checkRFiles(c, tableName, 1, 1, 0, 0);
 
       // even with bad locality group config, the minor compaction should still work
       c.tableOperations().flush(tableName, null, null, true);
-      RestartFramework.at("after_flush")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_flush").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       FunctionalTestUtils.checkRFiles(c, tableName, 1, 1, 1, 1);
 
@@ -121,12 +96,8 @@ public class BadLocalityGroupMincIT_RestartInjected extends AccumuloClusterHarne
       assertEquals(tableName, entry.getKey().getColumnQualifierData().toString());
       assertEquals("1", entry.getValue().toString());
 
-      RestartFramework.at("before_table_delete")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("before_table_delete").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       // this should not hang
       c.tableOperations().delete(tableName);
     }

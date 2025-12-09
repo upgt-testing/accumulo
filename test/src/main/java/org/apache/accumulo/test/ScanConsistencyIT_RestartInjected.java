@@ -80,7 +80,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  */
 public class ScanConsistencyIT_RestartInjected extends AccumuloClusterHarness {
 
-  private static final Logger log = LoggerFactory.getLogger(ScanConsistencyIT_RestartInjected.class);
+  private static final Logger log =
+      LoggerFactory.getLogger(ScanConsistencyIT_RestartInjected.class);
 
   @SuppressFBWarnings(value = {"PREDICTABLE_RANDOM", "DMI_RANDOM_USED_ONLY_ONCE"},
       justification = "predictable random is ok for testing")
@@ -109,12 +110,8 @@ public class ScanConsistencyIT_RestartInjected extends AccumuloClusterHarness {
     try (AccumuloClient client = Accumulo.newClient().from(getClientProps()).build()) {
       client.tableOperations().create(table);
 
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       TestContext testContext = new TestContext(client, table, getCluster().getFileSystem(),
           getCluster().getTemporaryPath().toString());
@@ -137,22 +134,14 @@ public class ScanConsistencyIT_RestartInjected extends AccumuloClusterHarness {
 
       var tableOpsTask = executor.submit(new TableOpsTask(testContext));
 
-      RestartFramework.at("after_concurrent_tasks_start")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_concurrent_tasks_start").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // let the concurrent mayhem run for a bit
       Thread.sleep(60000);
 
-      RestartFramework.at("after_concurrent_operations")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_concurrent_operations").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // let the threads know to exit
       testContext.keepRunning.set(false);
@@ -176,12 +165,8 @@ public class ScanConsistencyIT_RestartInjected extends AccumuloClusterHarness {
 
       log.debug(tableOpsTask.get());
 
-      RestartFramework.at("before_final_scans")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("before_final_scans").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       var stats1 = scanData(testContext, random, new Range(), false);
       var stats2 = scanData(testContext, random, new Range(), true);

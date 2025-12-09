@@ -74,12 +74,8 @@ public class YieldScannersIT_RestartInjected extends AccumuloClusterHarness {
     final String tableName = getUniqueNames(1)[0];
     try (AccumuloClient client = Accumulo.newClient().from(getClientProps()).build()) {
       client.tableOperations().create(tableName);
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       final BatchWriter writer = client.createBatchWriter(tableName);
       for (int i = 0; i < 10; i++) {
         byte[] row = {(byte) (START_ROW + i)};
@@ -89,24 +85,16 @@ public class YieldScannersIT_RestartInjected extends AccumuloClusterHarness {
       }
       writer.flush();
       writer.close();
-      RestartFramework.at("after_batch_write_flush")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write_flush").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       log.info("Creating scanner");
       // make a scanner for a table with 10 keys
       try (Scanner scanner = client.createScanner(tableName, Authorizations.EMPTY)) {
         final IteratorSetting cfg = new IteratorSetting(100, YieldingIterator.class);
         scanner.addScanIterator(cfg);
-        RestartFramework.at("after_iterator_setup")
-            .on(getCluster())
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_iterator_setup").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         log.info("iterating");
         Iterator<Map.Entry<Key,Value>> it = scanner.iterator();
@@ -136,12 +124,8 @@ public class YieldScannersIT_RestartInjected extends AccumuloClusterHarness {
           keyCount++;
         }
         assertEquals(10, keyCount, "Did not get the expected number of results");
-        RestartFramework.at("after_scan_completion")
-            .on(getCluster())
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_scan_completion").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       }
     }
   }
@@ -152,12 +136,8 @@ public class YieldScannersIT_RestartInjected extends AccumuloClusterHarness {
     final String tableName = getUniqueNames(1)[0];
     try (AccumuloClient client = Accumulo.newClient().from(getClientProps()).build()) {
       client.tableOperations().create(tableName);
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       final BatchWriter writer = client.createBatchWriter(tableName);
       for (int i = 0; i < 10; i++) {
         byte[] row = {(byte) (START_ROW + i)};
@@ -167,12 +147,8 @@ public class YieldScannersIT_RestartInjected extends AccumuloClusterHarness {
       }
       writer.flush();
       writer.close();
-      RestartFramework.at("after_batch_write_flush")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write_flush").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       log.info("Creating batch scanner");
       // make a scanner for a table with 10 keys
@@ -180,12 +156,8 @@ public class YieldScannersIT_RestartInjected extends AccumuloClusterHarness {
         final IteratorSetting cfg = new IteratorSetting(100, YieldingIterator.class);
         scanner.addScanIterator(cfg);
         scanner.setRanges(Collections.singleton(new Range()));
-        RestartFramework.at("after_iterator_setup")
-            .on(getCluster())
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_iterator_setup").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         log.info("iterating");
         Iterator<Map.Entry<Key,Value>> it = scanner.iterator();
@@ -215,12 +187,8 @@ public class YieldScannersIT_RestartInjected extends AccumuloClusterHarness {
           keyCount++;
         }
         assertEquals(10, keyCount, "Did not get the expected number of results");
-        RestartFramework.at("after_scan_completion")
-            .on(getCluster())
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_scan_completion").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       }
     }
   }
@@ -232,12 +200,8 @@ public class YieldScannersIT_RestartInjected extends AccumuloClusterHarness {
     TreeSet<Text> splits = new TreeSet<>();
     try (AccumuloClient client = Accumulo.newClient().from(getClientProps()).build()) {
       client.tableOperations().create(tableName);
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       List<Range> ranges = new ArrayList<>();
       final int alphabetLength = 26;
       try (BatchWriter writer = client.createBatchWriter(tableName, new BatchWriterConfig())) {
@@ -255,32 +219,20 @@ public class YieldScannersIT_RestartInjected extends AccumuloClusterHarness {
           }
         }
         client.tableOperations().addSplits(tableName, splits);
-        RestartFramework.at("after_add_splits")
-            .on(getCluster())
-            .restart("manager")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_add_splits").on(getCluster()).restart("manager").withIndex(0)
+            .withMode(RestartMode.GRACEFUL).execute();
         writer.flush();
       }
-      RestartFramework.at("after_batch_write_flush")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write_flush").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       log.info("Creating batch scanner");
       try (BatchScanner scanner = client.createBatchScanner(tableName, Authorizations.EMPTY, 1)) {
         final IteratorSetting cfg = new IteratorSetting(100, YieldingIterator.class);
         scanner.addScanIterator(cfg);
         scanner.setRanges(ranges);
-        RestartFramework.at("after_iterator_setup")
-            .on(getCluster())
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_iterator_setup").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         final AtomicInteger keyCount = new AtomicInteger();
         scanner.stream().sorted(Map.Entry.comparingByKey()).forEach(entry -> {
@@ -292,12 +244,8 @@ public class YieldScannersIT_RestartInjected extends AccumuloClusterHarness {
           keyCount.getAndIncrement();
         });
         assertEquals(alphabetLength, keyCount.get(), "Did not get the expected number of results");
-        RestartFramework.at("after_scan_completion")
-            .on(getCluster())
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_scan_completion").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       }
     }
   }

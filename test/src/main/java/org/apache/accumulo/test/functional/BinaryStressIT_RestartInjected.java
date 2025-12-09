@@ -100,33 +100,17 @@ public class BinaryStressIT_RestartInjected extends AccumuloClusterHarness {
     try (AccumuloClient c = Accumulo.newClient().from(getClientProps()).build()) {
       String tableName = getUniqueNames(1)[0];
       c.tableOperations().create(tableName);
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       c.tableOperations().setProperty(tableName, Property.TABLE_SPLIT_THRESHOLD.getKey(), "10K");
-      RestartFramework.at("after_property_set")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_property_set").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       BinaryIT.runTest(c, tableName);
-      RestartFramework.at("after_binary_test_run")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_binary_test_run").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       String id = c.tableOperations().tableIdMap().get(tableName);
-      RestartFramework.at("after_table_id_retrieved")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_id_retrieved").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       Set<Text> tablets = new HashSet<>();
       try (Scanner s = c.createScanner(MetadataTable.NAME, Authorizations.EMPTY)) {
         s.setRange(Range.prefix(id));
@@ -135,12 +119,8 @@ public class BinaryStressIT_RestartInjected extends AccumuloClusterHarness {
           tablets.add(entry.getKey().getRow());
           scannedCount++;
           if (scannedCount == 4) {
-            RestartFramework.at("during_metadata_scan")
-                .on(cluster)
-                .restart("tablet_server")
-                .withIndex(0)
-                .withMode(RestartMode.GRACEFUL)
-                .execute();
+            RestartFramework.at("during_metadata_scan").on(getCluster()).restart("tablet_server")
+                .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
           }
         }
       }

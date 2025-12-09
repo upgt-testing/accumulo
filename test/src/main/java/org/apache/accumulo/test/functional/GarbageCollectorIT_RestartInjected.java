@@ -91,7 +91,8 @@ import com.google.common.collect.Iterators;
 
 public class GarbageCollectorIT_RestartInjected extends ConfigurableMacBase {
   private static final String OUR_SECRET = "itsreallysecret";
-  public static final Logger log = LoggerFactory.getLogger(GarbageCollectorIT_RestartInjected.class);
+  public static final Logger log =
+      LoggerFactory.getLogger(GarbageCollectorIT_RestartInjected.class);
 
   @Override
   protected Duration defaultTimeout() {
@@ -139,34 +140,22 @@ public class GarbageCollectorIT_RestartInjected extends ConfigurableMacBase {
       c.tableOperations().create(table);
       c.tableOperations().setProperty(table, Property.TABLE_SPLIT_THRESHOLD.getKey(), "5K");
 
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       VerifyParams params = new VerifyParams(getClientProperties(), table, 10_000);
       params.cols = 1;
       log.info("Ingesting files to {}", table);
       TestIngest.ingest(c, cluster.getFileSystem(), params);
 
-      RestartFramework.at("after_ingest")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_ingest").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       log.info("Compacting the table {}", table);
       c.tableOperations().compact(table, null, null, true, true);
 
-      RestartFramework.at("after_compact")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_compact").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       String pathString = cluster.getConfig().getDir() + "/accumulo/tables/1/*/*.rf";
       log.info("Counting files in path: {}", pathString);
 
@@ -204,12 +193,8 @@ public class GarbageCollectorIT_RestartInjected extends ConfigurableMacBase {
     try (AccumuloClient c = Accumulo.newClient().from(getClientProperties()).build()) {
       addEntries(c);
 
-      RestartFramework.at("after_add_entries")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_add_entries").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       cluster.getConfig().setDefaultMemory(32, MemoryUnit.MEGABYTE);
       ProcessInfo gc = cluster.exec(SimpleGarbageCollector.class);
@@ -266,12 +251,8 @@ public class GarbageCollectorIT_RestartInjected extends ConfigurableMacBase {
       String table = getUniqueNames(1)[0];
       c.tableOperations().create(table);
 
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       try (BatchWriter bw = c.createBatchWriter(table)) {
         Mutation m1 = new Mutation("r1");
@@ -279,21 +260,13 @@ public class GarbageCollectorIT_RestartInjected extends ConfigurableMacBase {
         bw.addMutation(m1);
       }
 
-      RestartFramework.at("after_write")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_write").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       c.tableOperations().flush(table, null, null, true);
 
-      RestartFramework.at("after_flush")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_flush").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       // ensure an invalid delete entry does not cause GC to go berserk ACCUMULO-2520
       c.securityOperations().grantTablePermission(c.whoami(), MetadataTable.NAME,
@@ -307,12 +280,8 @@ public class GarbageCollectorIT_RestartInjected extends ConfigurableMacBase {
         bw.addMutation(createDelMutation("/", "", "", SkewedKeyValue.STR_NAME));
       }
 
-      RestartFramework.at("after_invalid_metadata_entries")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_invalid_metadata_entries").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       ProcessInfo gc = cluster.exec(SimpleGarbageCollector.class);
       try {

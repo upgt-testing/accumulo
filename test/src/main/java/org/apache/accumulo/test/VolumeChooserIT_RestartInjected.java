@@ -279,41 +279,25 @@ public class VolumeChooserIT_RestartInjected extends ConfigurableMacBase {
       // namespace 1 -> v2
       configureNamespace(c, PreferredVolumeChooser.class.getName(), v2.toString(), namespace1);
 
-      RestartFramework.at("after_namespace1_config")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_namespace1_config").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // Create table1 on namespace1
       verifyVolumesForWritesToNewTable(c, namespace1, v2.toString());
 
-      RestartFramework.at("after_table1_verify")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table1_verify").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       configureNamespace(c, PreferredVolumeChooser.class.getName(), v1.toString(), namespace2);
 
-      RestartFramework.at("after_namespace2_config")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_namespace2_config").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // Create table2 on namespace2
       verifyVolumesForWritesToNewTable(c, namespace2, v1.toString());
 
-      RestartFramework.at("after_table2_verify")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table2_verify").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     }
   }
 
@@ -327,21 +311,13 @@ public class VolumeChooserIT_RestartInjected extends ConfigurableMacBase {
     try (AccumuloClient client = Accumulo.newClient().from(getClientProperties()).build()) {
       createAndVerify(client, namespace1, v1 + "," + v2 + "," + v3);
 
-      RestartFramework.at("after_namespace1_create_verify")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_namespace1_create_verify").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       createAndVerify(client, namespace2, v1 + "," + v2 + "," + v3);
 
-      RestartFramework.at("after_namespace2_create_verify")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_namespace2_create_verify").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     }
   }
 
@@ -366,31 +342,19 @@ public class VolumeChooserIT_RestartInjected extends ConfigurableMacBase {
     try (AccumuloClient c = Accumulo.newClient().from(getClientProperties()).build()) {
       createAndVerify(c, namespace1, v1 + "," + v2 + "," + v3);
 
-      RestartFramework.at("after_random_chooser_verify")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_random_chooser_verify").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       configureNamespace(c, PreferredVolumeChooser.class.getName(), v1.toString(), namespace2);
 
-      RestartFramework.at("after_preferred_chooser_config")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_preferred_chooser_config").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // Create table2 on namespace2
       verifyVolumesForWritesToNewTable(c, namespace2, v1.toString());
 
-      RestartFramework.at("after_preferred_chooser_verify")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_preferred_chooser_verify").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     }
   }
 
@@ -404,21 +368,13 @@ public class VolumeChooserIT_RestartInjected extends ConfigurableMacBase {
       configureNamespace(client, PreferredVolumeChooser.class.getName(), configuredVolumes,
           namespace2);
 
-      RestartFramework.at("after_special_volume_config")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_special_volume_config").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       verifyVolumesForWritesToNewTable(client, namespace2, configuredVolumes);
 
-      RestartFramework.at("after_special_volume_verify")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_special_volume_verify").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     }
   }
 
@@ -430,40 +386,24 @@ public class VolumeChooserIT_RestartInjected extends ConfigurableMacBase {
       String tableName = "anotherTable";
       client.tableOperations().create(tableName);
 
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       VolumeChooserIT.addSplits(client, tableName);
 
-      RestartFramework.at("after_add_splits")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_add_splits").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       VolumeChooserIT.writeDataToTable(client, tableName, alpha_rows);
 
-      RestartFramework.at("after_write_data")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_write_data").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       // should only go to v2 as per configuration in configure()
       VolumeChooserIT.verifyWaLogVolumes(client, new Range(), v2.toString());
 
-      RestartFramework.at("after_verify_wa_logs")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_verify_wa_logs").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     }
   }
 }

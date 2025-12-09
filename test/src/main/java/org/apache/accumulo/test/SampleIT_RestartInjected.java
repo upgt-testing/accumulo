@@ -131,12 +131,8 @@ public class SampleIT_RestartInjected extends AccumuloClusterHarness {
 
       client.tableOperations().create(tableName, new NewTableConfiguration().enableSampling(SC1));
 
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       BatchWriter bw = client.createBatchWriter(tableName);
 
@@ -144,12 +140,8 @@ public class SampleIT_RestartInjected extends AccumuloClusterHarness {
       String someRow = writeData(bw, SC1, expected);
       assertEquals(20, expected.size());
 
-      RestartFramework.at("after_batch_write")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       Scanner scanner = client.createScanner(tableName, Authorizations.EMPTY);
       Scanner isoScanner =
@@ -169,12 +161,8 @@ public class SampleIT_RestartInjected extends AccumuloClusterHarness {
 
         client.tableOperations().flush(tableName, null, null, true);
 
-        RestartFramework.at("after_flush")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_flush").on(getCluster()).restart("tablet_server").withIndex(0)
+            .withMode(RestartMode.GRACEFUL).execute();
 
         Scanner oScanner = newOfflineScanner(client, tableName, clone, SC1);
         check(expected, scanner, bScanner, isoScanner, csiScanner, oScanner);
@@ -200,23 +188,15 @@ public class SampleIT_RestartInjected extends AccumuloClusterHarness {
         bw.addMutation(m);
         bw.close();
 
-        RestartFramework.at("after_mutation_update")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_mutation_update").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         check(expected, scanner, bScanner, isoScanner, csiScanner);
 
         client.tableOperations().flush(tableName, null, null, true);
 
-        RestartFramework.at("after_second_flush")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_second_flush").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         oScanner = newOfflineScanner(client, tableName, clone, SC1);
         check(expected, scanner, bScanner, isoScanner, csiScanner, oScanner);
@@ -336,24 +316,16 @@ public class SampleIT_RestartInjected extends AccumuloClusterHarness {
 
       client.tableOperations().create(tableName, new NewTableConfiguration().enableSampling(SC1));
 
-      RestartFramework.at("after_table_create_iterator_test")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_iterator_test").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       TreeMap<Key,Value> expected = new TreeMap<>();
       try (BatchWriter bw = client.createBatchWriter(tableName)) {
         writeData(bw, SC1, expected);
       }
 
-      RestartFramework.at("after_batch_write_iterator_test")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write_iterator_test").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       ArrayList<Key> keys = new ArrayList<>(expected.keySet());
 
@@ -397,12 +369,8 @@ public class SampleIT_RestartInjected extends AccumuloClusterHarness {
         // flush an rerun same test against files
         client.tableOperations().flush(tableName, null, null, true);
 
-        RestartFramework.at("after_flush_iterator_test")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_flush_iterator_test").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         oScanner = newOfflineScanner(client, tableName, clone, null);
         oScanner.addScanIterator(new IteratorSetting(100, IteratorThatUsesSample.class));
@@ -420,12 +388,8 @@ public class SampleIT_RestartInjected extends AccumuloClusterHarness {
 
         updateSamplingConfig(client, tableName, SC2);
 
-        RestartFramework.at("after_sampling_config_update")
-            .on(cluster)
-            .restart("manager")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_sampling_config_update").on(getCluster()).restart("manager")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         csiScanner.setIteratorSamplerConfiguration(SC2);
 
@@ -473,24 +437,16 @@ public class SampleIT_RestartInjected extends AccumuloClusterHarness {
 
       client.tableOperations().create(tableName);
 
-      RestartFramework.at("after_table_create_sample_not_present_test")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_sample_not_present_test").on(getCluster())
+          .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       TreeMap<Key,Value> expected = new TreeMap<>();
       try (BatchWriter bw = client.createBatchWriter(tableName)) {
         writeData(bw, SC1, expected);
       }
 
-      RestartFramework.at("after_batch_write_sample_not_present_test")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write_sample_not_present_test").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       Scanner scanner = client.createScanner(tableName);
       Scanner isoScanner = new IsolatedScanner(client.createScanner(tableName));
@@ -504,12 +460,8 @@ public class SampleIT_RestartInjected extends AccumuloClusterHarness {
 
         client.tableOperations().flush(tableName, null, null, true);
 
-        RestartFramework.at("after_flush_sample_not_present_test")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_flush_sample_not_present_test").on(getCluster())
+            .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         Scanner oScanner = newOfflineScanner(client, tableName, clone, SC1);
         assertSampleNotPresent(SC1, scanner, isoScanner, bScanner, csiScanner, oScanner);
@@ -519,12 +471,8 @@ public class SampleIT_RestartInjected extends AccumuloClusterHarness {
 
         updateSamplingConfig(client, tableName, SC1);
 
-        RestartFramework.at("after_first_sampling_config_update")
-            .on(cluster)
-            .restart("manager")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_first_sampling_config_update").on(getCluster())
+            .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         // create clone with new config
         oScanner = newOfflineScanner(client, tableName, clone, SC1);
@@ -534,12 +482,8 @@ public class SampleIT_RestartInjected extends AccumuloClusterHarness {
         // create rfile with sample data present
         client.tableOperations().compact(tableName, new CompactionConfig().setWait(true));
 
-        RestartFramework.at("after_first_compact")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_first_compact").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         // should be able to scan sample now
         oScanner = newOfflineScanner(client, tableName, clone, SC1);
@@ -549,12 +493,8 @@ public class SampleIT_RestartInjected extends AccumuloClusterHarness {
         // change sampling config
         updateSamplingConfig(client, tableName, SC2);
 
-        RestartFramework.at("after_second_sampling_config_update")
-            .on(cluster)
-            .restart("manager")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_second_sampling_config_update").on(getCluster())
+            .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         // create clone with new config
         oScanner = newOfflineScanner(client, tableName, clone, SC2);
@@ -565,12 +505,8 @@ public class SampleIT_RestartInjected extends AccumuloClusterHarness {
         // create rfile that has same sample data as table config
         client.tableOperations().compact(tableName, new CompactionConfig().setWait(true));
 
-        RestartFramework.at("after_second_compact")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_second_compact").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         // should be able to scan sample now
         updateExpected(SC2, expected);

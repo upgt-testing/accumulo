@@ -97,12 +97,8 @@ public class ExistingMacIT_RestartInjected extends ConfigurableMacBase {
     final String table = getUniqueNames(1)[0];
     client.tableOperations().create(table);
 
-    RestartFramework.at("after_table_create")
-        .on(cluster)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     try (BatchWriter bw = client.createBatchWriter(table)) {
       Mutation m1 = new Mutation("00081");
@@ -111,23 +107,15 @@ public class ExistingMacIT_RestartInjected extends ConfigurableMacBase {
       bw.addMutation(m1);
     }
 
-    RestartFramework.at("after_batch_write")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_batch_write").on(getCluster()).restart("tablet_server").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     client.tableOperations().flush(table, null, null, true);
     client.tableOperations().flush(MetadataTable.NAME, null, null, true);
     client.tableOperations().flush(RootTable.NAME, null, null, true);
 
-    RestartFramework.at("after_flush_all_tables")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_flush_all_tables").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     Set<Entry<ServerType,Collection<ProcessReference>>> procs =
         getCluster().getProcesses().entrySet();
@@ -148,7 +136,8 @@ public class ExistingMacIT_RestartInjected extends ConfigurableMacBase {
       Thread.sleep(1000);
     }
 
-    File hadoopConfDir = createTestDir(ExistingMacIT_RestartInjected.class.getSimpleName() + "_hadoop_conf");
+    File hadoopConfDir =
+        createTestDir(ExistingMacIT_RestartInjected.class.getSimpleName() + "_hadoop_conf");
     FileUtils.deleteQuietly(hadoopConfDir);
     assertTrue(hadoopConfDir.mkdirs());
     createEmptyConfig(new File(hadoopConfDir, "core-site.xml"));
@@ -184,12 +173,8 @@ public class ExistingMacIT_RestartInjected extends ConfigurableMacBase {
       // Ensure that a manager and tserver are up so the existing instance check won't fail.
       client.tableOperations().create(table);
 
-      RestartFramework.at("after_table_create_running")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_running").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (BatchWriter bw = client.createBatchWriter(table)) {
         Mutation m = new Mutation("foo");
@@ -197,14 +182,11 @@ public class ExistingMacIT_RestartInjected extends ConfigurableMacBase {
         bw.addMutation(m);
       }
 
-      RestartFramework.at("after_batch_write_running")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write_running").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
-      File hadoopConfDir = createTestDir(ExistingMacIT_RestartInjected.class.getSimpleName() + "_hadoop_conf_2");
+      File hadoopConfDir =
+          createTestDir(ExistingMacIT_RestartInjected.class.getSimpleName() + "_hadoop_conf_2");
       FileUtils.deleteQuietly(hadoopConfDir);
       assertTrue(hadoopConfDir.mkdirs());
       createEmptyConfig(new File(hadoopConfDir, "core-site.xml"));

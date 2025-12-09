@@ -47,12 +47,8 @@ public class DeleteFailIT_RestartInjected extends AccumuloClusterHarness {
           Collections.singletonMap(Property.TABLE_DELETE_BEHAVIOR.getKey(), Behavior.FAIL.name()));
       c.tableOperations().create(tableName, ntc);
 
-      RestartFramework.at("after_table_create_with_delete_behavior")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_with_delete_behavior").on(getCluster())
+          .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (BatchWriter writer = c.createBatchWriter(tableName)) {
         Mutation m = new Mutation("1234");
@@ -60,12 +56,8 @@ public class DeleteFailIT_RestartInjected extends AccumuloClusterHarness {
         writer.addMutation(m);
       }
 
-      RestartFramework.at("after_delete_mutation_write")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_delete_mutation_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (Scanner scanner = c.createScanner(tableName, Authorizations.EMPTY)) {
         assertThrows(RuntimeException.class, () -> scanner.forEach(e -> {}),

@@ -131,12 +131,8 @@ public class ErasureCodeIT_RestartInjected extends ConfigurableMacBase {
       var options3 = Map.of(Property.TABLE_ENABLE_ERASURE_CODES.getKey(), "disable");
       c.tableOperations().create(table3, new NewTableConfiguration().setProperties(options3));
 
-      RestartFramework.at("after_tables_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_tables_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       SecureRandom random = new SecureRandom();
 
@@ -157,23 +153,15 @@ public class ErasureCodeIT_RestartInjected extends ConfigurableMacBase {
         writer.getBatchWriter(table3).addMutation(m);
       }
 
-      RestartFramework.at("after_first_write")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_first_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       c.tableOperations().flush(table1, null, null, true);
       c.tableOperations().flush(table2, null, null, true);
       c.tableOperations().flush(table3, null, null, true);
 
-      RestartFramework.at("after_first_flush")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_first_flush").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       var ctx = ((ClientContext) c);
 
@@ -226,12 +214,8 @@ public class ErasureCodeIT_RestartInjected extends ConfigurableMacBase {
       c.tableOperations().compact(table1, cconfig);
       assertEquals(List.of("none"), getECPolicies(dfs, ctx, table1));
 
-      RestartFramework.at("after_first_compaction_set")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_first_compaction_set").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // add new files to the tables
       try (var writer = c.createMultiTableBatchWriter()) {
@@ -245,12 +229,8 @@ public class ErasureCodeIT_RestartInjected extends ConfigurableMacBase {
       c.tableOperations().flush(table1, null, null, true);
       c.tableOperations().flush(table2, null, null, true);
 
-      RestartFramework.at("after_second_flush")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_second_flush").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       assertEquals(List.of("none", policy1), getECPolicies(dfs, ctx, table1));
       assertEquals(List.of("none", "none"), getECPolicies(dfs, ctx, table2));
@@ -260,12 +240,8 @@ public class ErasureCodeIT_RestartInjected extends ConfigurableMacBase {
       dfs.setErasureCodingPolicy(getTableDir(ctx, table2), policy2);
       dfs.setErasureCodingPolicy(getTableDir(ctx, table3), policy2);
 
-      RestartFramework.at("after_set_ec_policies")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_set_ec_policies").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       // compact all the tables and see how setting an EC policy on the table dir influenced the
       // files created
@@ -273,12 +249,8 @@ public class ErasureCodeIT_RestartInjected extends ConfigurableMacBase {
       c.tableOperations().compact(table2, new CompactionConfig().setWait(true));
       c.tableOperations().compact(table3, new CompactionConfig().setWait(true));
 
-      RestartFramework.at("after_compaction_with_ec")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_compaction_with_ec").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // the table settings specify policy1 so that should win
       assertEquals(List.of(policy1), getECPolicies(dfs, ctx, table1));
@@ -292,24 +264,16 @@ public class ErasureCodeIT_RestartInjected extends ConfigurableMacBase {
       dfs.unsetErasureCodingPolicy(getTableDir(ctx, table2));
       dfs.unsetErasureCodingPolicy(getTableDir(ctx, table3));
 
-      RestartFramework.at("after_unset_ec_policies")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_unset_ec_policies").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // compact all the tables and see what happens
       c.tableOperations().compact(table1, new CompactionConfig().setWait(true));
       c.tableOperations().compact(table2, new CompactionConfig().setWait(true));
       c.tableOperations().compact(table3, new CompactionConfig().setWait(true));
 
-      RestartFramework.at("after_final_compaction")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_final_compaction").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // the table settings specify policy1 so that should win
       assertEquals(List.of(policy1), getECPolicies(dfs, ctx, table1));

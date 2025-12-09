@@ -89,7 +89,8 @@ public class BrokenBalancerIT_RestartInjected extends ConfigurableMacBase {
     testBadBalancer("org.apache.accumulo.abc.NonExistentBalancer", tableName, "notfound");
   }
 
-  private void testBadBalancer(String balancerClass, String tableName, String testVariant) throws Exception {
+  private void testBadBalancer(String balancerClass, String tableName, String testVariant)
+      throws Exception {
     try (AccumuloClient c = Accumulo.newClient().from(getClientProperties()).build()) {
       SortedSet<Text> splits = new TreeSet<>();
       for (int i = 0; i < 10; i++) {
@@ -100,12 +101,8 @@ public class BrokenBalancerIT_RestartInjected extends ConfigurableMacBase {
           new NewTableConfiguration().withSplits(splits).setProperties(props);
       c.tableOperations().create(tableName, ntc);
 
-      RestartFramework.at("after_table_create_" + testVariant)
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_" + testVariant).on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       assertEquals(Map.of(" none", 11), BalanceIT.countLocations(c, tableName));
       UtilWaitThread.sleep(5000);
@@ -117,12 +114,8 @@ public class BrokenBalancerIT_RestartInjected extends ConfigurableMacBase {
       c.tableOperations().setProperty(tableName, Property.TABLE_LOAD_BALANCER.getKey(),
           SimpleLoadBalancer.class.getName());
 
-      RestartFramework.at("after_fix_table_balancer_" + testVariant)
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_fix_table_balancer_" + testVariant).on(getCluster())
+          .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       Wait.waitFor(() -> 2 == BalanceIT.countLocations(c, tableName).size());
 
@@ -130,12 +123,8 @@ public class BrokenBalancerIT_RestartInjected extends ConfigurableMacBase {
       log.info("breaking manager balancer");
       c.instanceOperations().setProperty(Property.MANAGER_TABLET_BALANCER.getKey(), balancerClass);
 
-      RestartFramework.at("after_break_manager_balancer_" + testVariant)
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_break_manager_balancer_" + testVariant).on(getCluster())
+          .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // add some tablet servers
       assertEquals(2, getCluster().getConfig().getNumTservers());
@@ -158,12 +147,8 @@ public class BrokenBalancerIT_RestartInjected extends ConfigurableMacBase {
       c.instanceOperations().setProperty(Property.MANAGER_TABLET_BALANCER.getKey(),
           TableLoadBalancer.class.getName());
 
-      RestartFramework.at("after_fix_manager_balancer_" + testVariant)
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_fix_manager_balancer_" + testVariant).on(getCluster())
+          .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // should eventually balance across all 5 tabletsevers
       Wait.waitFor(() -> 5 == BalanceIT.countLocations(c, tableName).size(), 60_000);

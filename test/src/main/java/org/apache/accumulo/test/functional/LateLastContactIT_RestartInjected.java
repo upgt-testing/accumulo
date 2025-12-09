@@ -50,12 +50,8 @@ public class LateLastContactIT_RestartInjected extends ConfigurableMacBase {
   public void test() throws Exception {
     Process zombie = cluster.exec(ZombieTServer.class).getProcess();
 
-    RestartFramework.at("after_start_zombie_tserver")
-        .on(cluster)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_start_zombie_tserver").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     assertEquals(0, zombie.waitFor());
   }

@@ -91,24 +91,16 @@ public class ExternalCompaction_3_IT_RestartInjected extends SharedMiniClusterBa
 
     getCluster().getClusterControl().startCoordinator(CompactionCoordinator.class);
     getCluster().getClusterControl().startCompactors(ExternalDoNothingCompactor.class, 1, QUEUE1);
-    RestartFramework.at("after_coordinator_compactor_start_merge_test")
-        .on(cluster)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_coordinator_compactor_start_merge_test").on(getCluster())
+        .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     String table1 = this.getUniqueNames(1)[0];
     try (AccumuloClient client =
         Accumulo.newClient().from(getCluster().getClientProperties()).build()) {
 
       createTable(client, table1, "cs1", 2);
-      RestartFramework.at("after_table_create_merge_test")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_merge_test").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       // set compaction ratio to 1 so that majc occurs naturally, not user compaction
       // user compaction blocks merge
       client.tableOperations().setProperty(table1, Property.TABLE_MAJC_RATIO.toString(), "1.0");
@@ -117,24 +109,16 @@ public class ExternalCompaction_3_IT_RestartInjected extends SharedMiniClusterBa
       writeData(client, table1);
       writeData(client, table1);
       writeData(client, table1);
-      RestartFramework.at("after_data_writes_merge_test")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_data_writes_merge_test").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       TableId tid = getCluster().getServerContext().getTableId(table1);
 
       // Wait for the compaction to start by waiting for 1 external compaction column
       Set<ExternalCompactionId> ecids =
           waitForCompactionStartAndReturnEcids(getCluster().getServerContext(), tid);
-      RestartFramework.at("after_compaction_start_merge_test")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_compaction_start_merge_test").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       var md = new ArrayList<TabletMetadata>();
       try (TabletsMetadata tm = getCluster().getServerContext().getAmple().readTablets()
@@ -147,12 +131,8 @@ public class ExternalCompaction_3_IT_RestartInjected extends SharedMiniClusterBa
       Text start = md.get(0).getPrevEndRow();
       Text end = md.get(1).getEndRow();
       client.tableOperations().merge(table1, start, end);
-      RestartFramework.at("after_merge_operation_merge_test")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_merge_operation_merge_test").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       confirmCompactionCompleted(getCluster().getServerContext(), ecids,
           TCompactionState.CANCELLED);
@@ -181,61 +161,37 @@ public class ExternalCompaction_3_IT_RestartInjected extends SharedMiniClusterBa
     getCluster().getClusterControl().startCoordinator(CompactionCoordinator.class);
     getCluster().getClusterControl().startCompactors(ExternalDoNothingCompactor.class, 1, QUEUE2);
     RestartFramework.at("after_coordinator_compactor_start_coordinator_restart_test")
-        .on(cluster)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+        .on(getCluster()).restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     String table1 = this.getUniqueNames(1)[0];
     try (AccumuloClient client =
         Accumulo.newClient().from(getCluster().getClientProperties()).build()) {
 
       createTable(client, table1, "cs2", 2);
-      RestartFramework.at("after_table_create_coordinator_restart_test")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_coordinator_restart_test").on(getCluster())
+          .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       writeData(client, table1);
-      RestartFramework.at("after_data_write_coordinator_restart_test")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_data_write_coordinator_restart_test").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       compact(client, table1, 2, QUEUE2, false);
-      RestartFramework.at("after_compact_call_coordinator_restart_test")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_compact_call_coordinator_restart_test").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       TableId tid = getCluster().getServerContext().getTableId(table1);
 
       // Wait for the compaction to start by waiting for 1 external compaction column
       Set<ExternalCompactionId> ecids =
           waitForCompactionStartAndReturnEcids(getCluster().getServerContext(), tid);
-      RestartFramework.at("after_compaction_start_coordinator_restart_test")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_compaction_start_coordinator_restart_test").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // Stop the Coordinator
       getCluster().getClusterControl().stop(ServerType.COMPACTION_COORDINATOR);
 
       // Restart the coordinator while the compaction is running
       getCluster().getClusterControl().startCoordinator(CompactionCoordinator.class);
-      RestartFramework.at("after_coordinator_restart_coordinator_restart_test")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_coordinator_restart_coordinator_restart_test").on(getCluster())
+          .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // Confirm compaction is still running
       int matches = 0;

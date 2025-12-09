@@ -80,12 +80,8 @@ public class DeprecatedPropertyUtilIT_RestartInjected extends ConfigurableMacBas
       // create using old prop and verify new prop was created
       SystemPropUtil.setSystemProperty(getServerContext(), oldProp, propValue);
 
-      RestartFramework.at("after_set_property_with_old_prop")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_set_property_with_old_prop").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       config = client.instanceOperations().getSystemConfiguration();
       assertFalse(config.containsKey(oldProp), oldProp + " was in the config after set call!");
@@ -95,12 +91,8 @@ public class DeprecatedPropertyUtilIT_RestartInjected extends ConfigurableMacBas
       // remove using new prop and verify both are gone
       SystemPropUtil.removeSystemProperty(getServerContext(), newProp);
 
-      RestartFramework.at("after_remove_property_with_new_prop")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_remove_property_with_new_prop").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       config = client.instanceOperations().getSystemConfiguration();
       assertFalse(config.containsKey(oldProp), oldProp + " was in the config after remove call!");
@@ -109,12 +101,8 @@ public class DeprecatedPropertyUtilIT_RestartInjected extends ConfigurableMacBas
       // re-create using new prop and verify new prop was created
       SystemPropUtil.setSystemProperty(getServerContext(), newProp, propValue);
 
-      RestartFramework.at("after_recreate_property_with_new_prop")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_recreate_property_with_new_prop").on(getCluster())
+          .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       config = client.instanceOperations().getSystemConfiguration();
       assertFalse(config.containsKey(oldProp), oldProp + " was in the config after set call!");
@@ -124,12 +112,8 @@ public class DeprecatedPropertyUtilIT_RestartInjected extends ConfigurableMacBas
       // remove using old prop and verify both are gone
       SystemPropUtil.removeSystemProperty(getServerContext(), oldProp);
 
-      RestartFramework.at("after_remove_property_with_old_prop")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_remove_property_with_old_prop").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       config = client.instanceOperations().getSystemConfiguration();
       assertFalse(config.containsKey(oldProp), oldProp + " was in the config after remove call!");
@@ -150,12 +134,8 @@ public class DeprecatedPropertyUtilIT_RestartInjected extends ConfigurableMacBas
       // create using old prop and verify new prop was created
       SystemPropUtil.modifyProperties(getServerContext(), 0, Map.of(oldProp, propValue));
 
-      RestartFramework.at("after_modify_create_with_old_prop")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_modify_create_with_old_prop").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       config = client.instanceOperations().getSystemConfiguration();
       assertFalse(config.containsKey(oldProp), oldProp + " was in the config after set call!");
@@ -173,12 +153,8 @@ public class DeprecatedPropertyUtilIT_RestartInjected extends ConfigurableMacBas
       // remove using new prop and verify both are gone
       SystemPropUtil.modifyProperties(getServerContext(), 1, Map.of());
 
-      RestartFramework.at("after_modify_remove_with_new_prop")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_modify_remove_with_new_prop").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       config = client.instanceOperations().getSystemConfiguration();
       assertFalse(config.containsKey(oldProp), oldProp + " was in the config after remove call!");
@@ -187,12 +163,8 @@ public class DeprecatedPropertyUtilIT_RestartInjected extends ConfigurableMacBas
       // re-create using new prop and verify new prop was created
       SystemPropUtil.modifyProperties(getServerContext(), 2, Map.of(newProp, propValue));
 
-      RestartFramework.at("after_modify_recreate_with_new_prop")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_modify_recreate_with_new_prop").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       config = client.instanceOperations().getSystemConfiguration();
       assertFalse(config.containsKey(oldProp), oldProp + " was in the config after set call!");
@@ -202,12 +174,8 @@ public class DeprecatedPropertyUtilIT_RestartInjected extends ConfigurableMacBas
       // remove using old prop and verify both are gone
       SystemPropUtil.modifyProperties(getServerContext(), 3, Map.of());
 
-      RestartFramework.at("after_modify_remove_with_old_prop")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_modify_remove_with_old_prop").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       config = client.instanceOperations().getSystemConfiguration();
       assertFalse(config.containsKey(oldProp), oldProp + " was in the config after remove call!");

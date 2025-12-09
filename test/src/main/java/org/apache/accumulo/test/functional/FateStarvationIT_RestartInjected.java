@@ -47,12 +47,8 @@ public class FateStarvationIT_RestartInjected extends AccumuloClusterHarness {
       var ntc = new NewTableConfiguration().withSplits(TestIngest.getSplitPoints(0, 100000, 50));
       c.tableOperations().create(tableName, ntc);
 
-      RestartFramework.at("after_table_create_fate_starvation")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_fate_starvation").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       IngestParams params = new IngestParams(getClientProps(), tableName, 100_000);
       params.random = 89;
@@ -61,21 +57,13 @@ public class FateStarvationIT_RestartInjected extends AccumuloClusterHarness {
       params.cols = 1;
       TestIngest.ingest(c, params);
 
-      RestartFramework.at("after_data_ingest_fate_starvation")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_data_ingest_fate_starvation").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       c.tableOperations().flush(tableName, null, null, true);
 
-      RestartFramework.at("after_flush_fate_starvation")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_flush_fate_starvation").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       List<Text> splits = new ArrayList<>(TestIngest.getSplitPoints(0, 100000, 67));
 
@@ -86,21 +74,13 @@ public class FateStarvationIT_RestartInjected extends AccumuloClusterHarness {
         c.tableOperations().compact(tableName, splits.get(idx1), splits.get(idx2), false, false);
       }
 
-      RestartFramework.at("after_compaction_loop_fate_starvation")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_compaction_loop_fate_starvation").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       c.tableOperations().offline(tableName);
 
-      RestartFramework.at("after_offline_fate_starvation")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_offline_fate_starvation").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       FunctionalTestUtils.assertNoDanglingFateLocks(getCluster());
     }

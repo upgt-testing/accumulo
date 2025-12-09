@@ -95,12 +95,8 @@ public class LocatorIT_RestartInjected extends AccumuloClusterHarness {
       TableOperations tableOps = client.tableOperations();
       tableOps.create(tableName);
 
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       Range r1 = new Range("m");
       Range r2 = new Range("o", "x");
@@ -119,55 +115,35 @@ public class LocatorIT_RestartInjected extends AccumuloClusterHarness {
       Locations ret = tableOps.locate(tableName, ranges);
       assertContains(ret, tservers, Map.of(r1, Set.of(t1)), Map.of(t1, Set.of(r1)));
 
-      RestartFramework.at("after_first_locate")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_first_locate").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       ranges.add(r2);
       ret = tableOps.locate(tableName, ranges);
       assertContains(ret, tservers, Map.of(r1, Set.of(t1), r2, Set.of(t1)),
           Map.of(t1, Set.of(r1, r2)));
 
-      RestartFramework.at("after_second_locate")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_second_locate").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       TreeSet<Text> splits = new TreeSet<>();
       splits.add(new Text("r"));
       tableOps.addSplits(tableName, splits);
 
-      RestartFramework.at("after_add_splits")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_add_splits").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       ret = tableOps.locate(tableName, ranges);
       assertContains(ret, tservers, Map.of(r1, Set.of(t2), r2, Set.of(t2, t3)),
           Map.of(t2, Set.of(r1, r2), t3, Set.of(r2)));
 
-      RestartFramework.at("after_locate_with_splits")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_locate_with_splits").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       tableOps.offline(tableName, true);
 
-      RestartFramework.at("after_table_offline")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_offline").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       assertThrows(TableOfflineException.class, () -> tableOps.locate(tableName, ranges));
 

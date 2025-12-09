@@ -73,12 +73,8 @@ public class ManagerAssignmentIT_RestartInjected extends AccumuloClusterHarness 
       String tableName = super.getUniqueNames(1)[0];
       c.tableOperations().create(tableName);
 
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       TableId tableId = TableId.of(c.tableOperations().tableIdMap().get(tableName));
       // wait for the table to be online
@@ -97,22 +93,14 @@ public class ManagerAssignmentIT_RestartInjected extends AccumuloClusterHarness 
         bw.addMutation(m);
       }
 
-      RestartFramework.at("after_batch_write")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // give it a last location
       c.tableOperations().flush(tableName, null, null, true);
 
-      RestartFramework.at("after_flush")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_flush").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       TabletLocationState flushed = getTabletLocationState(c, tableId);
       assertEquals(newTablet.current, flushed.current);
@@ -122,12 +110,8 @@ public class ManagerAssignmentIT_RestartInjected extends AccumuloClusterHarness 
       // take the tablet offline
       c.tableOperations().offline(tableName, true);
 
-      RestartFramework.at("after_offline")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_offline").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       TabletLocationState offline = getTabletLocationState(c, tableId);
       assertNull(offline.future);
@@ -137,12 +121,8 @@ public class ManagerAssignmentIT_RestartInjected extends AccumuloClusterHarness 
       // put it back online
       c.tableOperations().online(tableName, true);
 
-      RestartFramework.at("after_online")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_online").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       TabletLocationState online = getTabletLocationState(c, tableId);
       assertNull(online.future);
@@ -165,21 +145,13 @@ public class ManagerAssignmentIT_RestartInjected extends AccumuloClusterHarness 
 
       Wait.waitFor(() -> client.instanceOperations().getTabletServers().size() == 1);
 
-      RestartFramework.at("after_start_single_tserver")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_start_single_tserver").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       client.tableOperations().create(tableName);
 
-      RestartFramework.at("after_table_create_shutdown_test")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_shutdown_test").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // wait for everything to be hosted and balanced
       client.instanceOperations().waitForBalance();
@@ -192,21 +164,13 @@ public class ManagerAssignmentIT_RestartInjected extends AccumuloClusterHarness 
         }
       }
 
-      RestartFramework.at("after_batch_write_shutdown_test")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write_shutdown_test").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       client.tableOperations().flush(tableName, null, null, true);
 
-      RestartFramework.at("after_flush_shutdown_test")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_flush_shutdown_test").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       final CountDownLatch latch = new CountDownLatch(10);
 
@@ -284,21 +248,13 @@ public class ManagerAssignmentIT_RestartInjected extends AccumuloClusterHarness 
 
       Wait.waitFor(() -> client.instanceOperations().getTabletServers().size() == 1, 60_000);
 
-      RestartFramework.at("after_start_single_tserver_no_user_table")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_start_single_tserver_no_user_table").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       client.instanceOperations().waitForBalance();
 
-      RestartFramework.at("after_wait_for_balance")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_wait_for_balance").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       // getClusterControl().stopAllServers(ServerType.TABLET_SERVER)
       // could potentially send a kill -9 to the process. Shut the tablet

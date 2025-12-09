@@ -71,7 +71,8 @@ import org.slf4j.LoggerFactory;
 
 public class ClassLoaderContextCompactionIT_RestartInjected extends AccumuloClusterHarness {
 
-  private static final Logger LOG = LoggerFactory.getLogger(ClassLoaderContextCompactionIT_RestartInjected.class);
+  private static final Logger LOG =
+      LoggerFactory.getLogger(ClassLoaderContextCompactionIT_RestartInjected.class);
   private static TestStatsDSink sink;
 
   @BeforeAll
@@ -163,12 +164,8 @@ public class ClassLoaderContextCompactionIT_RestartInjected extends AccumuloClus
       final HostAndPort compactorAddr = compactors.get(0);
       createTable(client, table1, "cs1");
 
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       client.tableOperations().setProperty(table1, TABLE_FILE_MAX.getKey(), "1001");
       client.tableOperations().setProperty(table1, TABLE_MAJC_RATIO.getKey(), "1001");
@@ -176,12 +173,8 @@ public class ClassLoaderContextCompactionIT_RestartInjected extends AccumuloClus
 
       ReadWriteIT.ingest(client, 1000, 1, 1, 0, "colf", table1, 20);
 
-      RestartFramework.at("after_ingest")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_ingest").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       Ample ample = ((ClientContext) client).getAmple();
       try (
@@ -205,12 +198,8 @@ public class ClassLoaderContextCompactionIT_RestartInjected extends AccumuloClus
       fs.copyFromLocalFile(src, dst);
       assertTrue(fs.exists(dst));
 
-      RestartFramework.at("after_setup_context")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_setup_context").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       // Define a classloader context that references Test.jar
       @SuppressWarnings("removal")
@@ -229,12 +218,8 @@ public class ClassLoaderContextCompactionIT_RestartInjected extends AccumuloClus
           new IteratorSetting(101, "FooFilter", "org.apache.accumulo.test.FooFilter");
       client.tableOperations().attachIterator(table1, cfg, EnumSet.of(IteratorScope.majc));
 
-      RestartFramework.at("after_config_context")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_config_context").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       // delete Test.jar, so that the classloader will fail
       assertTrue(fs.delete(dst, false));

@@ -52,30 +52,18 @@ public class ShutdownIT_RestartInjected extends ConfigurableMacBase {
     Process ingest = cluster
         .exec(TestIngest.class, "-c", cluster.getClientPropsPath(), "--createTable").getProcess();
 
-    RestartFramework.at("after_ingest_process_start")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_ingest_process_start").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     sleepUninterruptibly(100, TimeUnit.MILLISECONDS);
 
-    RestartFramework.at("after_sleep_during_ingest")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_sleep_during_ingest").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     assertEquals(0, cluster.exec(Admin.class, "stopAll").getProcess().waitFor());
 
-    RestartFramework.at("after_stopAll_during_ingest")
-        .on(cluster)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_stopAll_during_ingest").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     ingest.destroy();
   }
@@ -86,40 +74,24 @@ public class ShutdownIT_RestartInjected extends ConfigurableMacBase {
         cluster.exec(TestIngest.class, "-c", cluster.getClientPropsPath(), "--createTable")
             .getProcess().waitFor());
 
-    RestartFramework.at("after_ingest_completion_query")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_ingest_completion_query").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     Process verify =
         cluster.exec(VerifyIngest.class, "-c", cluster.getClientPropsPath()).getProcess();
 
-    RestartFramework.at("after_verify_process_start")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_verify_process_start").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     sleepUninterruptibly(100, TimeUnit.MILLISECONDS);
 
-    RestartFramework.at("after_sleep_during_query")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_sleep_during_query").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     assertEquals(0, cluster.exec(Admin.class, "stopAll").getProcess().waitFor());
 
-    RestartFramework.at("after_stopAll_during_query")
-        .on(cluster)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_stopAll_during_query").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     verify.destroy();
   }
@@ -130,40 +102,24 @@ public class ShutdownIT_RestartInjected extends ConfigurableMacBase {
         cluster.exec(TestIngest.class, "-c", cluster.getClientPropsPath(), "--createTable")
             .getProcess().waitFor());
 
-    RestartFramework.at("after_ingest_completion_delete")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_ingest_completion_delete").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     Process deleter =
         cluster.exec(TestRandomDeletes.class, "-c", cluster.getClientPropsPath()).getProcess();
 
-    RestartFramework.at("after_deleter_process_start")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_deleter_process_start").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     sleepUninterruptibly(100, TimeUnit.MILLISECONDS);
 
-    RestartFramework.at("after_sleep_during_delete")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_sleep_during_delete").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     assertEquals(0, cluster.exec(Admin.class, "stopAll").getProcess().waitFor());
 
-    RestartFramework.at("after_stopAll_during_delete")
-        .on(cluster)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_stopAll_during_delete").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     deleter.destroy();
   }
@@ -175,12 +131,8 @@ public class ShutdownIT_RestartInjected extends ConfigurableMacBase {
         c.tableOperations().create("table" + i);
       }
 
-      RestartFramework.at("after_tables_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_tables_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       final AtomicReference<Exception> ref = new AtomicReference<>();
       Thread async = new Thread(() -> {
@@ -194,30 +146,18 @@ public class ShutdownIT_RestartInjected extends ConfigurableMacBase {
       });
       async.start();
 
-      RestartFramework.at("after_async_delete_start")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_async_delete_start").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       sleepUninterruptibly(100, TimeUnit.MILLISECONDS);
 
-      RestartFramework.at("after_sleep_during_delete_table")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_sleep_during_delete_table").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       assertEquals(0, cluster.exec(Admin.class, "stopAll").getProcess().waitFor());
 
-      RestartFramework.at("after_stopAll_during_delete_table")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_stopAll_during_delete_table").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       if (ref.get() != null) {
         throw ref.get();
@@ -229,12 +169,8 @@ public class ShutdownIT_RestartInjected extends ConfigurableMacBase {
   public void stopDuringStart() throws Exception {
     assertEquals(0, cluster.exec(Admin.class, "stopAll").getProcess().waitFor());
 
-    RestartFramework.at("after_stopAll_during_start")
-        .on(cluster)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_stopAll_during_start").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
   }
 
   @Test
@@ -250,52 +186,32 @@ public class ShutdownIT_RestartInjected extends ConfigurableMacBase {
         .getProcess().waitFor();
     assertEquals(0, x);
 
-    RestartFramework.at("after_ingest_completion_admin_stop")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_ingest_completion_admin_stop").on(getCluster())
+        .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     List<String> tabletServers = c.instanceOperations().getTabletServers();
     assertEquals(2, tabletServers.size());
 
-    RestartFramework.at("after_get_tablet_servers")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_get_tablet_servers").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     String doomed = tabletServers.get(0);
     log.info("Stopping " + doomed);
     assertEquals(0, cluster.exec(Admin.class, "stop", doomed).getProcess().waitFor());
 
-    RestartFramework.at("after_admin_stop_tserver")
-        .on(cluster)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_admin_stop_tserver").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     Wait.waitFor(() -> c.instanceOperations().getTabletServers().size() == 1);
 
-    RestartFramework.at("after_wait_for_tserver_removal")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_wait_for_tserver_removal").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     tabletServers = c.instanceOperations().getTabletServers();
     assertEquals(1, tabletServers.size());
     assertNotEquals(tabletServers.get(0), doomed);
 
-    RestartFramework.at("after_final_verification_admin_stop")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_final_verification_admin_stop").on(getCluster())
+        .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
   }
 }

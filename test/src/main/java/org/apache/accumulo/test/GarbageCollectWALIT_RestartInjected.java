@@ -66,38 +66,22 @@ public class GarbageCollectWALIT_RestartInjected extends ConfigurableMacBase {
     cluster.getClusterControl().stop(ServerType.GARBAGE_COLLECTOR);
     try (AccumuloClient c = Accumulo.newClient().from(getClientProperties()).build()) {
       c.tableOperations().create(tableName);
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       // count the number of WALs in the filesystem
       assertEquals(2, countWALsInFS(cluster));
       cluster.getClusterControl().stop(ServerType.TABLET_SERVER);
       cluster.getClusterControl().start(ServerType.GARBAGE_COLLECTOR);
-      RestartFramework.at("after_gc_start")
-          .on(cluster)
-          .restart("garbage_collector")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_gc_start").on(getCluster()).restart("garbage_collector")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       cluster.getClusterControl().start(ServerType.TABLET_SERVER);
-      RestartFramework.at("after_tserver_restart")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_tserver_restart").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       try (Scanner scanner = c.createScanner(MetadataTable.NAME, Authorizations.EMPTY)) {
         scanner.forEach((k, v) -> {});
       }
-      RestartFramework.at("after_metadata_scan")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_metadata_scan").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       UtilWaitThread.sleep(3 * 5_000);
       assertEquals(2, countWALsInFS(cluster));
     }

@@ -70,12 +70,8 @@ public class BatchWriterIT_RestartInjected extends AccumuloClusterHarness {
     try (AccumuloClient c = Accumulo.newClient().from(getClientProps()).build()) {
       c.tableOperations().create(table);
 
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       BatchWriterConfig config = new BatchWriterConfig();
       config.setMaxMemory(0);
@@ -85,12 +81,8 @@ public class BatchWriterIT_RestartInjected extends AccumuloClusterHarness {
         writer.addMutation(m);
       }
 
-      RestartFramework.at("after_batch_write")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     }
   }
 
@@ -132,12 +124,8 @@ public class BatchWriterIT_RestartInjected extends AccumuloClusterHarness {
           NumericValueConstraint.class.getName()));
       c.tableOperations().create(table, ntc);
 
-      RestartFramework.at("after_table_create_rpc")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_rpc").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       var tableId = TableId.of(c.tableOperations().tableIdMap().get(table));
 
@@ -147,15 +135,12 @@ public class BatchWriterIT_RestartInjected extends AccumuloClusterHarness {
 
       update((ClientContext) c, m, new KeyExtent(tableId, null, null));
 
-      RestartFramework.at("after_first_update")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_first_update").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (var scanner = c.createScanner(table)) {
-        var entries = scanner.stream().map(BatchWriterIT_RestartInjected::toString).collect(Collectors.toList());
+        var entries = scanner.stream().map(BatchWriterIT_RestartInjected::toString)
+            .collect(Collectors.toList());
         assertEquals(List.of("r1:f1:q3::1", "r1:f1:q4::2"), entries);
       }
 
@@ -165,15 +150,12 @@ public class BatchWriterIT_RestartInjected extends AccumuloClusterHarness {
 
       update((ClientContext) c, m, new KeyExtent(tableId, null, null));
 
-      RestartFramework.at("after_second_update")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_second_update").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (var scanner = c.createScanner(table)) {
-        var entries = scanner.stream().map(BatchWriterIT_RestartInjected::toString).collect(Collectors.toList());
+        var entries = scanner.stream().map(BatchWriterIT_RestartInjected::toString)
+            .collect(Collectors.toList());
         assertEquals(List.of("r1:f1:q3::5", "r1:f1:q4::2", "r1:f1:q7::3"), entries);
       }
 

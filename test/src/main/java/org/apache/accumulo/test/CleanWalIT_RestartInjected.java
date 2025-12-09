@@ -77,12 +77,8 @@ public class CleanWalIT_RestartInjected extends AccumuloClusterHarness {
       String tableName = getUniqueNames(1)[0];
       client.tableOperations().create(tableName);
 
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       try (BatchWriter bw = client.createBatchWriter(tableName)) {
         Mutation m = new Mutation("row");
@@ -90,24 +86,16 @@ public class CleanWalIT_RestartInjected extends AccumuloClusterHarness {
         bw.addMutation(m);
       }
 
-      RestartFramework.at("after_first_batch_write")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_first_batch_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       getCluster().getClusterControl().stopAllServers(ServerType.TABLET_SERVER);
       // all 3 tables should do recovery, but the bug doesn't really remove the log file references
 
       getCluster().getClusterControl().startAllServers(ServerType.TABLET_SERVER);
 
-      RestartFramework.at("after_first_recovery")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_first_recovery").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       for (String table : new String[] {MetadataTable.NAME, RootTable.NAME}) {
         client.tableOperations().flush(table, null, null, true);
@@ -125,12 +113,8 @@ public class CleanWalIT_RestartInjected extends AccumuloClusterHarness {
         bw.addMutation(m);
       }
 
-      RestartFramework.at("after_delete_mutation")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_delete_mutation").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       assertEquals(0, count(tableName, client));
       client.tableOperations().flush(tableName, null, null, true);

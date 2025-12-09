@@ -99,12 +99,8 @@ public class AccumuloClientIT_RestartInjected extends AccumuloClusterHarness {
 
       c.tableOperations().create(tableName);
 
-      RestartFramework.at("after_table_create_connector")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_connector").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (AccumuloClient client2 = org.apache.accumulo.core.client.Connector.newClient(c)) {
         assertTrue(client2.tableOperations().list().contains(tableName));
@@ -128,12 +124,8 @@ public class AccumuloClientIT_RestartInjected extends AccumuloClusterHarness {
     final String password1 = testuser1.getPassword();
     c.securityOperations().createLocalUser(user1, new PasswordToken(password1));
 
-    RestartFramework.at("after_user1_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_user1_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     AccumuloClient client = Accumulo.newClient().to(instanceName, zookeepers).as(user1, password1)
         .zkTimeout(1234).build();
@@ -178,12 +170,8 @@ public class AccumuloClientIT_RestartInjected extends AccumuloClusterHarness {
     final String password2 = testuser2.getPassword();
     c.securityOperations().createLocalUser(user2, new PasswordToken(password2));
 
-    RestartFramework.at("after_user2_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_user2_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     AccumuloClient client2 = Accumulo.newClient().from(client.properties())
         .as(user2, new PasswordToken(password2)).build();
@@ -212,12 +200,8 @@ public class AccumuloClientIT_RestartInjected extends AccumuloClusterHarness {
 
       c.tableOperations().create(tableName);
 
-      RestartFramework.at("after_table_create_close")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_close").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (BatchWriter writer = c.createBatchWriter(tableName)) {
         Mutation m = new Mutation("0001");
@@ -225,12 +209,8 @@ public class AccumuloClientIT_RestartInjected extends AccumuloClusterHarness {
         writer.addMutation(m);
       }
 
-      RestartFramework.at("after_batch_write_close")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write_close").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       scanner = c.createScanner(tableName, Authorizations.EMPTY);
     }

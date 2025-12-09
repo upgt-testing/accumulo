@@ -66,37 +66,21 @@ public class ExternalCompaction4_IT_RestartInjected extends AccumuloClusterHarne
     try (AccumuloClient client = Accumulo.newClient().from(getClientProps()).build()) {
       getCluster().getClusterControl().startCoordinator(CompactionCoordinator.class);
       getCluster().getClusterControl().startCompactors(Compactor.class, 1, QUEUE1);
-      RestartFramework.at("after_coordinator_compactor_start_nooutput")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_coordinator_compactor_start_nooutput").on(getCluster())
+          .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       createTable(client, table1, "cs1");
-      RestartFramework.at("after_table_creation_nooutput")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_creation_nooutput").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       // prevent intermediate compactions from running as 50 files are generated in test
       client.tableOperations().setProperty(table1, TABLE_FILE_MAX.getKey(), "51");
       client.tableOperations().setProperty(table1, TABLE_MAJC_RATIO.getKey(), "51");
-      RestartFramework.at("after_table_properties_nooutput")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_properties_nooutput").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       TableId tid = TableId.of(client.tableOperations().tableIdMap().get(table1));
 
       ReadWriteIT.ingest(client, 50, 1, 1, 0, "colf", table1, 1);
-      RestartFramework.at("after_ingest_nooutput")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_ingest_nooutput").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       ReadWriteIT.verify(client, 50, 1, 1, 0, table1);
 
       Ample ample = ((ClientContext) client).getAmple();
@@ -115,19 +99,11 @@ public class ExternalCompaction4_IT_RestartInjected extends AccumuloClusterHarne
       IteratorSetting setting2 = new IteratorSetting(51, "error", ErrorThrowingIterator.class);
       setting2.addOption(ErrorThrowingIterator.TIMES, "3");
       client.tableOperations().attachIterator(table1, setting2, EnumSet.of(IteratorScope.majc));
-      RestartFramework.at("after_iterators_attached_nooutput")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_iterators_attached_nooutput").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       client.tableOperations().compact(table1, new CompactionConfig().setWait(true));
-      RestartFramework.at("after_compaction_nooutput")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_compaction_nooutput").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (TabletsMetadata tm = ample.readTablets().forTable(tid).fetch(ColumnType.FILES).build()) {
         assertThrows(NoSuchElementException.class, () -> tm.iterator().next());
@@ -145,36 +121,20 @@ public class ExternalCompaction4_IT_RestartInjected extends AccumuloClusterHarne
     try (AccumuloClient client = Accumulo.newClient().from(getClientProps()).build()) {
       getCluster().getClusterControl().startCoordinator(CompactionCoordinator.class);
       getCluster().getClusterControl().startCompactors(Compactor.class, 1, QUEUE1);
-      RestartFramework.at("after_coordinator_compactor_start_usercompaction")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_coordinator_compactor_start_usercompaction").on(getCluster())
+          .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       createTable(client, table1, "cs1");
-      RestartFramework.at("after_table_creation_usercompaction")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_creation_usercompaction").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       client.tableOperations().setProperty(table1, TABLE_FILE_MAX.getKey(), "1001");
       client.tableOperations().setProperty(table1, TABLE_MAJC_RATIO.getKey(), "1001");
-      RestartFramework.at("after_table_properties_usercompaction")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_properties_usercompaction").on(getCluster())
+          .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       TableId tid = TableId.of(client.tableOperations().tableIdMap().get(table1));
 
       ReadWriteIT.ingest(client, 1000, 1, 1, 0, "colf", table1, 20);
-      RestartFramework.at("after_ingest_usercompaction")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_ingest_usercompaction").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       Ample ample = ((ClientContext) client).getAmple();
       try (
@@ -186,19 +146,11 @@ public class ExternalCompaction4_IT_RestartInjected extends AccumuloClusterHarne
       IteratorSetting setting = new IteratorSetting(50, "error", ErrorThrowingIterator.class);
       setting.addOption(ErrorThrowingIterator.TIMES, "3");
       client.tableOperations().attachIterator(table1, setting, EnumSet.of(IteratorScope.majc));
-      RestartFramework.at("after_iterator_attached_usercompaction")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_iterator_attached_usercompaction").on(getCluster())
+          .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       client.tableOperations().compact(table1, new CompactionConfig().setWait(true));
-      RestartFramework.at("after_compaction_usercompaction")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_compaction_usercompaction").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (
           TabletsMetadata tms = ample.readTablets().forTable(tid).fetch(ColumnType.FILES).build()) {

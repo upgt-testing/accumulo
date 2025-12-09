@@ -53,7 +53,8 @@ import org.slf4j.LoggerFactory;
 
 public class VerifySerialRecoveryIT_RestartInjected extends ConfigurableMacBase {
 
-  private static final Logger log = LoggerFactory.getLogger(VerifySerialRecoveryIT_RestartInjected.class);
+  private static final Logger log =
+      LoggerFactory.getLogger(VerifySerialRecoveryIT_RestartInjected.class);
 
   private static final byte[] HEXCHARS = {0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38,
       0x39, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66};
@@ -99,12 +100,8 @@ public class VerifySerialRecoveryIT_RestartInjected extends ConfigurableMacBase 
       NewTableConfiguration ntc = new NewTableConfiguration().withSplits(splits);
       c.tableOperations().create(tableName, ntc);
 
-      RestartFramework.at("after_table_create_with_splits")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_with_splits").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // load data to give the recovery something to do
       try (BatchWriter bw = c.createBatchWriter(tableName)) {
@@ -115,12 +112,8 @@ public class VerifySerialRecoveryIT_RestartInjected extends ConfigurableMacBase 
         }
       }
 
-      RestartFramework.at("after_batch_write")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // kill the tserver
       for (ProcessReference ref : getCluster().getProcesses().get(ServerType.TABLET_SERVER)) {
@@ -133,12 +126,8 @@ public class VerifySerialRecoveryIT_RestartInjected extends ConfigurableMacBase 
         scanner.forEach((k, v) -> {});
       }
 
-      RestartFramework.at("after_recovery_scan")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_recovery_scan").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       assertEquals(0, cluster.exec(Admin.class, "stopAll").getProcess().waitFor());
       ts.getProcess().waitFor();

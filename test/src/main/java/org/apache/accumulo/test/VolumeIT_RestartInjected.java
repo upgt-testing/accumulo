@@ -133,40 +133,24 @@ public class VolumeIT_RestartInjected extends ConfigurableMacBase {
       // create table with splits
       NewTableConfiguration ntc = new NewTableConfiguration().withSplits(partitions);
       client.tableOperations().create(tableName, ntc);
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       // scribble over the splits
       VolumeChooserIT.writeDataToTable(client, tableName, VolumeChooserIT.alpha_rows);
-      RestartFramework.at("after_batch_write")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       // write the data to disk, read it back
       client.tableOperations().flush(tableName, null, null, true);
-      RestartFramework.at("after_flush")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_flush").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       try (Scanner scanner = client.createScanner(tableName, Authorizations.EMPTY)) {
         int i = 0;
         for (Entry<Key,Value> entry : scanner) {
           assertEquals(VolumeChooserIT.alpha_rows[i++], entry.getKey().getRow().toString());
         }
       }
-      RestartFramework.at("after_scan_verification")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_scan_verification").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       // verify the new files are written to the different volumes
       try (Scanner scanner = client.createScanner(MetadataTable.NAME, Authorizations.EMPTY)) {
         scanner.setRange(new Range("1", "1<"));
@@ -187,12 +171,8 @@ public class VolumeIT_RestartInjected extends ConfigurableMacBase {
         log.debug("usage {}", usage);
         assertTrue(usage > 700 && usage < 900);
       }
-      RestartFramework.at("after_metadata_scan")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_metadata_scan").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     }
   }
 
@@ -219,43 +199,27 @@ public class VolumeIT_RestartInjected extends ConfigurableMacBase {
       String[] tableNames = getUniqueNames(2);
 
       InstanceId uuid = verifyAndShutdownCluster(client, tableNames[0]);
-      RestartFramework.at("after_verify_and_shutdown")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_verify_and_shutdown").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       updateConfig(config -> config.setProperty(Property.INSTANCE_VOLUMES.getKey(),
           v1 + "," + v2 + "," + v3));
 
       // initialize volume
       assertEquals(0, cluster.exec(Initialize.class, "--add-volumes").getProcess().waitFor());
-      RestartFramework.at("after_initialize_volumes")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_initialize_volumes").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       checkVolumesInitialized(Arrays.asList(v1, v2, v3), uuid);
 
       // start cluster and verify that new volume is used
       cluster.start();
-      RestartFramework.at("after_cluster_start")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_cluster_start").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       verifyVolumesUsed(client, tableNames[1], false, v1, v2, v3);
-      RestartFramework.at("after_verify_volumes_used")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_verify_volumes_used").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     }
   }
 
@@ -279,52 +243,32 @@ public class VolumeIT_RestartInjected extends ConfigurableMacBase {
     try (AccumuloClient client = Accumulo.newClient().from(getClientProperties()).build()) {
 
       InstanceId uuid = verifyAndShutdownCluster(client, tableNames[0]);
-      RestartFramework.at("after_verify_and_shutdown")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_verify_and_shutdown").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       updateConfig(config -> config.setProperty(Property.INSTANCE_VOLUMES.getKey(), v2 + "," + v3));
 
       // initialize volume
       assertEquals(0, cluster.exec(Initialize.class, "--add-volumes").getProcess().waitFor());
-      RestartFramework.at("after_initialize_volumes")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_initialize_volumes").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       checkVolumesInitialized(Arrays.asList(v1, v2, v3), uuid);
 
       // start cluster and verify that new volume is used
       cluster.start();
-      RestartFramework.at("after_cluster_start")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_cluster_start").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       // verify we can still read the tables (tableNames[0] is likely to have a file still on v1)
       verifyData(expected, client.createScanner(tableNames[0], Authorizations.EMPTY));
-      RestartFramework.at("after_verify_data")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_verify_data").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // v1 should not have any data for tableNames[1]
       verifyVolumesUsed(client, tableNames[1], false, v2, v3);
-      RestartFramework.at("after_verify_volumes_used")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_verify_volumes_used").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     }
   }
 
@@ -440,56 +384,32 @@ public class VolumeIT_RestartInjected extends ConfigurableMacBase {
       String[] tableNames = getUniqueNames(2);
 
       verifyVolumesUsed(client, tableNames[0], false, v1, v2);
-      RestartFramework.at("after_verify_volumes_used")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_verify_volumes_used").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       assertEquals(0, cluster.exec(Admin.class, "stopAll").getProcess().waitFor());
       cluster.stop();
-      RestartFramework.at("after_stopall")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_stopall").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       updateConfig(config -> config.setProperty(Property.INSTANCE_VOLUMES.getKey(), v2.toString()));
 
       // start cluster and verify that volume was decommissioned
       cluster.start();
-      RestartFramework.at("after_cluster_start")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_cluster_start").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       client.tableOperations().compact(tableNames[0], null, null, true, true);
-      RestartFramework.at("after_compact")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_compact").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       verifyVolumesUsed(client, tableNames[0], true, v2);
-      RestartFramework.at("after_verify_volumes_used_v2")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_verify_volumes_used_v2").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       client.tableOperations().compact(RootTable.NAME, new CompactionConfig().setWait(true));
-      RestartFramework.at("after_root_compact")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_root_compact").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // check that root tablet is not on volume 1
       int count = 0;
@@ -503,21 +423,13 @@ public class VolumeIT_RestartInjected extends ConfigurableMacBase {
 
       client.tableOperations().clone(tableNames[0], tableNames[1], true, new HashMap<>(),
           new HashSet<>());
-      RestartFramework.at("after_clone")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_clone").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       client.tableOperations().flush(MetadataTable.NAME, null, null, true);
       client.tableOperations().flush(RootTable.NAME, null, null, true);
-      RestartFramework.at("after_flush_metadata_root")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_flush_metadata_root").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       verifyVolumesUsed(client, tableNames[0], true, v2);
       verifyVolumesUsed(client, tableNames[1], true, v2);
@@ -528,24 +440,16 @@ public class VolumeIT_RestartInjected extends ConfigurableMacBase {
     String[] tableNames = getUniqueNames(3);
 
     verifyVolumesUsed(client, tableNames[0], false, v1, v2);
-    RestartFramework.at("after_verify_volumes_used")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_verify_volumes_used").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     // write to 2nd table, but do not flush data to disk before shutdown
     try (AccumuloClient c2 =
         cluster.createAccumuloClient("root", new PasswordToken(ROOT_PASSWORD))) {
       writeData(tableNames[1], c2);
     }
-    RestartFramework.at("after_write_data")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_write_data").on(getCluster()).restart("tablet_server").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     if (cleanShutdown) {
       assertEquals(0, cluster.exec(Admin.class, "stopAll").getProcess().waitFor());
@@ -571,42 +475,26 @@ public class VolumeIT_RestartInjected extends ConfigurableMacBase {
 
     // start cluster and verify that volumes were replaced
     cluster.start();
-    RestartFramework.at("after_cluster_start")
-        .on(cluster)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_cluster_start").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     verifyVolumesUsed(client, tableNames[0], true, v8, v9);
     verifyVolumesUsed(client, tableNames[1], true, v8, v9);
-    RestartFramework.at("after_verify_volumes_used_v8_v9")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_verify_volumes_used_v8_v9").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     // verify writes to new dir
     client.tableOperations().compact(tableNames[0], null, null, true, true);
     client.tableOperations().compact(tableNames[1], null, null, true, true);
-    RestartFramework.at("after_compact_tables")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_compact_tables").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     verifyVolumesUsed(client, tableNames[0], true, v8, v9);
     verifyVolumesUsed(client, tableNames[1], true, v8, v9);
 
     client.tableOperations().compact(RootTable.NAME, new CompactionConfig().setWait(true));
-    RestartFramework.at("after_root_compact")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_root_compact").on(getCluster()).restart("tablet_server").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     // check that root tablet is not on volume 1 or 2
     int count = 0;
@@ -621,21 +509,13 @@ public class VolumeIT_RestartInjected extends ConfigurableMacBase {
 
     client.tableOperations().clone(tableNames[1], tableNames[2], true, new HashMap<>(),
         new HashSet<>());
-    RestartFramework.at("after_clone")
-        .on(cluster)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_clone").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     client.tableOperations().flush(MetadataTable.NAME, null, null, true);
     client.tableOperations().flush(RootTable.NAME, null, null, true);
-    RestartFramework.at("after_flush_metadata_root")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_flush_metadata_root").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     verifyVolumesUsed(client, tableNames[0], true, v8, v9);
     verifyVolumesUsed(client, tableNames[1], true, v8, v9);

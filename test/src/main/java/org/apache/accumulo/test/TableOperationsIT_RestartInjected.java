@@ -106,12 +106,8 @@ public class TableOperationsIT_RestartInjected extends AccumuloClusterHarness {
     String tableName = getUniqueNames(1)[0];
     accumuloClient.tableOperations().create(tableName);
 
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     List<DiskUsage> diskUsage =
         accumuloClient.tableOperations().getDiskUsage(Collections.singleton(tableName));
@@ -122,12 +118,8 @@ public class TableOperationsIT_RestartInjected extends AccumuloClusterHarness {
     accumuloClient.securityOperations().revokeTablePermission(getAdminPrincipal(), tableName,
         TablePermission.READ);
 
-    RestartFramework.at("after_revoke_permission")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_revoke_permission").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     assertThrows(AccumuloSecurityException.class,
         () -> accumuloClient.tableOperations().getDiskUsage(Collections.singleton(tableName)));
@@ -144,12 +136,8 @@ public class TableOperationsIT_RestartInjected extends AccumuloClusterHarness {
     String tableName = names[0];
     accumuloClient.tableOperations().create(tableName);
 
-    RestartFramework.at("after_table1_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table1_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     // verify 0 disk usage
     List<DiskUsage> diskUsages =
@@ -167,21 +155,13 @@ public class TableOperationsIT_RestartInjected extends AccumuloClusterHarness {
       bw.flush();
     }
 
-    RestartFramework.at("after_batch_write")
-        .on(getCluster())
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_batch_write").on(getCluster()).restart("tablet_server").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     accumuloClient.tableOperations().compact(tableName, new Text("A"), new Text("z"), true, true);
 
-    RestartFramework.at("after_compact")
-        .on(getCluster())
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_compact").on(getCluster()).restart("tablet_server").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     // verify we have usage
     diskUsages = accumuloClient.tableOperations().getDiskUsage(Collections.singleton(tableName));
@@ -195,12 +175,8 @@ public class TableOperationsIT_RestartInjected extends AccumuloClusterHarness {
     // clone table
     accumuloClient.tableOperations().clone(tableName, newTable, false, null, null);
 
-    RestartFramework.at("after_table_clone")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_clone").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     // verify tables are exactly the same
     Set<String> tables = new HashSet<>();
@@ -231,12 +207,8 @@ public class TableOperationsIT_RestartInjected extends AccumuloClusterHarness {
     String tableName = getUniqueNames(1)[0];
     accumuloClient.tableOperations().create(tableName);
 
-    RestartFramework.at("after_create_table")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_create_table").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     Map<String,String> props = accumuloClient.tableOperations().getConfiguration(tableName);
     assertEquals(DefaultKeySizeConstraint.class.getName(),
@@ -251,12 +223,8 @@ public class TableOperationsIT_RestartInjected extends AccumuloClusterHarness {
     AccumuloClient client = getServerContext();
     client.tableOperations().create(tableName);
 
-    RestartFramework.at("after_create_table_system_user")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_create_table_system_user").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     Map<String,String> props = client.tableOperations().getConfiguration(tableName);
     assertEquals(DefaultKeySizeConstraint.class.getName(),
@@ -272,23 +240,15 @@ public class TableOperationsIT_RestartInjected extends AccumuloClusterHarness {
     tableOps.create(t0);
     assertTrue(tableOps.exists(t0));
 
-    RestartFramework.at("after_max_len_minus_1_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_max_len_minus_1_table_create").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     String t1 = StringUtils.repeat('b', MAX_TABLE_NAME_LEN);
     tableOps.create(t1);
     assertTrue(tableOps.exists(t1));
 
-    RestartFramework.at("after_max_len_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_max_len_table_create").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     String t2 = StringUtils.repeat('c', MAX_TABLE_NAME_LEN + 1);
     assertThrows(IllegalArgumentException.class, () -> tableOps.create(t2));
@@ -303,12 +263,8 @@ public class TableOperationsIT_RestartInjected extends AccumuloClusterHarness {
     tableOps.create(t0);
     assertTrue(tableOps.exists(t0));
 
-    RestartFramework.at("after_table_create_for_bad_property")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create_for_bad_property").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     assertThrows(AccumuloException.class,
         () -> tableOps.setProperty(t0, Property.TABLE_BLOOM_ENABLED.getKey(), "foo"));
@@ -321,12 +277,8 @@ public class TableOperationsIT_RestartInjected extends AccumuloClusterHarness {
     accumuloClient.namespaceOperations().create("test1");
     accumuloClient.namespaceOperations().create("test2");
 
-    RestartFramework.at("after_namespaces_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_namespaces_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     var tables = Set.of("test1.table1", "test1.table2", "test1.root", "test2.table1",
         "test2.table2", "test2.metadata", "table1", "table2", "metadata");
@@ -335,23 +287,15 @@ public class TableOperationsIT_RestartInjected extends AccumuloClusterHarness {
       tableOps.create(table);
     }
 
-    RestartFramework.at("after_all_tables_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_all_tables_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     assertTrue(accumuloClient.tableOperations().list().containsAll(tables));
 
     accumuloClient.namespaceOperations().create("test3");
 
-    RestartFramework.at("after_test3_namespace_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_test3_namespace_create").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     Set<String> clones = new HashSet<>();
     for (String table : tables) {
@@ -362,12 +306,8 @@ public class TableOperationsIT_RestartInjected extends AccumuloClusterHarness {
       }
     }
 
-    RestartFramework.at("after_tables_cloned")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_tables_cloned").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     assertTrue(accumuloClient.tableOperations().list().containsAll(tables));
     assertTrue(accumuloClient.tableOperations().list().containsAll(clones));
@@ -375,12 +315,8 @@ public class TableOperationsIT_RestartInjected extends AccumuloClusterHarness {
     // Rename a table to a tablename that exists in another namespace
     tableOps.rename("test1.table1", "test1.metadata");
 
-    RestartFramework.at("after_table_rename")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_rename").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     tables = new HashSet<>(tables);
     tables.remove("test1.table1");
@@ -400,12 +336,8 @@ public class TableOperationsIT_RestartInjected extends AccumuloClusterHarness {
       }
     }
 
-    RestartFramework.at("after_write_data_to_all_tables")
-        .on(getCluster())
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_write_data_to_all_tables").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     for (var table : Sets.union(tables, clones)) {
       try (var scanner = accumuloClient.createScanner(table)) {
@@ -440,12 +372,8 @@ public class TableOperationsIT_RestartInjected extends AccumuloClusterHarness {
     tops.create(originalTable);
     tops.addSplits(originalTable, splits);
 
-    RestartFramework.at("after_table_create_and_splits")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create_and_splits").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     try (BatchWriter bw = accumuloClient.createBatchWriter(originalTable)) {
       for (Text row : splits) {
@@ -459,32 +387,20 @@ public class TableOperationsIT_RestartInjected extends AccumuloClusterHarness {
       }
     }
 
-    RestartFramework.at("after_batch_write_to_original")
-        .on(getCluster())
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_batch_write_to_original").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     String clonedTable = names[1];
 
     tops.clone(originalTable, clonedTable, true, null, null);
 
-    RestartFramework.at("after_table_clone")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_clone").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     tops.merge(clonedTable, null, new Text("b"));
 
-    RestartFramework.at("after_table_merge")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_merge").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     Map<String,Integer> rowCounts = new HashMap<>();
     try (Scanner s = accumuloClient.createScanner(clonedTable, new Authorizations())) {
@@ -531,12 +447,8 @@ public class TableOperationsIT_RestartInjected extends AccumuloClusterHarness {
     String tableName = getUniqueNames(1)[0];
     accumuloClient.tableOperations().create(tableName);
 
-    RestartFramework.at("after_table_create_for_bad_iterator")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create_for_bad_iterator").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     List<IteratorSetting> list = new ArrayList<>();
     list.add(new IteratorSetting(15, BadIterator.class));
@@ -544,12 +456,8 @@ public class TableOperationsIT_RestartInjected extends AccumuloClusterHarness {
                                                                                         // block
     sleepUninterruptibly(2, TimeUnit.SECONDS); // start compaction
 
-    RestartFramework.at("after_compact_started")
-        .on(getCluster())
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_compact_started").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     accumuloClient.tableOperations().cancelCompaction(tableName);
 
@@ -574,12 +482,8 @@ public class TableOperationsIT_RestartInjected extends AccumuloClusterHarness {
     TimeType timeType = accumuloClient.tableOperations().getTimeType(tableNames[0]);
     assertEquals(TimeType.MILLIS, timeType);
 
-    RestartFramework.at("after_default_millis_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_default_millis_table_create").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     // Create table, explicitly setting TimeType to MILLIS
     NewTableConfiguration ntc = new NewTableConfiguration();
@@ -588,12 +492,8 @@ public class TableOperationsIT_RestartInjected extends AccumuloClusterHarness {
     timeType = accumuloClient.tableOperations().getTimeType(tableNames[1]);
     assertEquals(TimeType.MILLIS, timeType);
 
-    RestartFramework.at("after_explicit_millis_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_explicit_millis_table_create").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     // Create table with LOGICAL TimeType.
     ntc = new NewTableConfiguration();
@@ -602,12 +502,8 @@ public class TableOperationsIT_RestartInjected extends AccumuloClusterHarness {
     timeType = accumuloClient.tableOperations().getTimeType(tableNames[2]);
     assertEquals(TimeType.LOGICAL, timeType);
 
-    RestartFramework.at("after_logical_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_logical_table_create").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     // Create some split points
     SortedSet<Text> splits = new TreeSet<>();
@@ -622,12 +518,8 @@ public class TableOperationsIT_RestartInjected extends AccumuloClusterHarness {
     timeType = accumuloClient.tableOperations().getTimeType(tableNames[3]);
     assertEquals(TimeType.MILLIS, timeType);
 
-    RestartFramework.at("after_millis_table_with_splits_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_millis_table_with_splits_create").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     // Create table with LOGICAL TimeType. Use splits to create multiple tablets
     ntc = new NewTableConfiguration();
@@ -636,12 +528,8 @@ public class TableOperationsIT_RestartInjected extends AccumuloClusterHarness {
     timeType = accumuloClient.tableOperations().getTimeType(tableNames[4]);
     assertEquals(TimeType.LOGICAL, timeType);
 
-    RestartFramework.at("after_logical_table_with_splits_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_logical_table_with_splits_create").on(getCluster())
+        .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     // check system tables
     timeType = accumuloClient.tableOperations().getTimeType("accumulo.metadata");

@@ -106,12 +106,8 @@ public class ClientSideIteratorIT_RestartInjected extends AccumuloClusterHarness
   public void testIntersect() throws Exception {
     client.tableOperations().create(tableName);
 
-    RestartFramework.at("after_table_create_intersect")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create_intersect").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     try (BatchWriter bw = client.createBatchWriter(tableName)) {
       Mutation m = new Mutation("part1");
@@ -131,12 +127,8 @@ public class ClientSideIteratorIT_RestartInjected extends AccumuloClusterHarness
       bw.flush();
     }
 
-    RestartFramework.at("after_batch_write_intersect")
-        .on(getCluster())
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_batch_write_intersect").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     final IteratorSetting si = new IteratorSetting(10, tableName, IntersectingIterator.class);
     try (ClientSideIteratorScanner csis =
@@ -151,12 +143,8 @@ public class ClientSideIteratorIT_RestartInjected extends AccumuloClusterHarness
   public void testVersioning() throws Exception {
     client.tableOperations().create(tableName);
 
-    RestartFramework.at("after_table_create_versioning")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create_versioning").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     client.tableOperations().removeProperty(tableName, "table.iterator.scan.vers");
     client.tableOperations().removeProperty(tableName, "table.iterator.majc.vers");
@@ -174,12 +162,8 @@ public class ClientSideIteratorIT_RestartInjected extends AccumuloClusterHarness
       bw.flush();
     }
 
-    RestartFramework.at("after_batch_write_versioning")
-        .on(getCluster())
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_batch_write_versioning").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     try (Scanner scanner = client.createScanner(tableName, new Authorizations());
         ClientSideIteratorScanner csis = new ClientSideIteratorScanner(scanner)) {
@@ -269,12 +253,8 @@ public class ClientSideIteratorIT_RestartInjected extends AccumuloClusterHarness
 
     client.tableOperations().create(tableName);
 
-    RestartFramework.at("after_table_create_pluginenv")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create_pluginenv").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     try (BatchWriter bw = client.createBatchWriter(tableName)) {
       for (var row : rows) {
@@ -284,12 +264,8 @@ public class ClientSideIteratorIT_RestartInjected extends AccumuloClusterHarness
       }
     }
 
-    RestartFramework.at("after_batch_write_pluginenv")
-        .on(getCluster())
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_batch_write_pluginenv").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     runPluginEnvTest(rows);
 

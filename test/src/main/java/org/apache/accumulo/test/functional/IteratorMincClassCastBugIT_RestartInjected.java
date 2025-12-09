@@ -42,12 +42,12 @@ import org.apache.accumulo.core.iterators.IteratorEnvironment;
 import org.apache.accumulo.core.iterators.IteratorUtil;
 import org.apache.accumulo.core.iterators.SortedKeyValueIterator;
 import org.apache.accumulo.harness.AccumuloClusterHarness;
-import org.restarttest.api.RestartFramework;
-import org.restarttest.core.RestartMode;
 import org.apache.accumulo.miniclusterImpl.MiniAccumuloConfigImpl;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.Text;
 import org.junit.jupiter.api.Test;
+import org.restarttest.api.RestartFramework;
+import org.restarttest.core.RestartMode;
 
 /**
  * Tests iterator class hierarchy bug. The failure condition of this test is to hang on the flush
@@ -84,12 +84,8 @@ public class IteratorMincClassCastBugIT_RestartInjected extends AccumuloClusterH
 
       c.tableOperations().create(tableName, ntc);
 
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       try (BatchWriter bw = c.createBatchWriter(tableName, new BatchWriterConfig())) {
         Mutation m1 = new Mutation(new Text("r1"));
@@ -100,22 +96,14 @@ public class IteratorMincClassCastBugIT_RestartInjected extends AccumuloClusterH
         bw.addMutation(m2);
       }
 
-      RestartFramework.at("after_write_mutations")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_write_mutations").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // class cast exception will happen in tserver and hang on flush
       c.tableOperations().flush(tableName, null, null, true);
 
-      RestartFramework.at("after_flush")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_flush").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
     }
   }
 

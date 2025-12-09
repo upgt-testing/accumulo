@@ -70,22 +70,14 @@ public class TotalQueuedIT_RestartInjected extends ConfigurableMacBase {
       String tableName = getUniqueNames(1)[0];
       c.tableOperations().create(tableName);
 
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       c.tableOperations().setProperty(tableName, Property.TABLE_MAJC_RATIO.getKey(), "9999");
       c.tableOperations().setProperty(tableName, Property.TABLE_FILE_MAX.getKey(), "999");
 
-      RestartFramework.at("after_table_property_set")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_property_set").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       sleepUninterruptibly(1, TimeUnit.SECONDS);
       // get an idea of how fast the syncs occur
@@ -107,12 +99,8 @@ public class TotalQueuedIT_RestartInjected extends ConfigurableMacBase {
         }
       }
 
-      RestartFramework.at("after_first_batch_write")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_first_batch_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       long diff = System.currentTimeMillis() - now;
       double secs = diff / 1000.;
@@ -129,34 +117,22 @@ public class TotalQueuedIT_RestartInjected extends ConfigurableMacBase {
           "" + LARGE_QUEUE_SIZE);
       c.tableOperations().flush(tableName, null, null, true);
 
-      RestartFramework.at("after_property_change_and_flush")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_property_change_and_flush").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       sleepUninterruptibly(1, TimeUnit.SECONDS);
 
       // property changed is a fixed property (requires restart to be picked up), restart TServers
       c.tableOperations().offline(tableName, true);
 
-      RestartFramework.at("after_table_offline")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_offline").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       getCluster().getClusterControl().stopAllServers(ServerType.TABLET_SERVER);
       getCluster().getClusterControl().startAllServers(ServerType.TABLET_SERVER);
       c.tableOperations().online(tableName, true);
 
-      RestartFramework.at("after_tserver_restart_and_table_online")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_tserver_restart_and_table_online").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (BatchWriter bw = c.createBatchWriter(tableName, cfg)) {
         now = System.currentTimeMillis();
@@ -170,12 +146,8 @@ public class TotalQueuedIT_RestartInjected extends ConfigurableMacBase {
         }
       }
 
-      RestartFramework.at("after_second_batch_write")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_second_batch_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       diff = System.currentTimeMillis() - now;
       secs = diff / 1000.;

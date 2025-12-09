@@ -41,8 +41,6 @@ import org.apache.accumulo.core.data.Value;
 import org.apache.accumulo.core.security.Authorizations;
 import org.apache.accumulo.harness.AccumuloClusterHarness;
 import org.apache.accumulo.minicluster.MemoryUnit;
-import org.restarttest.api.RestartFramework;
-import org.restarttest.core.RestartMode;
 import org.apache.accumulo.minicluster.ServerType;
 import org.apache.accumulo.miniclusterImpl.MiniAccumuloConfigImpl;
 import org.apache.accumulo.test.TestIngest;
@@ -52,6 +50,8 @@ import org.apache.hadoop.io.Text;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.restarttest.api.RestartFramework;
+import org.restarttest.core.RestartMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -124,24 +124,16 @@ public class LargeRowIT_RestartInjected extends AccumuloClusterHarness {
     try (AccumuloClient c = Accumulo.newClient().from(getClientProps()).build()) {
       c.tableOperations().create(REG_TABLE_NAME);
 
-      RestartFramework.at("after_create_regular_table")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_create_regular_table").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       c.tableOperations().create(PRE_SPLIT_TABLE_NAME,
           new NewTableConfiguration()
               .setProperties(singletonMap(Property.TABLE_MAX_END_ROW_SIZE.getKey(), "256K"))
               .withSplits(splitPoints));
 
-      RestartFramework.at("after_create_presplit_table")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_create_presplit_table").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       sleepUninterruptibly(3, TimeUnit.SECONDS);
       test1(c);
@@ -153,33 +145,21 @@ public class LargeRowIT_RestartInjected extends AccumuloClusterHarness {
 
     basicTest(c, REG_TABLE_NAME, 0);
 
-    RestartFramework.at("after_basic_test_reg")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_basic_test_reg").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     c.tableOperations().setProperty(REG_TABLE_NAME, Property.TABLE_SPLIT_THRESHOLD.getKey(),
         "" + SPLIT_THRESH);
 
-    RestartFramework.at("after_set_split_threshold")
-        .on(cluster)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_set_split_threshold").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     sleepUninterruptibly(timeoutFactor * 12, TimeUnit.SECONDS);
     log.info("checking splits");
     FunctionalTestUtils.checkSplits(c, REG_TABLE_NAME, NUM_PRE_SPLITS / 2, NUM_PRE_SPLITS * 4);
 
-    RestartFramework.at("after_split_check")
-        .on(cluster)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_split_check").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     verify(c, REG_TABLE_NAME);
   }
@@ -205,12 +185,8 @@ public class LargeRowIT_RestartInjected extends AccumuloClusterHarness {
       }
     }
 
-    RestartFramework.at("after_write_large_rows")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_write_large_rows").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     FunctionalTestUtils.checkSplits(c, table, expectedSplits, expectedSplits);
 
@@ -220,12 +196,8 @@ public class LargeRowIT_RestartInjected extends AccumuloClusterHarness {
 
     c.tableOperations().flush(table, null, null, false);
 
-    RestartFramework.at("after_flush_nonblocking")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_flush_nonblocking").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     // verify while table flush is running
     verify(c, table);
@@ -233,23 +205,15 @@ public class LargeRowIT_RestartInjected extends AccumuloClusterHarness {
     // give split time to complete
     c.tableOperations().flush(table, null, null, true);
 
-    RestartFramework.at("after_flush_blocking")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_flush_blocking").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     FunctionalTestUtils.checkSplits(c, table, expectedSplits, expectedSplits);
 
     verify(c, table);
 
-    RestartFramework.at("after_final_verify")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_final_verify").on(getCluster()).restart("tablet_server").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     FunctionalTestUtils.checkSplits(c, table, expectedSplits, expectedSplits);
   }

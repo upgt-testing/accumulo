@@ -60,7 +60,8 @@ import org.slf4j.LoggerFactory;
  */
 public class FileNormalizationIT_RestartInjected extends SharedMiniClusterBase {
 
-  private static final Logger log = LoggerFactory.getLogger(FileNormalizationIT_RestartInjected.class);
+  private static final Logger log =
+      LoggerFactory.getLogger(FileNormalizationIT_RestartInjected.class);
 
   @BeforeAll
   public static void setup() throws Exception {
@@ -79,53 +80,33 @@ public class FileNormalizationIT_RestartInjected extends SharedMiniClusterBase {
 
       client.tableOperations().create(table);
 
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       VerifyIngest.VerifyParams params =
           new VerifyIngest.VerifyParams(getClientProps(), table, 100_000);
       TestIngest.ingest(client, params);
 
-      RestartFramework.at("after_ingest")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_ingest").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       client.tableOperations().flush(table, null, null, true);
 
-      RestartFramework.at("after_flush")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_flush").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       misnormalizeFiles(client, table);
 
-      RestartFramework.at("after_misnormalize")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_misnormalize").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       var splits = TestIngest.getSplitPoints(params.startRow, params.startRow + params.rows, 2);
       assertEquals(1, splits.size());
 
       client.tableOperations().addSplits(table, splits);
 
-      RestartFramework.at("after_add_splits")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_add_splits").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       HashSet<String> paths = new HashSet<>();
 
@@ -157,50 +138,30 @@ public class FileNormalizationIT_RestartInjected extends SharedMiniClusterBase {
 
       client.tableOperations().create(table);
 
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       VerifyIngest.VerifyParams params =
           new VerifyIngest.VerifyParams(getClientProps(), table, 100_000);
       TestIngest.ingest(client, params);
 
-      RestartFramework.at("after_ingest")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_ingest").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       client.tableOperations().flush(table, null, null, true);
 
-      RestartFramework.at("after_flush")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_flush").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       misnormalizeFiles(client, table);
 
-      RestartFramework.at("after_misnormalize")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_misnormalize").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       client.tableOperations().compact(table, new CompactionConfig().setWait(true));
 
-      RestartFramework.at("after_compact")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_compact").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       try (var scanner = createMetadataFileScanner(client, table)) {
         Set<String> filenames = new HashSet<>();
@@ -228,63 +189,39 @@ public class FileNormalizationIT_RestartInjected extends SharedMiniClusterBase {
       Map<String,String> props = Map.of(Property.TABLE_MAJC_RATIO.getKey(), "10");
       client.tableOperations().create(table, new NewTableConfiguration().setProperties(props));
 
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       VerifyIngest.VerifyParams params =
           new VerifyIngest.VerifyParams(getClientProps(), table, 100_000);
       TestIngest.ingest(client, params);
 
-      RestartFramework.at("after_ingest")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_ingest").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       client.tableOperations().flush(table, null, null, true);
 
-      RestartFramework.at("after_flush")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_flush").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       var splits = TestIngest.getSplitPoints(params.startRow, params.startRow + params.rows, 4);
       assertEquals(3, splits.size());
 
       client.tableOperations().addSplits(table, splits);
 
-      RestartFramework.at("after_add_splits")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_add_splits").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       // create a unique file per tablet
       client.tableOperations().compact(table, new CompactionConfig().setWait(true));
 
-      RestartFramework.at("after_compact")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_compact").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       misnormalizeFiles(client, table);
 
-      RestartFramework.at("after_misnormalize")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_misnormalize").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       Set<String> filesBeforeMerge = new HashSet<>();
       try (var scanner = createMetadataFileScanner(client, table)) {
@@ -300,12 +237,8 @@ public class FileNormalizationIT_RestartInjected extends SharedMiniClusterBase {
 
       client.tableOperations().merge(table, null, null);
 
-      RestartFramework.at("after_merge")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_merge").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       Set<String> filesAfterMerge = new HashSet<>();
       try (var scanner = createMetadataFileScanner(client, table)) {

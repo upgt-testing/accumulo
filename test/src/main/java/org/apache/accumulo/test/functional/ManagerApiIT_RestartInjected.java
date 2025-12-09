@@ -87,12 +87,8 @@ public class ManagerApiIT_RestartInjected extends SharedMiniClusterBase {
       }
       rootSecOps.grantSystemPermission(privilegedUser.getPrincipal(), SystemPermission.SYSTEM);
 
-      RestartFramework.at("after_user_creation")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_user_creation").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
     }
   }
 
@@ -142,24 +138,16 @@ public class ManagerApiIT_RestartInjected extends SharedMiniClusterBase {
           (PasswordToken) regUserWithAlter.getToken());
       client.tableOperations().create(tableName);
 
-      RestartFramework.at("after_table_create_initiate_flush")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_initiate_flush").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       rootSecOps.grantTablePermission(regUserWithWrite.getPrincipal(), tableName,
           TablePermission.WRITE);
       rootSecOps.grantTablePermission(regUserWithAlter.getPrincipal(), tableName,
           TablePermission.ALTER_TABLE);
 
-      RestartFramework.at("after_grant_permissions_initiate_flush")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_grant_permissions_initiate_flush").on(getCluster())
+          .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       tableId = client.tableOperations().tableIdMap().get(tableName);
     }
@@ -209,24 +197,16 @@ public class ManagerApiIT_RestartInjected extends SharedMiniClusterBase {
           (PasswordToken) regUserWithAlter.getToken());
       client.tableOperations().create(tableName);
 
-      RestartFramework.at("after_table_create_wait_flush")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_wait_flush").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       rootSecOps.grantTablePermission(regUserWithWrite.getPrincipal(), tableName,
           TablePermission.WRITE);
       rootSecOps.grantTablePermission(regUserWithAlter.getPrincipal(), tableName,
           TablePermission.ALTER_TABLE);
 
-      RestartFramework.at("after_grant_permissions_wait_flush")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_grant_permissions_wait_flush").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       tableId = client.tableOperations().tableIdMap().get(tableName);
     }
@@ -239,12 +219,8 @@ public class ManagerApiIT_RestartInjected extends SharedMiniClusterBase {
     };
     expectPermissionSuccess(op, rootUser);
 
-    RestartFramework.at("after_initiate_flush_wait_flush")
-        .on(getCluster())
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_initiate_flush_wait_flush").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     op = client -> {
       client.waitForFlush(TraceUtil.traceInfo(), regularUser.toThrift(instanceId), tableId,
           TextUtil.getByteBuffer(new Text("myrow")), TextUtil.getByteBuffer(new Text("myrow~")),

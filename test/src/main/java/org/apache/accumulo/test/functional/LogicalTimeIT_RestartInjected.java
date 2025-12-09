@@ -104,12 +104,8 @@ public class LogicalTimeIT_RestartInjected extends AccumuloClusterHarness {
     client.tableOperations().create(table,
         new NewTableConfiguration().setTimeType(TimeType.LOGICAL).withSplits(splitSet));
 
-    RestartFramework.at("after_table_create_logical")
-        .on(cluster)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create_logical").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     BatchWriter bw = client.createBatchWriter(table);
     for (String row : inserts) {
@@ -120,34 +116,22 @@ public class LogicalTimeIT_RestartInjected extends AccumuloClusterHarness {
 
     bw.flush();
 
-    RestartFramework.at("after_initial_batch_write")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_initial_batch_write").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     client.tableOperations().merge(table, start == null ? null : new Text(start),
         end == null ? null : new Text(end));
 
-    RestartFramework.at("after_merge")
-        .on(cluster)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_merge").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     Mutation m = new Mutation(last);
     m.put("cf", "cq", "v");
     bw.addMutation(m);
     bw.flush();
 
-    RestartFramework.at("after_final_mutation")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_final_mutation").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     try (Scanner scanner = client.createScanner(table, Authorizations.EMPTY)) {
       scanner.setRange(new Range(last));

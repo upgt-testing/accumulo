@@ -61,12 +61,8 @@ public class TransportCachingIT_RestartInjected extends AccumuloClusterHarness {
         Thread.sleep(50);
       }
 
-      RestartFramework.at("after_tservers_up")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_tservers_up").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       ClientContext context = (ClientContext) client;
       long rpcTimeout =
@@ -87,12 +83,8 @@ public class TransportCachingIT_RestartInjected extends AccumuloClusterHarness {
       // Return it to unreserve it
       pool.returnTransport(first);
 
-      RestartFramework.at("after_first_transport")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_first_transport").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       TTransport second = getAnyTransport(ttk, pool, true);
 
@@ -100,12 +92,8 @@ public class TransportCachingIT_RestartInjected extends AccumuloClusterHarness {
       assertSame(first, second, "Expected the first and second to be the same instance");
       pool.returnTransport(second);
 
-      RestartFramework.at("after_cache_test")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_cache_test").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       // Ensure does not get cached connection just returned
       TTransport third = getAnyTransport(ttk, pool, false);
@@ -117,12 +105,8 @@ public class TransportCachingIT_RestartInjected extends AccumuloClusterHarness {
       pool.returnTransport(third);
       pool.returnTransport(fourth);
 
-      RestartFramework.at("after_noncache_test")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_noncache_test").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // The following three asserts ensure the per server queue is LIFO
       TTransport fifth = getAnyTransport(ttk, pool, true);
@@ -138,12 +122,8 @@ public class TransportCachingIT_RestartInjected extends AccumuloClusterHarness {
       pool.returnTransport(sixth);
       pool.returnTransport(seventh);
 
-      RestartFramework.at("after_lifo_test")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_lifo_test").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
     }
   }
 

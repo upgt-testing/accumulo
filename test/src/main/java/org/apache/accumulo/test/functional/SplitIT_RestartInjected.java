@@ -61,10 +61,10 @@ import org.apache.hadoop.fs.Path;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.restarttest.api.RestartFramework;
 import org.restarttest.core.RestartMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
@@ -145,41 +145,25 @@ public class SplitIT_RestartInjected extends AccumuloClusterHarness {
 
       c.tableOperations().create(table, new NewTableConfiguration().setProperties(props));
 
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       VerifyParams params = new VerifyParams(getClientProps(), table, 100_000);
       TestIngest.ingest(c, params);
 
-      RestartFramework.at("after_ingest")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_ingest").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       VerifyIngest.verifyIngest(c, params);
 
-      RestartFramework.at("after_verify_ingest")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_verify_ingest").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       while (c.tableOperations().listSplits(table).size() < 10) {
         sleepUninterruptibly(15, TimeUnit.SECONDS);
       }
 
-      RestartFramework.at("after_splits_occur")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_splits_occur").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       TableId id = TableId.of(c.tableOperations().tableIdMap().get(table));
       try (Scanner s = c.createScanner(MetadataTable.NAME, Authorizations.EMPTY)) {
@@ -200,22 +184,14 @@ public class SplitIT_RestartInjected extends AccumuloClusterHarness {
         assertTrue(count > 10, "Count should be cgreater than 10: " + count);
       }
 
-      RestartFramework.at("after_metadata_scan")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_metadata_scan").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       assertEquals(0, getCluster().getClusterControl().exec(CheckForMetadataProblems.class,
           new String[] {"-c", cluster.getClientPropsPath()}));
 
-      RestartFramework.at("after_metadata_check")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_metadata_check").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
     }
   }
 
@@ -230,22 +206,14 @@ public class SplitIT_RestartInjected extends AccumuloClusterHarness {
 
       c.tableOperations().create(tableName, new NewTableConfiguration().setProperties(props));
 
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       sleepUninterruptibly(5, TimeUnit.SECONDS);
       ReadWriteIT.interleaveTest(c, tableName);
 
-      RestartFramework.at("after_interleave_test")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_interleave_test").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       sleepUninterruptibly(5, TimeUnit.SECONDS);
       int numSplits = c.tableOperations().listSplits(tableName).size();
@@ -255,12 +223,8 @@ public class SplitIT_RestartInjected extends AccumuloClusterHarness {
         numSplits = c.tableOperations().listSplits(tableName).size();
       }
 
-      RestartFramework.at("after_splits_complete")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_splits_complete").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       assertTrue(numSplits > 20, "Expected at least 20 splits, saw " + numSplits);
     }
@@ -273,30 +237,18 @@ public class SplitIT_RestartInjected extends AccumuloClusterHarness {
       c.tableOperations().create(tableName, new NewTableConfiguration()
           .setProperties(singletonMap(Property.TABLE_SPLIT_THRESHOLD.getKey(), "10K")));
 
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       DeleteIT.deleteTest(c, getCluster(), tableName);
 
-      RestartFramework.at("after_delete_test")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_delete_test").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       c.tableOperations().flush(tableName, null, null, true);
 
-      RestartFramework.at("after_flush")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_flush").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       for (int i = 0; i < 5; i++) {
         sleepUninterruptibly(10, TimeUnit.SECONDS);
@@ -305,12 +257,8 @@ public class SplitIT_RestartInjected extends AccumuloClusterHarness {
         }
       }
 
-      RestartFramework.at("after_splits_complete")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_splits_complete").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       assertTrue(c.tableOperations().listSplits(tableName).size() > 20);
     }
@@ -346,12 +294,8 @@ public class SplitIT_RestartInjected extends AccumuloClusterHarness {
       c.tableOperations().create(tableName, new NewTableConfiguration()
           .setProperties(singletonMap(Property.TABLE_SPLIT_THRESHOLD.getKey(), "10K")));
 
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       Random random = new Random();
       byte[] val = new byte[100];
@@ -371,22 +315,14 @@ public class SplitIT_RestartInjected extends AccumuloClusterHarness {
         }
       }
 
-      RestartFramework.at("after_rfile_creation")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_rfile_creation").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // import the file
       c.tableOperations().importDirectory(dir).to(tableName).load();
 
-      RestartFramework.at("after_bulk_import")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_bulk_import").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // tablet should not be able to split
       assertEquals(0, c.tableOperations().listSplits(tableName).size());
@@ -395,12 +331,8 @@ public class SplitIT_RestartInjected extends AccumuloClusterHarness {
 
       c.tableOperations().compact(tableName, new CompactionConfig().setWait(true));
 
-      RestartFramework.at("after_compact")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_compact").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       // should have over 100K of data in the values
       assertTrue(

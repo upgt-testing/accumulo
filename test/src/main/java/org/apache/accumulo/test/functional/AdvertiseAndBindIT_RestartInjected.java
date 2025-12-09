@@ -84,23 +84,15 @@ public class AdvertiseAndBindIT_RestartInjected extends ConfigurableMacBase {
     Wait.waitFor(() -> !getServerContext().instanceOperations().getCompactors().isEmpty(), 60_000);
     Wait.waitFor(() -> !getServerContext().instanceOperations().getScanServers().isEmpty(), 60_000);
 
-    RestartFramework.at("after_initial_cluster_start_args")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_initial_cluster_start_args").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     try {
       Map<ServerType,HostAndPort> zkAddrs = getAdvertiseAddressFromZooKeeper(false);
       zkAddrs.values().forEach(hp -> assertTrue(hp.getHost().equals(localHostName)));
 
-      RestartFramework.at("after_default_address_verification_args")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_default_address_verification_args").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     } finally {
       cluster.stop();
       Thread.sleep(20_000); // wait 2x the ZK timeout to ensure ZK entries removed
@@ -169,23 +161,15 @@ public class AdvertiseAndBindIT_RestartInjected extends ConfigurableMacBase {
     Wait.waitFor(() -> !getServerContext().instanceOperations().getCompactors().isEmpty(), 60_000);
     Wait.waitFor(() -> !getServerContext().instanceOperations().getScanServers().isEmpty(), 60_000);
 
-    RestartFramework.at("after_initial_cluster_start_props")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_initial_cluster_start_props").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     try {
       Map<ServerType,HostAndPort> zkAddrs = getAdvertiseAddressFromZooKeeper(false);
       zkAddrs.values().forEach(hp -> assertTrue(hp.getHost().equals(localHostName)));
 
-      RestartFramework.at("after_default_address_verification_props")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_default_address_verification_props").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     } finally {
       cluster.stop();
       Thread.sleep(20_000); // wait 2x the ZK timeout to ensure ZK entries removed

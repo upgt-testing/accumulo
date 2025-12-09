@@ -194,21 +194,13 @@ public class CompactionExecutorIT_RestartInjected extends SharedMiniClusterBase 
     try (AccumuloClient client = Accumulo.newClient().from(getClientProps()).build()) {
       createTable(client, "rctt", "recfg");
 
-      RestartFramework.at("after_table_create_recfg")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_recfg").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       addFiles(client, "rctt", 22);
 
-      RestartFramework.at("after_first_files_add_recfg")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_first_files_add_recfg").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       while (getFiles(client, "rctt").size() > 2) {
         Thread.sleep(100);
@@ -221,21 +213,13 @@ public class CompactionExecutorIT_RestartInjected extends SharedMiniClusterBase 
       client.instanceOperations().setProperty(
           Property.TSERV_COMPACTION_SERVICE_PREFIX.getKey() + "recfg.planner.opts.executors", "1");
 
-      RestartFramework.at("after_config_change_recfg")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_config_change_recfg").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       addFiles(client, "rctt", 10);
 
-      RestartFramework.at("after_second_files_add_recfg")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_second_files_add_recfg").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       while (getFiles(client, "rctt").size() > 4) {
         Thread.sleep(100);
@@ -259,30 +243,18 @@ public class CompactionExecutorIT_RestartInjected extends SharedMiniClusterBase 
           Property.TSERV_COMPACTION_SERVICE_PREFIX.getKey() + "newcs.planner",
           TestPlanner.class.getName());
 
-      RestartFramework.at("after_properties_set_addcs")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_properties_set_addcs").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       createTable(client, "acst", "newcs");
 
-      RestartFramework.at("after_table_create_addcs")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_addcs").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       addFiles(client, "acst", 42);
 
-      RestartFramework.at("after_files_add_addcs")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_files_add_addcs").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       while (getFiles(client, "acst").size() > 6) {
         Thread.sleep(100);
@@ -303,22 +275,14 @@ public class CompactionExecutorIT_RestartInjected extends SharedMiniClusterBase 
       createTable(client, "dst1", "cs1");
       createTable(client, "dst2", "cs2");
 
-      RestartFramework.at("after_tables_create_dispatch_sys")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_tables_create_dispatch_sys").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       addFiles(client, "dst1", 14);
       addFiles(client, "dst2", 13);
 
-      RestartFramework.at("after_files_add_dispatch_sys")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_files_add_dispatch_sys").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       assertTrue(getFiles(client, "dst1").size() >= 6);
       assertTrue(getFiles(client, "dst2").size() >= 7);
@@ -341,22 +305,14 @@ public class CompactionExecutorIT_RestartInjected extends SharedMiniClusterBase 
       createTable(client, "dut1", "cs3");
       createTable(client, "dut2", "cs3", "special", "cs4");
 
-      RestartFramework.at("after_tables_create_dispatch_user")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_tables_create_dispatch_user").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       addFiles(client, "dut1", 6);
       addFiles(client, "dut2", 33);
 
-      RestartFramework.at("after_files_add_dispatch_user")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_files_add_dispatch_user").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       assertEquals(6, getFiles(client, "dut1").size());
       assertEquals(33, getFiles(client, "dut2").size());
@@ -368,12 +324,8 @@ public class CompactionExecutorIT_RestartInjected extends SharedMiniClusterBase 
       client.tableOperations().compact("dut2", new CompactionConfig().setWait(false)
           .setExecutionHints(Map.of("compaction_type", "special")));
 
-      RestartFramework.at("after_compact_dispatch_user")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_compact_dispatch_user").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       while (getFiles(client, "dut1").size() > 2 || getFiles(client, "dut2").size() > 3) {
         Thread.sleep(100);
@@ -420,12 +372,8 @@ public class CompactionExecutorIT_RestartInjected extends SharedMiniClusterBase 
       client.tableOperations().create("tmd_control3",
           new NewTableConfiguration().enableSummarization(deleteSummarizerCfg));
 
-      RestartFramework.at("after_tables_create_tmd")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_tables_create_tmd").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       addFile(client, "tmd_selector", 1, 1000, false);
       addFile(client, "tmd_selector", 1, 1000, true);
@@ -439,12 +387,8 @@ public class CompactionExecutorIT_RestartInjected extends SharedMiniClusterBase 
       addFile(client, "tmd_control3", 1, 2000, false);
       addFile(client, "tmd_control3", 1, 1000, true);
 
-      RestartFramework.at("after_files_add_tmd")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_files_add_tmd").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       assertEquals(2, getFiles(client, "tmd_control1").size());
       assertEquals(2, getFiles(client, "tmd_control2").size());
@@ -467,12 +411,8 @@ public class CompactionExecutorIT_RestartInjected extends SharedMiniClusterBase 
       client.tableOperations().compact("tmd_control2", cc1);
       client.tableOperations().compact("tmd_control3", cc1);
 
-      RestartFramework.at("after_first_compact_tmd")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_first_compact_tmd").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       assertEquals(0, getFiles(client, "tmd_control1").size());
       assertEquals(2, getFiles(client, "tmd_control2").size());
@@ -513,12 +453,8 @@ public class CompactionExecutorIT_RestartInjected extends SharedMiniClusterBase 
       NewTableConfiguration ntc = new NewTableConfiguration().withSplits(splits);
       client.tableOperations().create(tableName, ntc);
 
-      RestartFramework.at("after_table_create_iwr")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_iwr").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       Map<String,String> expected = new TreeMap<>();
 
@@ -536,12 +472,8 @@ public class CompactionExecutorIT_RestartInjected extends SharedMiniClusterBase 
         }
       }
 
-      RestartFramework.at("after_write_iwr")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_write_iwr").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       IteratorSetting iterSetting = new IteratorSetting(20, "rf", RegExFilter.class.getName());
       RegExFilter.setRegexs(iterSetting, null, null, "004|007", null, false);
@@ -550,12 +482,8 @@ public class CompactionExecutorIT_RestartInjected extends SharedMiniClusterBase 
           new CompactionConfig().setStartRow(new Text("b")).setEndRow(new Text("m"))
               .setIterators(List.of(iterSetting)).setWait(true).setFlush(true));
 
-      RestartFramework.at("after_first_compact_iwr")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_first_compact_iwr").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       for (String row : List.of("a", "h")) {
         assertNotNull(expected.remove(row + ":f:004"));
@@ -627,12 +555,8 @@ public class CompactionExecutorIT_RestartInjected extends SharedMiniClusterBase 
           .setProperties(Map.of(Property.TABLE_FILE_COMPRESSION_TYPE.getKey(), "none"));
       client.tableOperations().create(tableName, ntc);
 
-      RestartFramework.at("after_table_create_configurer")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_configurer").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       byte[] data = new byte[100000];
       Arrays.fill(data, (byte) 65);
@@ -647,12 +571,8 @@ public class CompactionExecutorIT_RestartInjected extends SharedMiniClusterBase 
 
       client.tableOperations().flush(tableName, null, null, true);
 
-      RestartFramework.at("after_write_flush_configurer")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_write_flush_configurer").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // without compression, expect file to be large
       long sizes = getFileSizes(client, tableName);
@@ -665,12 +585,8 @@ public class CompactionExecutorIT_RestartInjected extends SharedMiniClusterBase 
                   Map.of(CompressionConfigurer.LARGE_FILE_COMPRESSION_TYPE, "gz",
                       CompressionConfigurer.LARGE_FILE_COMPRESSION_THRESHOLD, data.length + ""))));
 
-      RestartFramework.at("after_first_compact_configurer")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_first_compact_configurer").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // after compacting with compression, expect small file
       sizes = getFileSizes(client, tableName);
@@ -710,21 +626,13 @@ public class CompactionExecutorIT_RestartInjected extends SharedMiniClusterBase 
     try (AccumuloClient client = Accumulo.newClient().from(getClientProps()).build()) {
       client.tableOperations().create(tableName);
 
-      RestartFramework.at("after_table_create_selector")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_selector").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       addFiles(client, tableName, 5);
 
-      RestartFramework.at("after_files_add_selector")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_files_add_selector").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       var e = assertThrows(AccumuloException.class,
           () -> client.tableOperations().compact(tableName, new CompactionConfig()
@@ -743,21 +651,13 @@ public class CompactionExecutorIT_RestartInjected extends SharedMiniClusterBase 
     try (AccumuloClient client = Accumulo.newClient().from(getClientProps()).build()) {
       client.tableOperations().create(tableName);
 
-      RestartFramework.at("after_table_create_configurer_type")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_configurer_type").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       addFiles(client, tableName, 5);
 
-      RestartFramework.at("after_files_add_configurer_type")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_files_add_configurer_type").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       var e = assertThrows(AccumuloException.class,
           () -> client.tableOperations().compact(tableName,

@@ -68,21 +68,13 @@ public class ZooPropEditorIT_RestartInjected extends SharedMiniClusterBase {
 
       client.namespaceOperations().create(namespace);
 
-      RestartFramework.at("after_namespace_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_namespace_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       client.tableOperations().create(table);
 
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       LOG.debug("Tables: {}", client.tableOperations().list());
 
@@ -92,12 +84,8 @@ public class ZooPropEditorIT_RestartInjected extends SharedMiniClusterBase {
           "true");
       client.tableOperations().setProperty(table, Property.TABLE_BLOOM_ENABLED.getKey(), "false");
 
-      RestartFramework.at("after_property_set")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_property_set").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       Wait.waitFor(() -> client.instanceOperations().getSystemConfiguration()
           .get(Property.TABLE_BLOOM_ENABLED.getKey()).equals("true"), 5000, 500);
@@ -112,12 +100,8 @@ public class ZooPropEditorIT_RestartInjected extends SharedMiniClusterBase {
           "-s", Property.TABLE_BLOOM_ENABLED.getKey() + "=true"};
       tool.execute(setTablePropArgs);
 
-      RestartFramework.at("after_table_prop_set_via_tool")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_prop_set_via_tool").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // after set - check prop changed in ZooKeeper
       Wait.waitFor(() -> client.tableOperations().getTableProperties(table)
@@ -127,12 +111,8 @@ public class ZooPropEditorIT_RestartInjected extends SharedMiniClusterBase {
           "-d", Property.TABLE_BLOOM_ENABLED.getKey()};
       tool.execute(deleteTablePropArgs);
 
-      RestartFramework.at("after_table_prop_delete_via_tool")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_prop_delete_via_tool").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // after delete - check map entry is null (removed from ZooKeeper)
       Wait.waitFor(() -> client.tableOperations().getTableProperties(table)
@@ -146,12 +126,8 @@ public class ZooPropEditorIT_RestartInjected extends SharedMiniClusterBase {
           Property.TABLE_BLOOM_ENABLED.getKey() + "=false"};
       tool.execute(setSystemPropArgs);
 
-      RestartFramework.at("after_system_prop_set_via_tool")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_system_prop_set_via_tool").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // after set - check map entry is false
       Wait.waitFor(() -> client.instanceOperations().getSystemConfiguration()
@@ -165,12 +141,8 @@ public class ZooPropEditorIT_RestartInjected extends SharedMiniClusterBase {
           namespace, "-s", Property.TABLE_BLOOM_ENABLED.getKey() + "=false"};
       tool.execute(setNamespacePropArgs);
 
-      RestartFramework.at("after_namespace_prop_set_via_tool")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_namespace_prop_set_via_tool").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // after set - check map entry is false
       Wait.waitFor(() -> client.namespaceOperations().getNamespaceProperties(namespace)
@@ -180,12 +152,8 @@ public class ZooPropEditorIT_RestartInjected extends SharedMiniClusterBase {
           namespace, "-d", Property.TABLE_BLOOM_ENABLED.getKey()};
       tool.execute(deleteNamespacePropArgs);
 
-      RestartFramework.at("after_namespace_prop_delete_via_tool")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_namespace_prop_delete_via_tool").on(getCluster())
+          .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // after set - check map entry is false
       Wait.waitFor(() -> client.namespaceOperations().getNamespaceProperties(namespace)

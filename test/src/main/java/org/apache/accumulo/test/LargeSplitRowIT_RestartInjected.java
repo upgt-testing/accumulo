@@ -85,12 +85,8 @@ public class LargeSplitRowIT_RestartInjected extends ConfigurableMacBase {
     try (AccumuloClient client = Accumulo.newClient().from(getClientProperties()).build()) {
       Map<String,String> props = Map.of(Property.TABLE_MAX_END_ROW_SIZE.getKey(), "1000");
       client.tableOperations().create(tableName, new NewTableConfiguration().setProperties(props));
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       // Create a BatchWriter and add a mutation to the table
       try (BatchWriter batchWriter = client.createBatchWriter(tableName)) {
@@ -98,12 +94,8 @@ public class LargeSplitRowIT_RestartInjected extends ConfigurableMacBase {
         m.put("cf", "cq", "value");
         batchWriter.addMutation(m);
       }
-      RestartFramework.at("after_batch_write")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // Create a split point that is too large to be an end row and fill it with all 'm'
       SortedSet<Text> partitionKeys = new TreeSet<>();
@@ -150,12 +142,8 @@ public class LargeSplitRowIT_RestartInjected extends ConfigurableMacBase {
       );
       // @formatter:on
       client.tableOperations().create(tableName, new NewTableConfiguration().setProperties(props));
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       // Create a key for a table entry that is longer than the allowed size for an
       // end row
@@ -175,21 +163,13 @@ public class LargeSplitRowIT_RestartInjected extends ConfigurableMacBase {
           batchWriter.addMutation(m);
         }
       }
-      RestartFramework.at("after_batch_write")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       // Flush the BatchWriter and table and sleep for a bit to make sure that there is enough time
       // for the table to split if need be.
       client.tableOperations().flush(tableName, new Text(), new Text("z"), true);
-      RestartFramework.at("after_flush")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_flush").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       Thread.sleep(500L);
 
       // Make sure all the data that was put in the table is still correct
@@ -261,20 +241,12 @@ public class LargeSplitRowIT_RestartInjected extends ConfigurableMacBase {
           }
         }
       }
-      RestartFramework.at("after_second_batch_write")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_second_batch_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       // Flush the BatchWriter and table then wait for splits to be present
       client.tableOperations().flush(tableName, new Text(), new Text("z"), true);
-      RestartFramework.at("after_second_flush")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_second_flush").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // Make sure a split occurs
       Wait.Condition splitsToBePresent =
@@ -296,12 +268,8 @@ public class LargeSplitRowIT_RestartInjected extends ConfigurableMacBase {
 
     final String tableName = getUniqueNames(1)[0];
     client.tableOperations().create(tableName, new NewTableConfiguration().setProperties(props));
-    RestartFramework.at("after_table_create")
-        .on(cluster)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     byte[] data = new byte[(int) (ConfigurationTypeHelper
         .getFixedMemoryAsBytes(Property.TABLE_MAX_END_ROW_SIZE.getDefaultValue()) + 2)];
@@ -324,21 +292,13 @@ public class LargeSplitRowIT_RestartInjected extends ConfigurableMacBase {
         }
       }
     }
-    RestartFramework.at("after_batch_write")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_batch_write").on(getCluster()).restart("tablet_server").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     // Flush the BatchWriter and table and sleep for a bit to make sure that there is enough time
     // for the table to split if need be.
     client.tableOperations().flush(tableName, new Text(), new Text("z"), true);
-    RestartFramework.at("after_flush")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_flush").on(getCluster()).restart("tablet_server").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     Thread.sleep(500);
 
     // Make sure all the data that was put in the table is still correct

@@ -68,12 +68,8 @@ public class ConstraintIT_RestartInjected extends AccumuloClusterHarness {
         c.tableOperations().addConstraint(table, AlphaNumKeyConstraint.class.getName());
       }
 
-      RestartFramework.at("after_table_creation_and_constraint_setup")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_creation_and_constraint_setup").on(getCluster())
+          .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // A static sleep to just let ZK do its thing
       Thread.sleep(10_000);
@@ -91,41 +87,25 @@ public class ConstraintIT_RestartInjected extends AccumuloClusterHarness {
         log.debug("Verified all constraints on {}", table);
       }
 
-      RestartFramework.at("after_constraint_verification")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_constraint_verification").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       log.debug("Verified constraints on all tables. Running tests");
 
       test1(c, tableNames[0]);
 
-      RestartFramework.at("after_test1_complete")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_test1_complete").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       test2(c, tableNames[1], false);
 
-      RestartFramework.at("after_test2_no_flush")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_test2_no_flush").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       test2(c, tableNames[2], true);
 
-      RestartFramework.at("after_test2_with_flush")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_test2_with_flush").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     }
   }
 

@@ -48,12 +48,12 @@ import org.apache.accumulo.core.security.TablePermission;
 import org.apache.accumulo.harness.AccumuloClusterHarness;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.security.UserGroupInformation;
-import org.restarttest.api.RestartFramework;
-import org.restarttest.core.RestartMode;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.restarttest.api.RestartFramework;
+import org.restarttest.core.RestartMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,12 +78,8 @@ public class ScanIteratorIT_RestartInjected extends AccumuloClusterHarness {
 
     accumuloClient.tableOperations().create(tableName);
 
-    RestartFramework.at("after_table_create")
-        .on(cluster)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     ClusterUser clusterUser = getUser(0);
     user = clusterUser.getPrincipal();
@@ -101,40 +97,24 @@ public class ScanIteratorIT_RestartInjected extends AccumuloClusterHarness {
     }
     accumuloClient.securityOperations().createLocalUser(user, userToken);
 
-    RestartFramework.at("after_user_create")
-        .on(cluster)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_user_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     accumuloClient.securityOperations().grantTablePermission(user, tableName, TablePermission.READ);
 
-    RestartFramework.at("after_grant_read_permission")
-        .on(cluster)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_grant_read_permission").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     accumuloClient.securityOperations().grantTablePermission(user, tableName,
         TablePermission.WRITE);
 
-    RestartFramework.at("after_grant_write_permission")
-        .on(cluster)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_grant_write_permission").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     accumuloClient.securityOperations().changeUserAuthorizations(user, AuthsIterator.AUTHS);
 
-    RestartFramework.at("after_change_authorizations")
-        .on(cluster)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_change_authorizations").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
   }
 
   @AfterEach
@@ -165,53 +145,33 @@ public class ScanIteratorIT_RestartInjected extends AccumuloClusterHarness {
         }
       }
 
-      RestartFramework.at("after_batch_write")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (Scanner scanner = c.createScanner(tableName);
           BatchScanner bscanner = c.createBatchScanner(tableName)) {
 
         setupIter(scanner);
 
-        RestartFramework.at("after_scanner_iterator_setup")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_scanner_iterator_setup").on(getCluster())
+            .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         verify(scanner, 1, 999);
 
-        RestartFramework.at("after_scanner_verify")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_scanner_verify").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         bscanner.setRanges(Collections.singleton(new Range((Key) null, null)));
 
         setupIter(bscanner);
 
-        RestartFramework.at("after_batchscanner_iterator_setup")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_batchscanner_iterator_setup").on(getCluster())
+            .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         verify(bscanner, 1, 999);
 
-        RestartFramework.at("after_batchscanner_verify_full_range")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_batchscanner_verify_full_range").on(getCluster())
+            .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         ArrayList<Range> ranges = new ArrayList<>();
         ranges.add(new Range(new Text(String.format("%06d", 1))));
@@ -234,12 +194,8 @@ public class ScanIteratorIT_RestartInjected extends AccumuloClusterHarness {
 
         bscanner.setRanges(ranges);
 
-        RestartFramework.at("after_batchscanner_multi_range_setup")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_batchscanner_multi_range_setup").on(getCluster())
+            .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         for (Entry<Key,Value> entry : bscanner) {
           got.add(Integer.parseInt(entry.getKey().getRow().toString()));
@@ -312,12 +268,8 @@ public class ScanIteratorIT_RestartInjected extends AccumuloClusterHarness {
         getCluster().createAccumuloClient(clusterUser.getPrincipal(), clusterUser.getToken());
     writeTestMutation(userC);
 
-    RestartFramework.at("after_write_test_mutation")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_write_test_mutation").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     IteratorSetting setting = new IteratorSetting(10, AuthsIterator.class);
 
@@ -325,22 +277,14 @@ public class ScanIteratorIT_RestartInjected extends AccumuloClusterHarness {
         BatchScanner batchScanner = userC.createBatchScanner(tableName, auths, 1)) {
       scanner.addScanIterator(setting);
 
-      RestartFramework.at("after_scanner_iterator_add")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_scanner_iterator_add").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       batchScanner.setRanges(Collections.singleton(new Range("1")));
       batchScanner.addScanIterator(setting);
 
-      RestartFramework.at("after_batchscanner_iterator_add")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batchscanner_iterator_add").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       runTest(scanner, shouldFail);
       runTest(batchScanner, shouldFail);

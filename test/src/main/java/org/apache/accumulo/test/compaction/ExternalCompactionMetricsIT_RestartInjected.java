@@ -108,30 +108,18 @@ public class ExternalCompactionMetricsIT_RestartInjected extends SharedMiniClust
         Accumulo.newClient().from(getCluster().getClientProperties()).build()) {
       String table1 = names[0];
       createTable(client, table1, "cs1", 5);
-      RestartFramework.at("after_table1_create_metrics")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table1_create_metrics").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       String table2 = names[1];
       createTable(client, table2, "cs2", 10);
-      RestartFramework.at("after_table2_create_metrics")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table2_create_metrics").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       writeData(client, table1);
       writeData(client, table2);
-      RestartFramework.at("after_data_write_metrics")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_data_write_metrics").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       final LinkedBlockingQueue<Metric> queueMetrics = new LinkedBlockingQueue<>();
       final AtomicBoolean shutdownTailer = new AtomicBoolean(false);
@@ -153,12 +141,8 @@ public class ExternalCompactionMetricsIT_RestartInjected extends SharedMiniClust
 
       compact(client, table1, 7, "DCQ1", false);
       compact(client, table2, 13, "DCQ2", false);
-      RestartFramework.at("after_compact_initiate_metrics")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_compact_initiate_metrics").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       boolean sawDCQ1_5 = false;
       boolean sawDCQ2_10 = false;
@@ -172,12 +156,8 @@ public class ExternalCompactionMetricsIT_RestartInjected extends SharedMiniClust
 
       getCluster().getClusterControl().startCompactors(Compactor.class, 1, QUEUE1);
       getCluster().getClusterControl().startCompactors(Compactor.class, 1, QUEUE2);
-      RestartFramework.at("after_compactors_start_metrics")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_compactors_start_metrics").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       boolean sawDCQ1_0 = false;
       boolean sawDCQ2_0 = false;
@@ -204,12 +184,8 @@ public class ExternalCompactionMetricsIT_RestartInjected extends SharedMiniClust
 
       verify(client, table1, 7);
       verify(client, table2, 13);
-      RestartFramework.at("after_verify_metrics")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_verify_metrics").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     }
   }

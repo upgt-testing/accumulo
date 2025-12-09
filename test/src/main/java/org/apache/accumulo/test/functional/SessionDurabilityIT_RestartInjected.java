@@ -71,52 +71,32 @@ public class SessionDurabilityIT_RestartInjected extends ConfigurableMacBase {
       c.tableOperations().create(tableName, new NewTableConfiguration()
           .setProperties(singletonMap(Property.TABLE_DURABILITY.getKey(), "none")));
 
-      RestartFramework.at("after_table_create_nondurable")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_nondurable").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // send durable writes
       BatchWriterConfig cfg = new BatchWriterConfig();
       cfg.setDurability(Durability.SYNC);
       writeSome(c, tableName, 10, cfg);
 
-      RestartFramework.at("after_durable_writes")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_durable_writes").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       assertEquals(10, count(c, tableName));
 
-      RestartFramework.at("after_first_count_nondurable")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_first_count_nondurable").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // verify writes servive restart
       restartTServer();
 
-      RestartFramework.at("after_tserver_restart_nondurable")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_tserver_restart_nondurable").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       assertEquals(10, count(c, tableName));
 
-      RestartFramework.at("after_final_count_nondurable")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_final_count_nondurable").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     }
   }
 
@@ -128,43 +108,27 @@ public class SessionDurabilityIT_RestartInjected extends ConfigurableMacBase {
       c.tableOperations().create(tableName, new NewTableConfiguration()
           .setProperties(singletonMap(Property.TABLE_DURABILITY.getKey(), "sync")));
 
-      RestartFramework.at("after_table_create_durable")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_durable").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // write with no durability
       BatchWriterConfig cfg = new BatchWriterConfig();
       cfg.setDurability(Durability.NONE);
       writeSome(c, tableName, 10, cfg);
 
-      RestartFramework.at("after_nondurable_writes")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_nondurable_writes").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // verify writes are lost on restart
       restartTServer();
 
-      RestartFramework.at("after_tserver_restart_durable")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_tserver_restart_durable").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       assertTrue(count(c, tableName) < 10);
 
-      RestartFramework.at("after_final_count_durable")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_final_count_durable").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     }
   }
 
@@ -191,53 +155,33 @@ public class SessionDurabilityIT_RestartInjected extends ConfigurableMacBase {
       c.tableOperations().create(tableName, new NewTableConfiguration()
           .setProperties(singletonMap(Property.TABLE_DURABILITY.getKey(), "sync")));
 
-      RestartFramework.at("after_table_create_condition1")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_condition1").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // write without durability
       ConditionalWriterConfig cfg = new ConditionalWriterConfig();
       cfg.setDurability(Durability.NONE);
       conditionWriteSome(c, tableName, 10, cfg);
 
-      RestartFramework.at("after_nondurable_condition_writes")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_nondurable_condition_writes").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // everything in there?
       assertEquals(10, count(c, tableName));
 
-      RestartFramework.at("after_first_count_condition1")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_first_count_condition1").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // restart the server and verify the updates are lost
       restartTServer();
 
-      RestartFramework.at("after_tserver_restart_condition1")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_tserver_restart_condition1").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       assertEquals(0, count(c, tableName));
 
-      RestartFramework.at("after_final_count_condition1")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_final_count_condition1").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     }
   }
 
@@ -249,53 +193,33 @@ public class SessionDurabilityIT_RestartInjected extends ConfigurableMacBase {
       c.tableOperations().create(tableName, new NewTableConfiguration()
           .setProperties(singletonMap(Property.TABLE_DURABILITY.getKey(), "none")));
 
-      RestartFramework.at("after_table_create_condition2")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_condition2").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // write with durability
       ConditionalWriterConfig cfg = new ConditionalWriterConfig();
       cfg.setDurability(Durability.SYNC);
       conditionWriteSome(c, tableName, 10, cfg);
 
-      RestartFramework.at("after_durable_condition_writes")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_durable_condition_writes").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // everything in there?
       assertEquals(10, count(c, tableName));
 
-      RestartFramework.at("after_first_count_condition2")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_first_count_condition2").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // restart the server and verify the updates are still there
       restartTServer();
 
-      RestartFramework.at("after_tserver_restart_condition2")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_tserver_restart_condition2").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       assertEquals(10, count(c, tableName));
 
-      RestartFramework.at("after_final_count_condition2")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_final_count_condition2").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     }
   }
 

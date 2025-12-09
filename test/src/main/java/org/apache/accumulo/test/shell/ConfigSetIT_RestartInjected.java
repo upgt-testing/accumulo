@@ -67,12 +67,8 @@ public class ConfigSetIT_RestartInjected extends SharedMiniClusterBase {
       client.instanceOperations().setProperty(TSERV_COMPACTION_SERVICE_ROOT_EXECUTORS.getKey(),
           validJson);
 
-      RestartFramework.at("after_valid_property_set")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_valid_property_set").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       assertThrows(AccumuloException.class, () -> client.instanceOperations()
           .setProperty(MONITOR_RESOURCES_EXTERNAL.getKey(), invalidJson));

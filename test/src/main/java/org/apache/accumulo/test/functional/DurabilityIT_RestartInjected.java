@@ -91,12 +91,8 @@ public class DurabilityIT_RestartInjected extends ConfigurableMacBase {
     try (AccumuloClient client = Accumulo.newClient().from(getClientProperties()).build()) {
       String[] tableNames = init(client);
 
-      RestartFramework.at("after_table_init_durability_sync")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_init_durability_sync").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // sync table should lose nothing
       writeSome(client, tableNames[0], N);
@@ -111,12 +107,8 @@ public class DurabilityIT_RestartInjected extends ConfigurableMacBase {
     try (AccumuloClient client = Accumulo.newClient().from(getClientProperties()).build()) {
       String[] tableNames = init(client);
 
-      RestartFramework.at("after_table_init_durability_flush")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_init_durability_flush").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // flush table won't lose anything since we're not losing power/dfs
       writeSome(client, tableNames[1], N);
@@ -131,12 +123,8 @@ public class DurabilityIT_RestartInjected extends ConfigurableMacBase {
     try (AccumuloClient client = Accumulo.newClient().from(getClientProperties()).build()) {
       String[] tableNames = init(client);
 
-      RestartFramework.at("after_table_init_durability_log")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_init_durability_log").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // we're probably going to lose something the the log setting
       writeSome(client, tableNames[2], N);
@@ -152,12 +140,8 @@ public class DurabilityIT_RestartInjected extends ConfigurableMacBase {
     try (AccumuloClient client = Accumulo.newClient().from(getClientProperties()).build()) {
       String[] tableNames = init(client);
 
-      RestartFramework.at("after_table_init_durability_none")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_init_durability_none").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // probably won't get any data back without logging
       writeSome(client, tableNames[3], N);
@@ -175,12 +159,8 @@ public class DurabilityIT_RestartInjected extends ConfigurableMacBase {
       c.tableOperations().create(tableName);
       c.tableOperations().setProperty(tableName, Property.TABLE_DURABILITY.getKey(), "none");
 
-      RestartFramework.at("after_table_create_durability_increase")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_durability_increase").on(getCluster())
+          .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       writeSome(c, tableName, N);
       restartTServer();
@@ -202,12 +182,8 @@ public class DurabilityIT_RestartInjected extends ConfigurableMacBase {
       assertEquals("sync", props.get(Property.TABLE_DURABILITY.getKey()));
       c.tableOperations().create(tableName);
 
-      RestartFramework.at("after_table_create_meta_durability")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_meta_durability").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       props = c.tableOperations().getConfiguration(tableName);
       assertEquals("none", props.get(Property.TABLE_DURABILITY.getKey()));

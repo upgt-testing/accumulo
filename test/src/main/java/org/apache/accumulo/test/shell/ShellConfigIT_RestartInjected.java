@@ -64,12 +64,8 @@ public class ShellConfigIT_RestartInjected extends AccumuloClusterHarness {
       client.instanceOperations().setProperty(PERTABLE_CHOOSER_PROP,
           FairVolumeChooser.class.getName());
 
-      RestartFramework.at("after_property_set_in_setup")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_property_set_in_setup").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     }
   }
 
@@ -116,12 +112,8 @@ public class ShellConfigIT_RestartInjected extends AccumuloClusterHarness {
       fail("Unknown token type");
     }
 
-    RestartFramework.at("after_mock_shell_created")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_mock_shell_created").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     assertTrue(Property.TABLE_CRYPTO_PREFIX.isExperimental());
     assertTrue(Property.TABLE_CRYPTO_SENSITIVE_PREFIX.isExperimental());
@@ -131,12 +123,8 @@ public class ShellConfigIT_RestartInjected extends AccumuloClusterHarness {
 
     String configOutput = ts.exec("config");
 
-    RestartFramework.at("after_config_command")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_config_command").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     assertTrue(configOutput.contains(PERTABLE_CHOOSER_PROP));
   }

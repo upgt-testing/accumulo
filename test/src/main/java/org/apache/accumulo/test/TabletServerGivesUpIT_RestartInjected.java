@@ -62,22 +62,14 @@ public class TabletServerGivesUpIT_RestartInjected extends ConfigurableMacBase {
         Thread.sleep(100);
       }
 
-      RestartFramework.at("after_tablet_servers_up")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_tablet_servers_up").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       final String tableName = getUniqueNames(1)[0];
       client.tableOperations().create(tableName);
 
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       // Kill dfs
       cluster.getMiniDfs().shutdown();

@@ -34,8 +34,6 @@ import org.apache.accumulo.core.client.Accumulo;
 import org.apache.accumulo.core.client.AccumuloClient;
 import org.apache.accumulo.core.client.AccumuloException;
 import org.apache.accumulo.core.conf.Property;
-import org.restarttest.api.RestartFramework;
-import org.restarttest.core.RestartMode;
 import org.apache.accumulo.core.data.TableId;
 import org.apache.accumulo.core.dataImpl.KeyExtent;
 import org.apache.accumulo.core.fate.zookeeper.ZooUtil.NodeMissingPolicy;
@@ -57,6 +55,8 @@ import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.restarttest.api.RestartFramework;
+import org.restarttest.core.RestartMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -172,12 +172,8 @@ public class HalfDeadServerWatcherIT_RestartInjected extends AccumuloClusterHarn
       String tableName = getUniqueNames(1)[0];
       client.tableOperations().create(tableName);
 
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       // add splits to the table, which should set a StuckWatcher on the table node in zookeeper
       TreeSet<Text> splits = new TreeSet<>();
@@ -185,22 +181,14 @@ public class HalfDeadServerWatcherIT_RestartInjected extends AccumuloClusterHarn
       splits.add(new Text("t"));
       client.tableOperations().addSplits(tableName, splits);
 
-      RestartFramework.at("after_add_splits")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_add_splits").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       // delete the table, which should invoke the watcher
       client.tableOperations().delete(tableName);
 
-      RestartFramework.at("after_table_delete")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_delete").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       final List<String> tservers = client.instanceOperations().getTabletServers();
       assertEquals(1, tservers.size());
@@ -211,12 +199,8 @@ public class HalfDeadServerWatcherIT_RestartInjected extends AccumuloClusterHarn
       ctx.getZooReaderWriter().recursiveDelete(
           zooRoot + Constants.ZTSERVERS + "/" + tservers.get(0), NodeMissingPolicy.FAIL);
 
-      RestartFramework.at("after_lock_delete")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_lock_delete").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       Wait.waitFor(() -> pingServer(client, tservers.get(0)) == false, 60_000);
       return true;

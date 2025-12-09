@@ -33,8 +33,6 @@ import java.util.concurrent.TimeUnit;
 import org.apache.accumulo.core.client.Accumulo;
 import org.apache.accumulo.core.client.AccumuloClient;
 import org.apache.accumulo.core.clientImpl.Namespace;
-import org.restarttest.api.RestartFramework;
-import org.restarttest.core.RestartMode;
 import org.apache.accumulo.core.conf.AccumuloConfiguration;
 import org.apache.accumulo.core.conf.DefaultConfiguration;
 import org.apache.accumulo.core.conf.Property;
@@ -44,11 +42,14 @@ import org.apache.accumulo.server.ServerContext;
 import org.apache.accumulo.server.conf.NamespaceConfiguration;
 import org.apache.accumulo.server.conf.TableConfiguration;
 import org.junit.jupiter.api.Test;
+import org.restarttest.api.RestartFramework;
+import org.restarttest.core.RestartMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class TableConfigurationUpdateIT_RestartInjected extends AccumuloClusterHarness {
-  private static final Logger log = LoggerFactory.getLogger(TableConfigurationUpdateIT_RestartInjected.class);
+  private static final Logger log =
+      LoggerFactory.getLogger(TableConfigurationUpdateIT_RestartInjected.class);
 
   @Override
   protected Duration defaultTimeout() {
@@ -63,12 +64,8 @@ public class TableConfigurationUpdateIT_RestartInjected extends AccumuloClusterH
       String table = getUniqueNames(1)[0];
       client.tableOperations().create(table);
 
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       final NamespaceConfiguration defaultConf = new NamespaceConfiguration(context,
           Namespace.DEFAULT.id(), DefaultConfiguration.getInstance());
@@ -81,21 +78,13 @@ public class TableConfigurationUpdateIT_RestartInjected extends AccumuloClusterH
       int iterations = 100000;
       TableId tid = TableId.of(client.tableOperations().tableIdMap().get(table));
 
-      RestartFramework.at("after_get_table_id")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_get_table_id").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       AccumuloConfiguration tableConf = new TableConfiguration(context, tid, defaultConf);
 
-      RestartFramework.at("after_table_config_create")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_config_create").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       long start = System.currentTimeMillis();
       ExecutorService svc = Executors.newFixedThreadPool(numThreads);
@@ -106,22 +95,14 @@ public class TableConfigurationUpdateIT_RestartInjected extends AccumuloClusterH
         futures.add(svc.submit(new TableConfRunner(randomMax, iterations, tableConf, countDown)));
       }
 
-      RestartFramework.at("after_threads_submitted")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_threads_submitted").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       svc.shutdown();
       assertTrue(svc.awaitTermination(60, TimeUnit.MINUTES));
 
-      RestartFramework.at("after_threads_complete")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_threads_complete").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       for (Future<Exception> fut : futures) {
         Exception e = fut.get();

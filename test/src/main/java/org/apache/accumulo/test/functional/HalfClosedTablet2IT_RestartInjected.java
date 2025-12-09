@@ -82,12 +82,8 @@ public class HalfClosedTablet2IT_RestartInjected extends SharedMiniClusterBase {
       final var tops = client.tableOperations();
       tops.create(tableName);
       TableId tableId = TableId.of(tops.tableIdMap().get(tableName));
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       try (final var bw = client.createBatchWriter(tableName)) {
         final var m1 = new Mutation("a");
@@ -97,47 +93,31 @@ public class HalfClosedTablet2IT_RestartInjected extends SharedMiniClusterBase {
         bw.addMutation(m1);
         bw.addMutation(m2);
       }
-      RestartFramework.at("after_batch_write")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       HalfClosedTabletIT.setInvalidClassLoaderContextPropertyWithoutValidation(
           getCluster().getServerContext(), tableId);
 
       // Need to wait for TabletServer to pickup configuration change
       Thread.sleep(3000);
-      RestartFramework.at("after_set_invalid_context")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_set_invalid_context").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       tops.flush(tableName);
 
       // minc should fail until invalid context is removed, so there should be no files
       FunctionalTestUtils.checkRFiles(client, tableName, 1, 1, 0, 0);
-      RestartFramework.at("after_flush_with_invalid_context")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_flush_with_invalid_context").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       HalfClosedTabletIT.removeInvalidClassLoaderContextProperty(client, tableName);
 
       // Minc should have completed successfully
       Wait.waitFor(() -> HalfClosedTabletIT.tabletHasExpectedRFiles(client, tableName, 1, 1, 1, 1),
           340_000);
-      RestartFramework.at("after_minc_completion")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_minc_completion").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // offline the table which will unload the tablets. If the context property is not
       // removed above, then this test will fail because the tablets will not be able to be

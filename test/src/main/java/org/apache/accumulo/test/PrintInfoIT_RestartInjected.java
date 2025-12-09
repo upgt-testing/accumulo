@@ -86,12 +86,8 @@ public class PrintInfoIT_RestartInjected extends SharedMiniClusterBase {
       createTableAndFlush(accumuloClient, table, false);
       String rFileName = getRFileName(accumuloClient, table);
 
-      RestartFramework.at("after_get_rfile_name")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_get_rfile_name").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       String output = execPrintInfo(rFileName, false);
       assertTrue(output.contains("RFile Version            : 8"));
@@ -115,12 +111,8 @@ public class PrintInfoIT_RestartInjected extends SharedMiniClusterBase {
       createTableAndFlush(accumuloClient, table, true);
       String rFileName = getRFileName(accumuloClient, table);
 
-      RestartFramework.at("after_get_rfile_name")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_get_rfile_name").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       String output = execPrintInfo(rFileName, false);
       assertTrue(output.contains("RFile Version            : 8"));
@@ -143,14 +135,11 @@ public class PrintInfoIT_RestartInjected extends SharedMiniClusterBase {
   public void testOldRFileVersion() throws Exception {
     String resource = "/org/apache/accumulo/test/ver_7.rf";
     File rFile = new File(tempDir, resource);
-    FileUtils.copyURLToFile(requireNonNull(PrintInfoIT_RestartInjected.class.getResource(resource)), rFile);
+    FileUtils.copyURLToFile(requireNonNull(PrintInfoIT_RestartInjected.class.getResource(resource)),
+        rFile);
 
-    RestartFramework.at("after_file_copy")
-        .on(getCluster())
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_file_copy").on(getCluster()).restart("tablet_server").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     String output = execPrintInfo(rFile.getAbsolutePath(), false);
     assertTrue(output.contains("Unable to read crypto params"));
@@ -164,12 +153,8 @@ public class PrintInfoIT_RestartInjected extends SharedMiniClusterBase {
       AccumuloSecurityException, TableNotFoundException {
     client.tableOperations().create(tableName);
 
-    RestartFramework.at("after_table_create")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     BatchWriterConfig config = new BatchWriterConfig();
     config.setMaxMemory(0);
@@ -185,33 +170,21 @@ public class PrintInfoIT_RestartInjected extends SharedMiniClusterBase {
       writer.addMutation(m);
     }
 
-    RestartFramework.at("after_batch_write")
-        .on(getCluster())
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_batch_write").on(getCluster()).restart("tablet_server").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     if (enableSummaries) {
       SummarizerConfiguration sc1 =
           SummarizerConfiguration.builder(VisibilitySummarizer.class).build();
       client.tableOperations().addSummarizers(tableName, sc1);
 
-      RestartFramework.at("after_add_summarizers")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_add_summarizers").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
     }
     client.tableOperations().flush(tableName, null, null, true);
 
-    RestartFramework.at("after_flush")
-        .on(getCluster())
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_flush").on(getCluster()).restart("tablet_server").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
   }
 
   // Get the name of the RFile associated with a table.

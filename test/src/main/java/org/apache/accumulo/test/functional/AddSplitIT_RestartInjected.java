@@ -55,21 +55,13 @@ public class AddSplitIT_RestartInjected extends AccumuloClusterHarness {
     try (AccumuloClient c = Accumulo.newClient().from(getClientProps()).build()) {
       c.tableOperations().create(tableName);
 
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       insertData(c, tableName, 1L);
 
-      RestartFramework.at("after_first_data_insert")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_first_data_insert").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       TreeSet<Text> splits = new TreeSet<>();
       splits.add(new Text(String.format("%09d", 333)));
@@ -77,12 +69,8 @@ public class AddSplitIT_RestartInjected extends AccumuloClusterHarness {
 
       c.tableOperations().addSplits(tableName, splits);
 
-      RestartFramework.at("after_first_add_splits")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_first_add_splits").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       sleepUninterruptibly(100, TimeUnit.MILLISECONDS);
 
@@ -94,21 +82,13 @@ public class AddSplitIT_RestartInjected extends AccumuloClusterHarness {
 
       verifyData(c, tableName, 1L);
 
-      RestartFramework.at("after_first_verify_data")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_first_verify_data").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       insertData(c, tableName, 2L);
 
-      RestartFramework.at("after_second_data_insert")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_second_data_insert").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // did not clear splits on purpose, it should ignore existing split points
       // and still create the three additional split points
@@ -119,12 +99,8 @@ public class AddSplitIT_RestartInjected extends AccumuloClusterHarness {
 
       c.tableOperations().addSplits(tableName, splits);
 
-      RestartFramework.at("after_second_add_splits")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_second_add_splits").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       sleepUninterruptibly(100, TimeUnit.MILLISECONDS);
 

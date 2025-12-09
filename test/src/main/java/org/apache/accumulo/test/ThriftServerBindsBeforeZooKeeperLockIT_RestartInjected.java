@@ -76,12 +76,8 @@ public class ThriftServerBindsBeforeZooKeeperLockIT_RestartInjected extends Accu
       getClusterControl().start(ServerType.MONITOR, "localhost");
     }
 
-    RestartFramework.at("after_monitor_start")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_monitor_start").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     while (true) {
       try {
@@ -95,12 +91,8 @@ public class ThriftServerBindsBeforeZooKeeperLockIT_RestartInjected extends Accu
 
     LOG.debug("Found active monitor");
 
-    RestartFramework.at("after_active_monitor_found")
-        .on(cluster)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_active_monitor_found").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     int freePort = PortUtils.getRandomFreePort();
     String monitorUrl = "http://localhost:" + freePort;
@@ -109,12 +101,8 @@ public class ThriftServerBindsBeforeZooKeeperLockIT_RestartInjected extends Accu
       LOG.debug("Starting standby monitor on {}", freePort);
       monitor = startProcess(cluster, ServerType.MONITOR, freePort);
 
-      RestartFramework.at("after_standby_monitor_start")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_standby_monitor_start").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       while (true) {
         URL url = new URL(monitorUrl);
@@ -124,12 +112,8 @@ public class ThriftServerBindsBeforeZooKeeperLockIT_RestartInjected extends Accu
           String errorText;
           // This is our "assertion", but we want to re-check it if it's not what we expect
           if (responseCode == HttpURLConnection.HTTP_OK) {
-            RestartFramework.at("after_monitor_http_success")
-                .on(cluster)
-                .restart("manager")
-                .withIndex(0)
-                .withMode(RestartMode.GRACEFUL)
-                .execute();
+            RestartFramework.at("after_monitor_http_success").on(getCluster()).restart("manager")
+                .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
             return;
           } else {
             errorText = FunctionalTestUtils.readAll(cnxn.getErrorStream());
@@ -182,12 +166,8 @@ public class ThriftServerBindsBeforeZooKeeperLockIT_RestartInjected extends Accu
 
       LOG.debug("Found active manager");
 
-      RestartFramework.at("after_active_manager_found")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_active_manager_found").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       int freePort = PortUtils.getRandomFreePort();
       Process manager = null;
@@ -195,22 +175,14 @@ public class ThriftServerBindsBeforeZooKeeperLockIT_RestartInjected extends Accu
         LOG.debug("Starting standby manager on {}", freePort);
         manager = startProcess(cluster, ServerType.MANAGER, freePort);
 
-        RestartFramework.at("after_standby_manager_start")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_standby_manager_start").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         while (true) {
           try (Socket s = new Socket("localhost", freePort)) {
             if (s.isConnected()) {
-              RestartFramework.at("after_manager_socket_success")
-                  .on(cluster)
-                  .restart("manager")
-                  .withIndex(0)
-                  .withMode(RestartMode.GRACEFUL)
-                  .execute();
+              RestartFramework.at("after_manager_socket_success").on(getCluster())
+                  .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
               // Pass
               return;
             }
@@ -261,12 +233,8 @@ public class ThriftServerBindsBeforeZooKeeperLockIT_RestartInjected extends Accu
 
       LOG.debug("Found active gc");
 
-      RestartFramework.at("after_active_gc_found")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_active_gc_found").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       int freePort = PortUtils.getRandomFreePort();
       Process manager = null;
@@ -274,21 +242,14 @@ public class ThriftServerBindsBeforeZooKeeperLockIT_RestartInjected extends Accu
         LOG.debug("Starting standby gc on {}", freePort);
         manager = startProcess(cluster, ServerType.GARBAGE_COLLECTOR, freePort);
 
-        RestartFramework.at("after_standby_gc_start")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_standby_gc_start").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         while (true) {
           try (Socket s = new Socket("localhost", freePort)) {
             if (s.isConnected()) {
-              RestartFramework.at("after_gc_socket_success")
-                  .on(cluster)
-                  .restart("garbage_collector")
-                  .withIndex(0)
-                  .withMode(RestartMode.GRACEFUL)
+              RestartFramework.at("after_gc_socket_success").on(getCluster())
+                  .restart("garbage_collector").withIndex(0).withMode(RestartMode.GRACEFUL)
                   .execute();
               // Pass
               return;

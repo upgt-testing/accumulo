@@ -106,12 +106,8 @@ public class ConcurrencyIT_RestartInjected extends AccumuloClusterHarness {
   static void runTest(AccumuloClient c, String tableName, Object cluster) throws Exception {
     c.tableOperations().create(tableName);
 
-    RestartFramework.at("after_table_create_concurrency")
-        .on(cluster)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create_concurrency").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     IteratorSetting is = new IteratorSetting(10, SlowIterator.class);
     SlowIterator.setSleepTime(is, 50);
@@ -119,12 +115,8 @@ public class ConcurrencyIT_RestartInjected extends AccumuloClusterHarness {
         EnumSet.of(IteratorScope.minc, IteratorScope.majc));
     c.tableOperations().setProperty(tableName, Property.TABLE_MAJC_RATIO.getKey(), "1.0");
 
-    RestartFramework.at("after_iterator_attach_concurrency")
-        .on(cluster)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_iterator_attach_concurrency").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     BatchWriter bw = c.createBatchWriter(tableName);
     for (int i = 0; i < 50; i++) {
@@ -134,12 +126,8 @@ public class ConcurrencyIT_RestartInjected extends AccumuloClusterHarness {
     }
     bw.flush();
 
-    RestartFramework.at("after_initial_batch_write")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_initial_batch_write").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     ScanTask st0 = new ScanTask(c, tableName, 300);
     st0.start();
@@ -187,12 +175,8 @@ public class ConcurrencyIT_RestartInjected extends AccumuloClusterHarness {
       throw new Exception("Thread 0 did not see 50, saw " + st0.count);
     }
 
-    RestartFramework.at("after_all_scans_complete")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_all_scans_complete").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     bw.close();
   }

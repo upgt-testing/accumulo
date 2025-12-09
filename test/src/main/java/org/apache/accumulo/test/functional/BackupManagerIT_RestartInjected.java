@@ -59,12 +59,8 @@ public class BackupManagerIT_RestartInjected extends ConfigurableMacBase {
       // wait for the backup manager to learn to be the backup
       UtilWaitThread.sleep(1000);
 
-      RestartFramework.at("after_backup_manager_established")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_backup_manager_established").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // generate a false zookeeper event
       String lockPath = root + Constants.ZMANAGER_LOCK + "/" + children.get(0);
@@ -73,32 +69,20 @@ public class BackupManagerIT_RestartInjected extends ConfigurableMacBase {
       // let it propagate
       UtilWaitThread.sleep(500);
 
-      RestartFramework.at("after_zk_event_generated")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_zk_event_generated").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // kill the manager by removing its lock
       writer.recursiveDelete(lockPath, NodeMissingPolicy.FAIL);
 
-      RestartFramework.at("after_manager_lock_removed")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_manager_lock_removed").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // ensure the backup becomes the manager
       client.tableOperations().create(getUniqueNames(1)[0]);
 
-      RestartFramework.at("after_backup_promotion_verified")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_backup_promotion_verified").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     } finally {
       backup.destroy();
     }

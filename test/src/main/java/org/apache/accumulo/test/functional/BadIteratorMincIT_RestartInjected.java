@@ -36,11 +36,10 @@ import org.apache.accumulo.core.security.Authorizations;
 import org.apache.accumulo.harness.AccumuloClusterHarness;
 import org.apache.hadoop.io.Text;
 import org.junit.jupiter.api.Test;
-
-import com.google.common.collect.Iterators;
-
 import org.restarttest.api.RestartFramework;
 import org.restarttest.core.RestartMode;
+
+import com.google.common.collect.Iterators;
 
 public class BadIteratorMincIT_RestartInjected extends AccumuloClusterHarness {
 
@@ -55,39 +54,23 @@ public class BadIteratorMincIT_RestartInjected extends AccumuloClusterHarness {
 
       String tableName = getUniqueNames(1)[0];
       c.tableOperations().create(tableName);
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       IteratorSetting is = new IteratorSetting(30, BadIterator.class);
       c.tableOperations().attachIterator(tableName, is, EnumSet.of(IteratorScope.minc));
-      RestartFramework.at("after_iterator_attach")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_iterator_attach").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       try (BatchWriter bw = c.createBatchWriter(tableName)) {
         Mutation m = new Mutation(new Text("r1"));
         m.put("acf", tableName, "1");
         bw.addMutation(m);
       }
-      RestartFramework.at("after_first_batch_write")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_first_batch_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       c.tableOperations().flush(tableName, null, null, false);
-      RestartFramework.at("after_first_flush")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_first_flush").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       sleepUninterruptibly(1, TimeUnit.SECONDS);
 
       // minc should fail, so there should be no files
@@ -101,12 +84,8 @@ public class BadIteratorMincIT_RestartInjected extends AccumuloClusterHarness {
         // remove the bad iterator
         c.tableOperations().removeIterator(tableName, BadIterator.class.getSimpleName(),
             EnumSet.of(IteratorScope.minc));
-        RestartFramework.at("after_iterator_remove")
-            .on(cluster)
-            .restart("manager")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_iterator_remove").on(getCluster()).restart("manager")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         sleepUninterruptibly(5, TimeUnit.SECONDS);
 
@@ -121,44 +100,28 @@ public class BadIteratorMincIT_RestartInjected extends AccumuloClusterHarness {
 
         // now try putting bad iterator back and deleting the table
         c.tableOperations().attachIterator(tableName, is, EnumSet.of(IteratorScope.minc));
-        RestartFramework.at("after_second_iterator_attach")
-            .on(cluster)
-            .restart("manager")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_second_iterator_attach").on(getCluster()).restart("manager")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
         try (BatchWriter bw = c.createBatchWriter(tableName)) {
           Mutation m = new Mutation(new Text("r2"));
           m.put("acf", tableName, "1");
           bw.addMutation(m);
         }
-        RestartFramework.at("after_second_batch_write")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_second_batch_write").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         // make sure property is given time to propagate
         sleepUninterruptibly(500, TimeUnit.MILLISECONDS);
 
         c.tableOperations().flush(tableName, null, null, false);
-        RestartFramework.at("after_second_flush")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_second_flush").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         // make sure the flush has time to start
         sleepUninterruptibly(1, TimeUnit.SECONDS);
 
-        RestartFramework.at("before_table_delete")
-            .on(cluster)
-            .restart("manager")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("before_table_delete").on(getCluster()).restart("manager").withIndex(0)
+            .withMode(RestartMode.GRACEFUL).execute();
         // this should not hang
         c.tableOperations().delete(tableName);
       }

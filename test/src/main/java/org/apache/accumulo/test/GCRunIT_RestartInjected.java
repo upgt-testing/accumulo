@@ -54,10 +54,10 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.restarttest.api.RestartFramework;
 import org.restarttest.core.RestartMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Tag(MINI_CLUSTER_ONLY)
 public class GCRunIT_RestartInjected extends SharedMiniClusterBase {
@@ -90,12 +90,8 @@ public class GCRunIT_RestartInjected extends SharedMiniClusterBase {
     final String clone1 = names[1];
 
     fillMetadataEntries(table1, clone1);
-    RestartFramework.at("after_fill_metadata")
-        .on(getCluster())
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_fill_metadata").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     try (AccumuloClient client = Accumulo.newClient().from(getClientProps()).build()) {
 
@@ -104,12 +100,8 @@ public class GCRunIT_RestartInjected extends SharedMiniClusterBase {
       scanReferences(new GCRun(Ample.DataLevel.ROOT, context));
       scanReferences(new GCRun(Ample.DataLevel.METADATA, context));
       scanReferences(new GCRun(Ample.DataLevel.USER, context));
-      RestartFramework.at("after_scan_references")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_scan_references").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       client.tableOperations().delete(clone1);
     }
@@ -127,22 +119,14 @@ public class GCRunIT_RestartInjected extends SharedMiniClusterBase {
     final String clone1 = names[1];
 
     fillMetadataEntries(table1, clone1);
-    RestartFramework.at("after_fill_metadata")
-        .on(getCluster())
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_fill_metadata").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     try (AccumuloClient client = Accumulo.newClient().from(getClientProps()).build()) {
 
       client.securityOperations().grantTablePermission(getAdminPrincipal(), MetadataTable.NAME,
           TablePermission.WRITE);
-      RestartFramework.at("after_grant_permission")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_grant_permission").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       String cloneId = client.tableOperations().tableIdMap().get(clone1);
 
@@ -158,12 +142,8 @@ public class GCRunIT_RestartInjected extends SharedMiniClusterBase {
         log.info("forcing delete of srv:dir with mutation {}", m.prettyPrint());
         bw.addMutation(m);
       }
-      RestartFramework.at("after_metadata_write")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_metadata_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       var context = getCluster().getServerContext();
 
@@ -208,19 +188,11 @@ public class GCRunIT_RestartInjected extends SharedMiniClusterBase {
       NewTableConfiguration ntc = new NewTableConfiguration().withSplits(splits);
       ntc.withSplits(splits);
       client.tableOperations().create(table1, ntc);
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       client.tableOperations().compact(table1, new CompactionConfig().setWait(true));
-      RestartFramework.at("after_first_compact")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_first_compact").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       BatchWriterConfig config = new BatchWriterConfig();
       config.setMaxMemory(0);
@@ -231,50 +203,26 @@ public class GCRunIT_RestartInjected extends SharedMiniClusterBase {
           writer.addMutation(m);
         }
       }
-      RestartFramework.at("after_batch_write")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       client.tableOperations().flush(table1, null, null, true);
-      RestartFramework.at("after_flush")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_flush").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       client.tableOperations().clone(table1, clone1, CloneConfiguration.empty());
-      RestartFramework.at("after_clone")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_clone").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       client.tableOperations().compact(table1, new CompactionConfig().setWait(true));
-      RestartFramework.at("after_second_compact")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_second_compact").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       client.tableOperations().delete(table1);
-      RestartFramework.at("after_table_delete")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_delete").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       client.tableOperations().flush(MetadataTable.NAME, null, null, true);
       client.tableOperations().flush(RootTable.NAME, null, null, true);
-      RestartFramework.at("after_metadata_root_flush")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_metadata_root_flush").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     }
   }

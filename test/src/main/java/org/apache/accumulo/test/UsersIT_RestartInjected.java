@@ -47,12 +47,8 @@ public class UsersIT_RestartInjected extends AccumuloClusterHarness {
       Set<String> currentUsers = securityOperations.listLocalUsers();
       final String user0Principal = user0.getPrincipal();
 
-      RestartFramework.at("after_list_users")
-          .on((MiniAccumuloClusterImpl) getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_list_users").on((MiniAccumuloClusterImpl) getCluster())
+          .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // Ensure that the user exists
       if (!currentUsers.contains(user0Principal)) {
@@ -62,20 +58,12 @@ public class UsersIT_RestartInjected extends AccumuloClusterHarness {
         }
         securityOperations.createLocalUser(user0Principal, token);
 
-        RestartFramework.at("after_user_create")
-            .on((MiniAccumuloClusterImpl) getCluster())
-            .restart("manager")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_user_create").on((MiniAccumuloClusterImpl) getCluster())
+            .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       }
 
-      RestartFramework.at("before_duplicate_user_create")
-          .on((MiniAccumuloClusterImpl) getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("before_duplicate_user_create").on((MiniAccumuloClusterImpl) getCluster())
+          .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       final PasswordToken badToken = new PasswordToken("better_fail");
       var ase = assertThrows(AccumuloSecurityException.class,

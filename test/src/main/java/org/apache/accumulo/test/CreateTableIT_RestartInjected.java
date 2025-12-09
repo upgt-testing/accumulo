@@ -73,12 +73,8 @@ public class CreateTableIT_RestartInjected extends SharedMiniClusterBase {
         log.info("Table {} creation took: {} ms", name, timer.elapsed(TimeUnit.MILLISECONDS));
       });
 
-      RestartFramework.at("after_create_all_tables")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_create_all_tables").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       final int systemTables = 3;
       assertEquals(NUM_TABLES + systemTables, client.tableOperations().list().size());

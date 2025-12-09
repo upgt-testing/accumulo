@@ -44,8 +44,6 @@ import org.apache.accumulo.core.conf.Property;
 import org.apache.accumulo.core.iterators.IteratorUtil;
 import org.apache.accumulo.core.metrics.MetricsProducer;
 import org.apache.accumulo.core.security.Authorizations;
-import org.restarttest.api.RestartFramework;
-import org.restarttest.core.RestartMode;
 import org.apache.accumulo.harness.MiniClusterConfigurationCallback;
 import org.apache.accumulo.harness.SharedMiniClusterBase;
 import org.apache.accumulo.minicluster.ServerType;
@@ -58,12 +56,15 @@ import org.apache.hadoop.conf.Configuration;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.restarttest.api.RestartFramework;
+import org.restarttest.core.RestartMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class IdleProcessMetricsIT_RestartInjected extends SharedMiniClusterBase {
 
-  private static final Logger log = LoggerFactory.getLogger(IdleProcessMetricsIT_RestartInjected.class);
+  private static final Logger log =
+      LoggerFactory.getLogger(IdleProcessMetricsIT_RestartInjected.class);
 
   static final Duration idleProcessInterval = Duration.ofSeconds(10);
 
@@ -119,49 +120,29 @@ public class IdleProcessMetricsIT_RestartInjected extends SharedMiniClusterBase 
 
     getCluster().getClusterControl().startCoordinator(CompactionCoordinator.class);
 
-    RestartFramework.at("after_start_coordinator")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_start_coordinator").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     getCluster().getClusterControl().startCompactors(Compactor.class, 1, QUEUE1);
 
-    RestartFramework.at("after_start_compactors")
-        .on(getCluster())
-        .restart("compactor")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_start_compactors").on(getCluster()).restart("compactor").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     getCluster().getClusterControl().start(ServerType.SCAN_SERVER, "localhost");
 
-    RestartFramework.at("after_start_scan_server")
-        .on(getCluster())
-        .restart("scan_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_start_scan_server").on(getCluster()).restart("scan_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     getCluster().getClusterControl().start(ServerType.TABLET_SERVER);
 
-    RestartFramework.at("after_start_tablet_server")
-        .on(getCluster())
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_start_tablet_server").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     // should emit the idle metric after the configured duration of GENERAL_IDLE_PROCESS_INTERVAL
     Thread.sleep(idleProcessInterval.toMillis());
 
-    RestartFramework.at("before_metric_check")
-        .on(getCluster())
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("before_metric_check").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     AtomicBoolean sawCompactor = new AtomicBoolean(false);
     AtomicBoolean sawSServer = new AtomicBoolean(false);
@@ -201,12 +182,8 @@ public class IdleProcessMetricsIT_RestartInjected extends SharedMiniClusterBase 
       getCluster().getClusterControl().startCoordinator(CompactionCoordinator.class);
       getCluster().getClusterControl().startCompactors(Compactor.class, 1, QUEUE1);
 
-      RestartFramework.at("after_start_coordinator_and_compactors")
-          .on(getCluster())
-          .restart("compactor")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_start_coordinator_and_compactors").on(getCluster())
+          .restart("compactor").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // should emit the idle metric after the configured duration of GENERAL_IDLE_PROCESS_INTERVAL
       Thread.sleep(idleProcessInterval.toMillis());
@@ -216,64 +193,40 @@ public class IdleProcessMetricsIT_RestartInjected extends SharedMiniClusterBase 
       log.info("Waiting for compactor to go idle");
       waitForIdleMetricValueToBe(1, processName);
 
-      RestartFramework.at("after_compactor_idle")
-          .on(getCluster())
-          .restart("compactor")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_compactor_idle").on(getCluster()).restart("compactor").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       String table1 = getUniqueNames(1)[0];
       createTable(client, table1, "cs1");
       writeData(client, table1);
 
-      RestartFramework.at("after_table_create_and_write")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_and_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       IteratorSetting setting = new IteratorSetting(50, "Slow", SlowIterator.class);
       SlowIterator.setSleepTime(setting, 5);
       client.tableOperations().attachIterator(table1, setting,
           EnumSet.of(IteratorUtil.IteratorScope.majc));
 
-      RestartFramework.at("after_iterator_attach")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_iterator_attach").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       compact(client, table1, 2, QUEUE1, false);
 
-      RestartFramework.at("after_start_compaction")
-          .on(getCluster())
-          .restart("compactor")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_start_compaction").on(getCluster()).restart("compactor")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       log.info("Waiting for compactor to be not idle after starting compaction");
       waitForIdleMetricValueToBe(0, processName);
 
-      RestartFramework.at("after_compactor_busy")
-          .on(getCluster())
-          .restart("compactor")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_compactor_busy").on(getCluster()).restart("compactor").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       log.info("Waiting for compactor to go idle once compaction completes");
       waitForIdleMetricValueToBe(1, processName);
 
-      RestartFramework.at("after_compaction_complete")
-          .on(getCluster())
-          .restart("compactor")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_compaction_complete").on(getCluster()).restart("compactor")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       verify(client, table1, 2);
     }
@@ -291,12 +244,8 @@ public class IdleProcessMetricsIT_RestartInjected extends SharedMiniClusterBase 
 
       getCluster().getClusterControl().start(ServerType.SCAN_SERVER, "localhost");
 
-      RestartFramework.at("after_start_scan_server")
-          .on(getCluster())
-          .restart("scan_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_start_scan_server").on(getCluster()).restart("scan_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // should emit the idle metric after the configured duration of GENERAL_IDLE_PROCESS_INTERVAL
       Thread.sleep(idleProcessInterval.toMillis());
@@ -306,67 +255,43 @@ public class IdleProcessMetricsIT_RestartInjected extends SharedMiniClusterBase 
       log.info("Waiting for sserver to go idle");
       waitForIdleMetricValueToBe(1, processName);
 
-      RestartFramework.at("after_sserver_idle")
-          .on(getCluster())
-          .restart("scan_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_sserver_idle").on(getCluster()).restart("scan_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       String table1 = getUniqueNames(1)[0];
       createTable(client, table1, "cs1");
       writeData(client, table1);
 
-      RestartFramework.at("after_table_create_and_write")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_and_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       IteratorSetting setting = new IteratorSetting(50, "Slow", SlowIterator.class);
       SlowIterator.setSleepTime(setting, 5);
       client.tableOperations().attachIterator(table1, setting,
           EnumSet.of(IteratorUtil.IteratorScope.scan));
 
-      RestartFramework.at("after_iterator_attach")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_iterator_attach").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       try (Scanner scanner = client.createScanner(table1, Authorizations.EMPTY)) {
         scanner.setConsistencyLevel(ScannerBase.ConsistencyLevel.EVENTUAL);
         assertEquals(MAX_DATA, scanner.stream().count());
       }
 
-      RestartFramework.at("after_scan")
-          .on(getCluster())
-          .restart("scan_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_scan").on(getCluster()).restart("scan_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       log.info("Waiting for sserver to be not idle after starting a scan");
       waitForIdleMetricValueToBe(0, processName);
 
-      RestartFramework.at("after_sserver_busy")
-          .on(getCluster())
-          .restart("scan_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_sserver_busy").on(getCluster()).restart("scan_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       log.info("Waiting for sserver to go idle once scan completes completes");
       waitForIdleMetricValueToBe(1, processName);
 
-      RestartFramework.at("after_scan_complete")
-          .on(getCluster())
-          .restart("scan_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_scan_complete").on(getCluster()).restart("scan_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     }
 
   }

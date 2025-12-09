@@ -42,26 +42,14 @@ public class StartIT_RestartInjected extends AccumuloClusterHarness {
     ClusterControl control = getCluster().getClusterControl();
 
     assertNotEquals(0, control.exec(TestMain.class, new String[] {"exception"}));
-    RestartFramework.at("after_exception_exec")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_exception_exec").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     assertEquals(0, control.exec(TestMain.class, new String[] {"success"}));
-    RestartFramework.at("after_success_exec")
-        .on(cluster)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_success_exec").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     assertNotEquals(0, control.exec(TestMain.class, new String[0]));
-    RestartFramework.at("after_empty_exec")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_empty_exec").on(getCluster()).restart("tablet_server").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
   }
 
 }

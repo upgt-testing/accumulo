@@ -78,12 +78,8 @@ public class BloomFilterIT_RestartInjected extends AccumuloClusterHarness {
           .get(Property.TSERV_SCAN_EXECUTORS_DEFAULT_THREADS.getKey());
       c.instanceOperations().setProperty(Property.TSERV_SCAN_EXECUTORS_DEFAULT_THREADS.getKey(),
           "1");
-      RestartFramework.at("after_scan_executors_property_set")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_scan_executors_property_set").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       try {
         Thread.sleep(1000);
         final String[] tables = getUniqueNames(4);
@@ -97,23 +93,15 @@ public class BloomFilterIT_RestartInjected extends AccumuloClusterHarness {
           tops.setProperty(table, Property.TABLE_BLOOM_LOAD_THRESHOLD.getKey(), "0");
           tops.setProperty(table, Property.TABLE_FILE_COMPRESSED_BLOCK_SIZE.getKey(), "64K");
         }
-        RestartFramework.at("after_all_tables_created_configured")
-            .on(cluster)
-            .restart("manager")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_all_tables_created_configured").on(getCluster())
+            .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
         log.info("Writing");
         write(c, tables[0], 1, 0, 2000000000, 500);
         write(c, tables[1], 2, 0, 2000000000, 500);
         write(c, tables[2], 3, 0, 2000000000, 500);
         log.info("Writing complete");
-        RestartFramework.at("after_all_writes_complete")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_all_writes_complete").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         // test inserting an empty key
         try (BatchWriter bw = c.createBatchWriter(tables[3])) {
@@ -122,33 +110,21 @@ public class BloomFilterIT_RestartInjected extends AccumuloClusterHarness {
           bw.addMutation(m);
         }
         c.tableOperations().flush(tables[3], null, null, true);
-        RestartFramework.at("after_empty_key_flush")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_empty_key_flush").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         for (String table : Arrays.asList(tables[0], tables[1], tables[2])) {
           c.tableOperations().compact(table, null, null, true, true);
         }
-        RestartFramework.at("after_compaction_without_bloom")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_compaction_without_bloom").on(getCluster())
+            .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         // ensure compactions are finished
         for (String table : tables) {
           FunctionalTestUtils.checkRFiles(c, table, 1, 1, 1, 1);
         }
-        RestartFramework.at("after_rfiles_check")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_rfiles_check").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         // these queries should only run quickly if bloom filters are working, so lets get a base
         log.info("Base query");
@@ -156,12 +132,8 @@ public class BloomFilterIT_RestartInjected extends AccumuloClusterHarness {
         long t2 = query(c, tables[1], 2, 0, 2000000000, 5000, 500);
         long t3 = query(c, tables[2], 3, 0, 2000000000, 5000, 500);
         log.info("Base query complete");
-        RestartFramework.at("after_base_query")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_base_query").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         log.info("Rewriting with bloom filters");
         c.tableOperations().setProperty(tables[0], Property.TABLE_BLOOM_ENABLED.getKey(), "true");
@@ -179,12 +151,8 @@ public class BloomFilterIT_RestartInjected extends AccumuloClusterHarness {
         c.tableOperations().setProperty(tables[3], Property.TABLE_BLOOM_ENABLED.getKey(), "true");
         c.tableOperations().setProperty(tables[3], Property.TABLE_BLOOM_KEY_FUNCTOR.getKey(),
             RowFunctor.class.getName());
-        RestartFramework.at("after_bloom_properties_set")
-            .on(cluster)
-            .restart("manager")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_bloom_properties_set").on(getCluster()).restart("manager")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         // ensure the updates to zookeeper propagate
         UtilWaitThread.sleep(500);
@@ -194,12 +162,8 @@ public class BloomFilterIT_RestartInjected extends AccumuloClusterHarness {
         c.tableOperations().compact(tables[1], null, null, false, true);
         c.tableOperations().compact(tables[2], null, null, false, true);
         log.info("Rewriting with bloom filters complete");
-        RestartFramework.at("after_compaction_with_bloom")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_compaction_with_bloom").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         // these queries should only run quickly if bloom
         // filters are working
@@ -208,12 +172,8 @@ public class BloomFilterIT_RestartInjected extends AccumuloClusterHarness {
         long tb2 = query(c, tables[1], 2, 0, 2000000000, 5000, 500);
         long tb3 = query(c, tables[2], 3, 0, 2000000000, 5000, 500);
         log.info("Bloom query complete");
-        RestartFramework.at("after_bloom_query")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_bloom_query").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
         timeCheck(t1 + t2 + t3, tb1 + tb2 + tb3);
 
         // test querying for empty key
@@ -224,12 +184,8 @@ public class BloomFilterIT_RestartInjected extends AccumuloClusterHarness {
             throw new Exception("Did not see foo1");
           }
         }
-        RestartFramework.at("after_empty_key_scan")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_empty_key_scan").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       } finally {
         c.instanceOperations().setProperty(Property.TSERV_SCAN_EXECUTORS_DEFAULT_THREADS.getKey(),
             readAhead);

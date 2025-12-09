@@ -61,10 +61,10 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.fs.Path;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.restarttest.api.RestartFramework;
 import org.restarttest.core.RestartMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * ImportTable didn't correctly place absolute paths in metadata. This resulted in the imported
@@ -109,12 +109,8 @@ public class ImportExportIT_RestartInjected extends AccumuloClusterHarness {
 
     client.tableOperations().create(srcTable);
     MiniAccumuloClusterImpl mac = (MiniAccumuloClusterImpl) getCluster();
-    RestartFramework.at("after_table_create")
-        .on(mac)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(mac).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     try (BatchWriter bw = client.createBatchWriter(srcTable)) {
       for (int row = 0; row < 1000; row++) {
@@ -125,20 +121,12 @@ public class ImportExportIT_RestartInjected extends AccumuloClusterHarness {
         bw.addMutation(m);
       }
     }
-    RestartFramework.at("after_batch_write")
-        .on(mac)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_batch_write").on(mac).restart("tablet_server").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     client.tableOperations().compact(srcTable, null, null, true, true);
-    RestartFramework.at("after_compact")
-        .on(mac)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_compact").on(mac).restart("tablet_server").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     // Make a directory we can use to throw the export and import directories
     // Must exist on the filesystem the cluster is running.
@@ -175,20 +163,12 @@ public class ImportExportIT_RestartInjected extends AccumuloClusterHarness {
 
     // Offline the table
     client.tableOperations().offline(srcTable, true);
-    RestartFramework.at("after_offline")
-        .on(mac)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_offline").on(mac).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     // Then export it
     client.tableOperations().exportTable(srcTable, exportDir.toString());
-    RestartFramework.at("after_export")
-        .on(mac)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_export").on(mac).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     // Make sure the distcp.txt file that exporttable creates is available
     Path distcp = new Path(exportDir, "distcp.txt");
@@ -216,12 +196,8 @@ public class ImportExportIT_RestartInjected extends AccumuloClusterHarness {
 
     // Import the exported data into a new table
     client.tableOperations().importTable(destTable, importDirs, ImportConfiguration.empty());
-    RestartFramework.at("after_import")
-        .on(mac)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_import").on(mac).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     // Get the table ID for the table that the importtable command created
     final String tableId = client.tableOperations().tableIdMap().get(destTable);
@@ -268,12 +244,8 @@ public class ImportExportIT_RestartInjected extends AccumuloClusterHarness {
       String srcTable = tableNames[0], destTable = tableNames[1];
       client.tableOperations().create(srcTable);
       MiniAccumuloClusterImpl mac = (MiniAccumuloClusterImpl) getCluster();
-      RestartFramework.at("after_table_create")
-          .on(mac)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(mac).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       try (BatchWriter bw = client.createBatchWriter(srcTable)) {
         for (int row = 0; row < 1000; row++) {
@@ -286,12 +258,8 @@ public class ImportExportIT_RestartInjected extends AccumuloClusterHarness {
       }
 
       client.tableOperations().compact(srcTable, new CompactionConfig());
-      RestartFramework.at("after_compact")
-          .on(mac)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_compact").on(mac).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       // Make export and import directories
       FileSystem fs = cluster.getFileSystem();
@@ -323,20 +291,12 @@ public class ImportExportIT_RestartInjected extends AccumuloClusterHarness {
 
       // Offline the table
       client.tableOperations().offline(srcTable, true);
-      RestartFramework.at("after_offline")
-          .on(mac)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_offline").on(mac).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       // Then export it
       client.tableOperations().exportTable(srcTable, exportDir.toString());
-      RestartFramework.at("after_export")
-          .on(mac)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_export").on(mac).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       // Make sure the distcp.txt file that exporttable creates is available
       Path distcp = new Path(exportDir, "distcp.txt");

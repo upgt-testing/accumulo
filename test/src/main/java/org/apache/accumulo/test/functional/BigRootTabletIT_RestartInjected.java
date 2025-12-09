@@ -59,12 +59,8 @@ public class BigRootTabletIT_RestartInjected extends AccumuloClusterHarness {
       c.tableOperations().addSplits(MetadataTable.NAME,
           FunctionalTestUtils.splits("0 1 2 3 4 5 6 7 8 9 a".split(" ")));
 
-      RestartFramework.at("after_metadata_splits")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_metadata_splits").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       String[] names = getUniqueNames(10);
       int iteration = 0;
@@ -74,32 +70,20 @@ public class BigRootTabletIT_RestartInjected extends AccumuloClusterHarness {
         c.tableOperations().flush(RootTable.NAME, null, null, true);
 
         if (iteration == 0 || iteration == 5 || iteration == 9) {
-          RestartFramework.at("after_table_flush_iteration_" + iteration)
-              .on(cluster)
-              .restart("tablet_server")
-              .withIndex(0)
-              .withMode(RestartMode.GRACEFUL)
-              .execute();
+          RestartFramework.at("after_table_flush_iteration_" + iteration).on(getCluster())
+              .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
         }
         iteration++;
       }
 
-      RestartFramework.at("before_manual_cluster_stop")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("before_manual_cluster_stop").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       cluster.stop();
       cluster.start();
 
-      RestartFramework.at("after_manual_cluster_start")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_manual_cluster_start").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       assertTrue(
           c.createScanner(RootTable.NAME, Authorizations.EMPTY).stream().findAny().isPresent());

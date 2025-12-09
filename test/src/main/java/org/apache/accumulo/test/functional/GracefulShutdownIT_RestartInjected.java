@@ -163,12 +163,8 @@ public class GracefulShutdownIT_RestartInjected extends SharedMiniClusterBase {
       long numFiles = getNumFilesForTable(ctx, tid);
       assertEquals(10, numFiles);
       client.instanceOperations().waitForBalance();
-      RestartFramework.at("after_data_insertion")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_data_insertion").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // Restart Garbage Collector
       final ServiceLockPath gcLockPath =
@@ -186,12 +182,8 @@ public class GracefulShutdownIT_RestartInjected extends SharedMiniClusterBase {
         control.refreshProcesses(ServerType.GARBAGE_COLLECTOR);
         return control.getProcesses(ServerType.GARBAGE_COLLECTOR).isEmpty();
       });
-      RestartFramework.at("after_gc_restart")
-          .on(getCluster())
-          .restart("garbage_collector")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_gc_restart").on(getCluster()).restart("garbage_collector")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // Restart Tablet Server
       final List<String> tservers = client.instanceOperations().getTabletServers();
@@ -206,12 +198,8 @@ public class GracefulShutdownIT_RestartInjected extends SharedMiniClusterBase {
       control.start(ServerType.TABLET_SERVER);
       Wait.waitFor(() -> control.getProcesses(ServerType.TABLET_SERVER).size() == 2);
       client.instanceOperations().waitForBalance();
-      RestartFramework.at("after_tablet_server_restart")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_tablet_server_restart").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // Restart Manager
       final List<String> managers = client.instanceOperations().getManagerLocations();
@@ -225,12 +213,8 @@ public class GracefulShutdownIT_RestartInjected extends SharedMiniClusterBase {
       control.start(ServerType.MANAGER);
       Wait.waitFor(() -> control.getProcesses(ServerType.MANAGER).size() == 1);
       client.instanceOperations().waitForBalance();
-      RestartFramework.at("after_manager_restart")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_manager_restart").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       // Compact table and shutdown compactor
       control.startCoordinator(CompactionCoordinator.class);
@@ -253,12 +237,8 @@ public class GracefulShutdownIT_RestartInjected extends SharedMiniClusterBase {
       client.tableOperations().compact(tableName, cc);
       Wait.waitFor(
           () -> ExternalCompactionTestUtils.getRunningCompactions(ctx).getCompactionsSize() > 0);
-      RestartFramework.at("after_compaction_start")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_compaction_start").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       Admin.signalGracefulShutdown(ctx, compactorAddress);
       Wait.waitFor(() -> {
         control.refreshProcesses(ServerType.COMPACTOR);
@@ -267,12 +247,8 @@ public class GracefulShutdownIT_RestartInjected extends SharedMiniClusterBase {
       final long numFiles3 = getNumFilesForTable(ctx, tid);
       assertTrue(numFiles3 < numFiles2);
       assertEquals(1, numFiles3);
-      RestartFramework.at("after_compactor_shutdown")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_compactor_shutdown").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       getCluster().getConfig().setNumScanServers(1);
       control.startScanServer(ScanServer.class, 1, GROUP_NAME);

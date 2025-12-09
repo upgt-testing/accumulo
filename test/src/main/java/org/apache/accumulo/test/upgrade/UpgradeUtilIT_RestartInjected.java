@@ -48,12 +48,8 @@ public class UpgradeUtilIT_RestartInjected extends AccumuloClusterHarness {
         NodeExistsPolicy.SKIP);
     assertTrue(ctx.getZooReader().exists(ctx.getZooKeeperRoot() + Constants.ZPREPARE_FOR_UPGRADE));
 
-    RestartFramework.at("after_zk_setup")
-        .on((MiniAccumuloClusterImpl) getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_zk_setup").on((MiniAccumuloClusterImpl) getCluster())
+        .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     System.setProperty("accumulo.properties", "file://" + getCluster().getAccumuloPropertiesPath());
     IllegalStateException ise = assertThrows(IllegalStateException.class,
@@ -77,23 +73,15 @@ public class UpgradeUtilIT_RestartInjected extends AccumuloClusterHarness {
         ctx.getZooKeeperRoot() + Constants.ZFATE + "/" + UUID.randomUUID(), new byte[0]);
     assertFalse(ctx.getZooReader().getChildren(ctx.getZooKeeperRoot() + Constants.ZFATE).isEmpty());
 
-    RestartFramework.at("after_fate_setup")
-        .on((MiniAccumuloClusterImpl) getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_fate_setup").on((MiniAccumuloClusterImpl) getCluster())
+        .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     getCluster().getClusterControl().stopAllServers(ServerType.MANAGER);
     Wait.waitFor(() -> ctx.getZooReader()
         .getChildren(ctx.getZooKeeperRoot() + Constants.ZMANAGER_LOCK).isEmpty());
 
-    RestartFramework.at("after_manager_stop")
-        .on((MiniAccumuloClusterImpl) getCluster())
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_manager_stop").on((MiniAccumuloClusterImpl) getCluster())
+        .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     System.setProperty("accumulo.properties", "file://" + getCluster().getAccumuloPropertiesPath());
     IllegalStateException ise = assertThrows(IllegalStateException.class,
@@ -113,23 +101,15 @@ public class UpgradeUtilIT_RestartInjected extends AccumuloClusterHarness {
         NodeExistsPolicy.SKIP);
     assertTrue(ctx.getZooReader().exists(ctx.getZooKeeperRoot() + Constants.ZPREPARE_FOR_UPGRADE));
 
-    RestartFramework.at("after_zk_prepare_setup")
-        .on((MiniAccumuloClusterImpl) getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_zk_prepare_setup").on((MiniAccumuloClusterImpl) getCluster())
+        .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     getCluster().getClusterControl().stopAllServers(ServerType.MANAGER);
     Wait.waitFor(() -> ctx.getZooReader()
         .getChildren(ctx.getZooKeeperRoot() + Constants.ZMANAGER_LOCK).isEmpty());
 
-    RestartFramework.at("after_manager_stopped")
-        .on((MiniAccumuloClusterImpl) getCluster())
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_manager_stopped").on((MiniAccumuloClusterImpl) getCluster())
+        .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     System.setProperty("accumulo.properties", "file://" + getCluster().getAccumuloPropertiesPath());
     new UpgradeUtil().execute(new String[] {"--prepare"});

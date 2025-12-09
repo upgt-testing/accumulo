@@ -46,11 +46,10 @@ import org.apache.accumulo.miniclusterImpl.ProcessReference;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.Text;
 import org.junit.jupiter.api.Test;
-
-import com.google.common.collect.Iterables;
-
 import org.restarttest.api.RestartFramework;
 import org.restarttest.core.RestartMode;
+
+import com.google.common.collect.Iterables;
 
 public class BalanceAfterCommsFailureIT_RestartInjected extends ConfigurableMacBase {
 
@@ -68,12 +67,8 @@ public class BalanceAfterCommsFailureIT_RestartInjected extends ConfigurableMacB
   public void test() throws Exception {
     try (AccumuloClient c = Accumulo.newClient().from(getClientProperties()).build()) {
       c.tableOperations().create("test");
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       Collection<ProcessReference> tservers =
           getCluster().getProcesses().get(ServerType.TABLET_SERVER);
       ArrayList<Integer> tserverPids = new ArrayList<>(tservers.size());
@@ -98,31 +93,19 @@ public class BalanceAfterCommsFailureIT_RestartInjected extends ConfigurableMacB
         assertEquals(0, Runtime.getRuntime()
             .exec(new String[] {"kill", "-SIGCONT", Integer.toString(pid)}).waitFor());
       }
-      RestartFramework.at("after_sigcont_sent")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_sigcont_sent").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       SortedSet<Text> splits = new TreeSet<>();
       for (String split : "a b c d e f g h i j k l m n o p q r s t u v w x y z".split(" ")) {
         splits.add(new Text(split));
       }
       c.tableOperations().addSplits("test", splits);
-      RestartFramework.at("after_splits_added")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_splits_added").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       // Ensure all of the tablets are actually assigned
       assertEquals(0, Iterables.size(c.createScanner("test", Authorizations.EMPTY)));
-      RestartFramework.at("after_scan_verification")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_scan_verification").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       UtilWaitThread.sleep(30_000);
       checkBalance(c);
     }

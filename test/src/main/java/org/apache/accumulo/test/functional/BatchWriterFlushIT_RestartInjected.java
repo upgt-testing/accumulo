@@ -73,22 +73,14 @@ public class BatchWriterFlushIT_RestartInjected extends AccumuloClusterHarness {
       String bwft = tableNames[0];
       c.tableOperations().create(bwft);
 
-      RestartFramework.at("after_flush_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_flush_table_create").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       String bwlt = tableNames[1];
       c.tableOperations().create(bwlt);
 
-      RestartFramework.at("after_latency_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_latency_table_create").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       runFlushTest(c, bwft);
       runLatencyTest(c, bwlt);
@@ -122,12 +114,8 @@ public class BatchWriterFlushIT_RestartInjected extends AccumuloClusterHarness {
         throw new Exception("Did not flush");
       }
 
-      RestartFramework.at("after_latency_flush")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_latency_flush").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     }
   }
 
@@ -146,12 +134,8 @@ public class BatchWriterFlushIT_RestartInjected extends AccumuloClusterHarness {
 
         bw.flush();
 
-        RestartFramework.at("after_batch_flush_iteration_" + i)
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_batch_flush_iteration_" + i).on(getCluster())
+            .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         // do a few random lookups into the data just flushed
 
@@ -200,12 +184,8 @@ public class BatchWriterFlushIT_RestartInjected extends AccumuloClusterHarness {
 
       bw.close();
 
-      RestartFramework.at("after_batch_writer_close")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_writer_close").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // test adding a mutation to a closed batch writer
       boolean caught = false;
@@ -228,33 +208,21 @@ public class BatchWriterFlushIT_RestartInjected extends AccumuloClusterHarness {
       String tableName = tableNames[0];
       c.tableOperations().create(tableName);
 
-      RestartFramework.at("after_multithreaded_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_multithreaded_table_create").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       for (int x = 0; x < NUM_THREADS; x++) {
         c.tableOperations().addSplits(tableName,
             new TreeSet<>(Collections.singleton(new Text(Integer.toString(x * NUM_TO_FLUSH)))));
       }
 
-      RestartFramework.at("after_splits_added")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_splits_added").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       c.instanceOperations().waitForBalance();
 
-      RestartFramework.at("after_wait_for_balance")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_wait_for_balance").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // Logger.getLogger(TabletServerBatchWriter.class).setLevel(Level.TRACE);
       final List<Set<Mutation>> allMuts = new LinkedList<>();
@@ -303,12 +271,8 @@ public class BatchWriterFlushIT_RestartInjected extends AccumuloClusterHarness {
       threads.awaitTermination(3, TimeUnit.MINUTES);
       bw.close();
 
-      RestartFramework.at("after_multithreaded_batch_writer_close")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_multithreaded_batch_writer_close").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (Scanner scanner = c.createScanner(tableName, Authorizations.EMPTY)) {
         for (Entry<Key,Value> e : scanner) {

@@ -78,12 +78,8 @@ public class BalanceIT_RestartInjected extends ConfigurableMacBase {
       log.info("Creating table");
       c.tableOperations().create(tableName);
 
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       SortedSet<Text> splits = new TreeSet<>();
       for (int i = 0; i < 10; i++) {
@@ -92,12 +88,8 @@ public class BalanceIT_RestartInjected extends ConfigurableMacBase {
       log.info("Adding splits");
       c.tableOperations().addSplits(tableName, splits);
 
-      RestartFramework.at("after_add_splits")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_add_splits").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       log.info("Waiting for balance");
       c.instanceOperations().waitForBalance();
@@ -114,23 +106,15 @@ public class BalanceIT_RestartInjected extends ConfigurableMacBase {
       }
       c.tableOperations().create(tableName, new NewTableConfiguration().withSplits(splits));
 
-      RestartFramework.at("after_table_create_meta")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_meta").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       var metaSplits = IntStream.range(1, 100).mapToObj(i -> Integer.toString(i, 36)).map(Text::new)
           .collect(Collectors.toCollection(TreeSet::new));
       c.tableOperations().addSplits(MetadataTable.NAME, metaSplits);
 
-      RestartFramework.at("after_metadata_splits")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_metadata_splits").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       var locCounts = countLocations(c, MetadataTable.NAME);
 

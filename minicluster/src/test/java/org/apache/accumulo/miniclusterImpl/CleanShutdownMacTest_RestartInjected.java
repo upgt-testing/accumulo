@@ -51,12 +51,8 @@ public class CleanShutdownMacTest_RestartInjected extends WithTestNames {
     assertTrue(tmp.isDirectory() || tmp.mkdir(), "Failed to make a new sub-directory");
     MiniAccumuloClusterImpl cluster = new MiniAccumuloClusterImpl(tmp, "foo");
 
-    RestartFramework.at("after_cluster_create")
-        .on(cluster)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_cluster_create").on(cluster).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     ExecutorService mockService = createMock(ExecutorService.class);
     Future<Integer> future = createMock(Future.class);

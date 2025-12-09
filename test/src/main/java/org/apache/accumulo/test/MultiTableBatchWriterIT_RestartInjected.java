@@ -85,12 +85,8 @@ public class MultiTableBatchWriterIT_RestartInjected extends AccumuloClusterHarn
       TableOperations tops = accumuloClient.tableOperations();
       tops.create(table1);
 
-      RestartFramework.at("after_table1_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table1_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       BatchWriter bw1 = mtbw.getBatchWriter(table1);
 
@@ -99,22 +95,14 @@ public class MultiTableBatchWriterIT_RestartInjected extends AccumuloClusterHarn
 
       bw1.addMutation(m1);
 
-      RestartFramework.at("after_first_mutation")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_first_mutation").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       tops.rename(table1, table2);
       tops.create(table1);
 
-      RestartFramework.at("after_table_rename")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_rename").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       BatchWriter bw2 = mtbw.getBatchWriter(table1);
 
@@ -173,12 +161,8 @@ public class MultiTableBatchWriterIT_RestartInjected extends AccumuloClusterHarn
       tops.create(table1);
       tops.create(table2);
 
-      RestartFramework.at("after_tables_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_tables_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       BatchWriter bw1 = mtbw.getBatchWriter(table1), bw2 = mtbw.getBatchWriter(table2);
 
@@ -189,22 +173,14 @@ public class MultiTableBatchWriterIT_RestartInjected extends AccumuloClusterHarn
       bw1.addMutation(m1);
       bw2.addMutation(m1);
 
-      RestartFramework.at("after_mutations")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_mutations").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       tops.rename(table1, newTable1);
       tops.rename(table2, newTable2);
 
-      RestartFramework.at("after_tables_rename")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_tables_rename").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       Mutation m2 = new Mutation("bar");
       m2.put("col1", "", "val1");
@@ -251,12 +227,8 @@ public class MultiTableBatchWriterIT_RestartInjected extends AccumuloClusterHarn
       tops.create(table1);
       tops.create(table2);
 
-      RestartFramework.at("after_tables_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_tables_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       BatchWriter bw1 = mtbw.getBatchWriter(table1), bw2 = mtbw.getBatchWriter(table2);
 
@@ -267,12 +239,8 @@ public class MultiTableBatchWriterIT_RestartInjected extends AccumuloClusterHarn
       bw1.addMutation(m1);
       bw2.addMutation(m1);
 
-      RestartFramework.at("after_mutations")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_mutations").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       tops.rename(table1, newTable1);
 
@@ -283,12 +251,8 @@ public class MultiTableBatchWriterIT_RestartInjected extends AccumuloClusterHarn
 
       tops.rename(table2, newTable2);
 
-      RestartFramework.at("after_tables_rename")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_tables_rename").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       assertThrows(TableNotFoundException.class, () -> mtbw.getBatchWriter(table2),
           "Should not be able to find this table");
@@ -342,12 +306,8 @@ public class MultiTableBatchWriterIT_RestartInjected extends AccumuloClusterHarn
       tops.create(table1);
       tops.create(table2);
 
-      RestartFramework.at("after_tables_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_tables_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       BatchWriter bw1 = mtbw.getBatchWriter(table1), bw2 = mtbw.getBatchWriter(table2);
 
@@ -385,12 +345,8 @@ public class MultiTableBatchWriterIT_RestartInjected extends AccumuloClusterHarn
       tops.create(table1);
       tops.create(table2);
 
-      RestartFramework.at("after_tables_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_tables_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       BatchWriter bw1 = mtbw.getBatchWriter(table1), bw2 = mtbw.getBatchWriter(table2);
 
@@ -401,22 +357,14 @@ public class MultiTableBatchWriterIT_RestartInjected extends AccumuloClusterHarn
       bw1.addMutation(m1);
       bw2.addMutation(m1);
 
-      RestartFramework.at("after_mutations")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_mutations").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       tops.delete(table1);
       tops.delete(table2);
 
-      RestartFramework.at("after_tables_delete")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_tables_delete").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       Mutation m2 = new Mutation("bar");
       m2.put("col1", "", "val1");
@@ -457,12 +405,8 @@ public class MultiTableBatchWriterIT_RestartInjected extends AccumuloClusterHarn
       tops.create(table1);
       tops.create(table2);
 
-      RestartFramework.at("after_tables_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_tables_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       BatchWriter bw1 = mtbw.getBatchWriter(table1), bw2 = mtbw.getBatchWriter(table2);
 
@@ -473,22 +417,14 @@ public class MultiTableBatchWriterIT_RestartInjected extends AccumuloClusterHarn
       bw1.addMutation(m1);
       bw2.addMutation(m1);
 
-      RestartFramework.at("after_mutations")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_mutations").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       tops.offline(table1, true);
       tops.offline(table2, true);
 
-      RestartFramework.at("after_tables_offline")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_tables_offline").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       Mutation m2 = new Mutation("bar");
       m2.put("col1", "", "val1");

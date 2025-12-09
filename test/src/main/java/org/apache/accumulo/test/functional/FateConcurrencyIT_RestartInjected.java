@@ -188,12 +188,8 @@ public class FateConcurrencyIT_RestartInjected extends AccumuloClusterHarness {
     // block if compaction still running
     slowOps.blockWhileCompactionRunning();
 
-    RestartFramework.at("after_table_state_test_complete")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_state_test_complete").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
   }
 
@@ -326,12 +322,8 @@ public class FateConcurrencyIT_RestartInjected extends AccumuloClusterHarness {
       log.debug("Could not cancel compaction due to exception", ex);
     }
 
-    RestartFramework.at("after_fate_status_test_complete")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_fate_status_test_complete").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
   }
 
   /**
@@ -517,12 +509,8 @@ public class FateConcurrencyIT_RestartInjected extends AccumuloClusterHarness {
       }
     });
 
-    RestartFramework.at("after_multiple_compactions_complete")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_multiple_compactions_complete").on(getCluster()).restart("manager")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
   }
 }

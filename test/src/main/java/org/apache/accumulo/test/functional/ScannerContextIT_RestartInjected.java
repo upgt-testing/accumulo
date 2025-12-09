@@ -97,23 +97,15 @@ public class ScannerContextIT_RestartInjected extends AccumuloClusterHarness {
       // Set the classloader context property on the table to point to the test iterators jar file.
       c.instanceOperations().setProperty(CONTEXT_PROPERTY, CONTEXT_CLASSPATH);
 
-      RestartFramework.at("after_set_instance_property")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_set_instance_property").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // Insert rows with the word "Test" in the value.
       String tableName = getUniqueNames(1)[0];
       c.tableOperations().create(tableName);
 
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       try (BatchWriter bw = c.createBatchWriter(tableName)) {
         for (int i = 0; i < ITERATIONS; i++) {
@@ -123,31 +115,19 @@ public class ScannerContextIT_RestartInjected extends AccumuloClusterHarness {
         }
       }
 
-      RestartFramework.at("after_batch_write")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // Ensure that we can get the data back
       scanCheck(c, tableName, null, null, "Test");
 
-      RestartFramework.at("after_scan_check_no_iterator")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_scan_check_no_iterator").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       batchCheck(c, tableName, null, null, "Test");
 
-      RestartFramework.at("after_batch_check_no_iterator")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_check_no_iterator").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // This iterator is in the test iterators jar file
       IteratorSetting cfg = new IteratorSetting(21, "reverse",
@@ -164,21 +144,13 @@ public class ScannerContextIT_RestartInjected extends AccumuloClusterHarness {
       // Ensure that the value is reversed using the iterator config and classloader context
       scanCheck(c, tableName, cfg, CONTEXT, "tseT");
 
-      RestartFramework.at("after_scan_check_with_context")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_scan_check_with_context").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       batchCheck(c, tableName, cfg, CONTEXT, "tseT");
 
-      RestartFramework.at("after_batch_check_with_context")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_check_with_context").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     } finally {
       // Delete file in tmp
       fs.delete(dstPath, true);
@@ -199,33 +171,21 @@ public class ScannerContextIT_RestartInjected extends AccumuloClusterHarness {
       c.instanceOperations().setProperty(tableContextProperty, tableContextClasspath);
       c.instanceOperations().setProperty(CONTEXT_PROPERTY, CONTEXT_CLASSPATH);
 
-      RestartFramework.at("after_set_instance_properties")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_set_instance_properties").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       String tableName = getUniqueNames(1)[0];
       c.tableOperations().create(tableName);
 
-      RestartFramework.at("after_table_create_override")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_override").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // Set the FOO context on the table
       c.tableOperations().setProperty(tableName, Property.TABLE_CLASSLOADER_CONTEXT.getKey(),
           tableContext);
 
-      RestartFramework.at("after_table_property_set")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_property_set").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (BatchWriter bw = c.createBatchWriter(tableName)) {
         for (int i = 0; i < ITERATIONS; i++) {
@@ -235,30 +195,18 @@ public class ScannerContextIT_RestartInjected extends AccumuloClusterHarness {
         }
       }
 
-      RestartFramework.at("after_batch_write_override")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write_override").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       scanCheck(c, tableName, null, null, "Test");
 
-      RestartFramework.at("after_scan_check_override")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_scan_check_override").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       batchCheck(c, tableName, null, null, "Test");
 
-      RestartFramework.at("after_batch_check_override")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_check_override").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // This iterator is in the test iterators jar file
       IteratorSetting cfg = new IteratorSetting(21, "reverse",
@@ -275,21 +223,13 @@ public class ScannerContextIT_RestartInjected extends AccumuloClusterHarness {
       // Ensure that the value is reversed using the iterator config and classloader context
       scanCheck(c, tableName, cfg, CONTEXT, "tseT");
 
-      RestartFramework.at("after_scan_check_context_override")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_scan_check_context_override").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       batchCheck(c, tableName, cfg, CONTEXT, "tseT");
 
-      RestartFramework.at("after_batch_check_context_override")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_check_context_override").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     } finally {
       // Delete file in tmp
       fs.delete(dstPath, true);
@@ -304,23 +244,15 @@ public class ScannerContextIT_RestartInjected extends AccumuloClusterHarness {
       // Set the classloader context property on the table to point to the test iterators jar file.
       c.instanceOperations().setProperty(CONTEXT_PROPERTY, CONTEXT_CLASSPATH);
 
-      RestartFramework.at("after_set_instance_property_interference")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_set_instance_property_interference").on(getCluster())
+          .restart("manager").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // Insert rows with the word "Test" in the value.
       String tableName = getUniqueNames(1)[0];
       c.tableOperations().create(tableName);
 
-      RestartFramework.at("after_table_create_interference")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_interference").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (BatchWriter bw = c.createBatchWriter(tableName)) {
         for (int i = 0; i < ITERATIONS; i++) {
@@ -330,12 +262,8 @@ public class ScannerContextIT_RestartInjected extends AccumuloClusterHarness {
         }
       }
 
-      RestartFramework.at("after_batch_write_interference")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write_interference").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (Scanner one = c.createScanner(tableName, Authorizations.EMPTY);
           Scanner two = c.createScanner(tableName, Authorizations.EMPTY)) {
@@ -345,12 +273,8 @@ public class ScannerContextIT_RestartInjected extends AccumuloClusterHarness {
         one.addScanIterator(cfg);
         one.setClassLoaderContext(CONTEXT);
 
-        RestartFramework.at("after_first_scanner_setup")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_first_scanner_setup").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         Iterator<Entry<Key,Value>> iterator = one.iterator();
         for (int i = 0; i < ITERATIONS; i++) {
@@ -359,12 +283,8 @@ public class ScannerContextIT_RestartInjected extends AccumuloClusterHarness {
           assertEquals("tseT", next.getValue().toString());
         }
 
-        RestartFramework.at("after_first_scanner_iteration")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_first_scanner_iteration").on(getCluster())
+            .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         Iterator<Entry<Key,Value>> iterator2 = two.iterator();
         for (int i = 0; i < ITERATIONS; i++) {
@@ -373,12 +293,8 @@ public class ScannerContextIT_RestartInjected extends AccumuloClusterHarness {
           assertEquals("Test", next.getValue().toString());
         }
 
-        RestartFramework.at("after_second_scanner_iteration")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_second_scanner_iteration").on(getCluster())
+            .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       }
     } finally {
       // Delete file in tmp
@@ -393,23 +309,15 @@ public class ScannerContextIT_RestartInjected extends AccumuloClusterHarness {
       // Set the classloader context property on the table to point to the test iterators jar file.
       c.instanceOperations().setProperty(CONTEXT_PROPERTY, CONTEXT_CLASSPATH);
 
-      RestartFramework.at("after_set_instance_property_clear")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_set_instance_property_clear").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // Insert rows with the word "Test" in the value.
       String tableName = getUniqueNames(1)[0];
       c.tableOperations().create(tableName);
 
-      RestartFramework.at("after_table_create_clear")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_clear").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (BatchWriter bw = c.createBatchWriter(tableName)) {
         for (int i = 0; i < ITERATIONS; i++) {
@@ -419,12 +327,8 @@ public class ScannerContextIT_RestartInjected extends AccumuloClusterHarness {
         }
       }
 
-      RestartFramework.at("after_batch_write_clear")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write_clear").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (Scanner one = c.createScanner(tableName, Authorizations.EMPTY)) {
         IteratorSetting cfg = new IteratorSetting(21, "reverse",
@@ -432,12 +336,8 @@ public class ScannerContextIT_RestartInjected extends AccumuloClusterHarness {
         one.addScanIterator(cfg);
         one.setClassLoaderContext(CONTEXT);
 
-        RestartFramework.at("after_scanner_setup_with_context")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_scanner_setup_with_context").on(getCluster())
+            .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         Iterator<Entry<Key,Value>> iterator = one.iterator();
         for (int i = 0; i < ITERATIONS; i++) {
@@ -446,22 +346,14 @@ public class ScannerContextIT_RestartInjected extends AccumuloClusterHarness {
           assertEquals("tseT", next.getValue().toString());
         }
 
-        RestartFramework.at("after_scanner_iteration_with_context")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_scanner_iteration_with_context").on(getCluster())
+            .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         one.removeScanIterator("reverse");
         one.clearClassLoaderContext();
 
-        RestartFramework.at("after_clear_context")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_clear_context").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         iterator = one.iterator();
         for (int i = 0; i < ITERATIONS; i++) {
@@ -470,12 +362,8 @@ public class ScannerContextIT_RestartInjected extends AccumuloClusterHarness {
           assertEquals("Test", next.getValue().toString());
         }
 
-        RestartFramework.at("after_scanner_iteration_without_context")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_scanner_iteration_without_context").on(getCluster())
+            .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       }
     } finally {
       // Delete file in tmp

@@ -139,12 +139,8 @@ public class WriteAfterCloseIT_RestartInjected extends AccumuloClusterHarness {
 
     try (AccumuloClient c = Accumulo.newClient().from(props).build()) {
       c.tableOperations().create(table, ntc);
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       List<Future<?>> futures = new ArrayList<>();
 
@@ -152,31 +148,19 @@ public class WriteAfterCloseIT_RestartInjected extends AccumuloClusterHarness {
         futures.add(
             executor.submit(createWriteTask(i * 1000, c, table, timeout, useConditionalWriter)));
       }
-      RestartFramework.at("after_submit_write_tasks")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_submit_write_tasks").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       if (killTservers) {
         Thread.sleep(250);
         getCluster().getClusterControl().stopAllServers(ServerType.TABLET_SERVER);
-        RestartFramework.at("after_stop_tservers")
-            .on(getCluster())
-            .restart("manager")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_stop_tservers").on(getCluster()).restart("manager").withIndex(0)
+            .withMode(RestartMode.GRACEFUL).execute();
         // sleep longer than ZK timeout to let ephemeral lock nodes expire in ZK
         Thread.sleep(11000);
         getCluster().getClusterControl().startAllServers(ServerType.TABLET_SERVER);
-        RestartFramework.at("after_start_tservers")
-            .on(getCluster())
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_start_tservers").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       }
 
       int errorCount = 0;
@@ -195,12 +179,8 @@ public class WriteAfterCloseIT_RestartInjected extends AccumuloClusterHarness {
           errorCount++;
         }
       }
-      RestartFramework.at("after_futures_complete")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_futures_complete").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       boolean expectErrors = timeout > 0;
       if (expectErrors) {
@@ -214,12 +194,8 @@ public class WriteAfterCloseIT_RestartInjected extends AccumuloClusterHarness {
           // writes
           assertEquals(0, scanner.stream().count());
         }
-        RestartFramework.at("after_scan_verification")
-            .on(getCluster())
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_scan_verification").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       }
     } finally {
       executor.shutdownNow();

@@ -166,43 +166,27 @@ public class BulkNewIT_RestartInjected extends SharedMiniClusterBase {
       throws Exception {
     addSplits(c, tableName, "0333");
 
-    RestartFramework.at("after_add_splits")
-        .on(getCluster())
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_add_splits").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     if (offline) {
       c.tableOperations().offline(tableName);
 
-      RestartFramework.at("after_table_offline")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_offline").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
     }
 
     String dir = getDir("/testSingleTabletSingleFileNoSplits-");
 
     String h1 = writeData(fs, dir + "/f1.", aconf, 0, 332);
 
-    RestartFramework.at("after_write_data")
-        .on(getCluster())
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_write_data").on(getCluster()).restart("tablet_server").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     c.tableOperations().importDirectory(dir).to(tableName).tableTime(setTime).load();
 
-    RestartFramework.at("after_bulk_import")
-        .on(getCluster())
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_bulk_import").on(getCluster()).restart("tablet_server").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     // running again with ignoreEmptyDir set to true will not throw an exception
     c.tableOperations().importDirectory(dir).to(tableName).tableTime(setTime).ignoreEmptyDir(true)
         .load();
@@ -224,12 +208,8 @@ public class BulkNewIT_RestartInjected extends SharedMiniClusterBase {
     if (offline) {
       c.tableOperations().online(tableName);
 
-      RestartFramework.at("after_table_online")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_online").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
     }
 
     verifyData(c, tableName, 0, 332, setTime);
@@ -293,43 +273,27 @@ public class BulkNewIT_RestartInjected extends SharedMiniClusterBase {
     if (offline) {
       c.tableOperations().offline(tableName);
 
-      RestartFramework.at("after_table_offline_no_splits")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_offline_no_splits").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     }
 
     String dir = getDir("/testSingleTabletSingleFileNoSplits-");
 
     String h1 = writeData(fs, dir + "/f1.", aconf, 0, 333);
 
-    RestartFramework.at("after_write_data_no_splits")
-        .on(getCluster())
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_write_data_no_splits").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     c.tableOperations().importDirectory(dir).to(tableName).load();
 
-    RestartFramework.at("after_bulk_import_no_splits")
-        .on(getCluster())
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_bulk_import_no_splits").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     if (offline) {
       c.tableOperations().online(tableName);
 
-      RestartFramework.at("after_table_online_no_splits")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_online_no_splits").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     }
 
     verifyData(c, tableName, 0, 333, false);
@@ -388,22 +352,14 @@ public class BulkNewIT_RestartInjected extends SharedMiniClusterBase {
     try (AccumuloClient c = Accumulo.newClient().from(getClientProps()).build()) {
       addSplits(c, tableName, "0333 0666 0999 1333 1666");
 
-      RestartFramework.at("after_add_splits_bulk")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_add_splits_bulk").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       if (offline) {
         c.tableOperations().offline(tableName);
 
-        RestartFramework.at("after_table_offline_bulk")
-            .on(getCluster())
-            .restart("manager")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_table_offline_bulk").on(getCluster()).restart("manager")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       }
 
       String dir = getDir("/testBulkFile-");
@@ -437,12 +393,8 @@ public class BulkNewIT_RestartInjected extends SharedMiniClusterBase {
       hashes.get("1666").add(h4);
       hashes.get("null").add(h4);
 
-      RestartFramework.at("after_write_bulk_files")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_write_bulk_files").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       if (usePlan) {
         LoadPlan loadPlan = LoadPlan.builder().loadFileTo("f1.rf", RangeType.TABLE, null, row(333))
@@ -454,22 +406,14 @@ public class BulkNewIT_RestartInjected extends SharedMiniClusterBase {
         c.tableOperations().importDirectory(dir).to(tableName).load();
       }
 
-      RestartFramework.at("after_bulk_import_files")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_bulk_import_files").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       if (offline) {
         c.tableOperations().online(tableName);
 
-        RestartFramework.at("after_table_online_bulk")
-            .on(getCluster())
-            .restart("manager")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_table_online_bulk").on(getCluster()).restart("manager")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       }
 
       verifyData(c, tableName, 0, 1999, false);
@@ -590,12 +534,8 @@ public class BulkNewIT_RestartInjected extends SharedMiniClusterBase {
     try (AccumuloClient c = Accumulo.newClient().from(getClientProps()).build()) {
       addSplits(c, tableName, "0333 0666 0999 1333 1666");
 
-      RestartFramework.at("after_add_splits_compute_plan")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_add_splits_compute_plan").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       String dir = getDir("/testBulkFile-");
 
@@ -612,12 +552,8 @@ public class BulkNewIT_RestartInjected extends SharedMiniClusterBase {
       hashes.put("1666", Set.of());
       hashes.put("null", Set.of());
 
-      RestartFramework.at("after_write_data_compute_plan")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_write_data_compute_plan").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       SortedSet<Text> splits = new TreeSet<>(c.tableOperations().listSplits(tableName));
 
@@ -636,12 +572,8 @@ public class BulkNewIT_RestartInjected extends SharedMiniClusterBase {
         }
       }
 
-      RestartFramework.at("after_compute_load_plans")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_compute_load_plans").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       // This simulates the code that would run after the map reduce job and bulk import the files
       var builder = LoadPlan.builder();
@@ -657,12 +589,8 @@ public class BulkNewIT_RestartInjected extends SharedMiniClusterBase {
 
       c.tableOperations().importDirectory(dir).to(tableName).plan(lpAll).load();
 
-      RestartFramework.at("after_bulk_import_with_plan")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_bulk_import_with_plan").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       verifyData(c, tableName, 0, 700, false);
       verifyMetadata(c, tableName, hashes);
@@ -705,30 +633,18 @@ public class BulkNewIT_RestartInjected extends SharedMiniClusterBase {
 
       addSplits(c, tableName, "0333");
 
-      RestartFramework.at("after_add_splits_end_tablet")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_add_splits_end_tablet").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       var h1 = writeData(fs, dir + "/f1.", aconf, 333, 333);
 
-      RestartFramework.at("after_write_data_end_tablet")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_write_data_end_tablet").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       c.tableOperations().importDirectory(dir).to(tableName).load();
 
-      RestartFramework.at("after_bulk_import_end_tablet")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_bulk_import_end_tablet").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       verifyData(c, tableName, 333, 333, false);
 
@@ -787,12 +703,8 @@ public class BulkNewIT_RestartInjected extends SharedMiniClusterBase {
       writeData(fs, dir + "/f4.", aconf, 600, 799);
       writeData(fs, dir + "/f5.", aconf, 800, 999);
 
-      RestartFramework.at("after_write_many_files")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_write_many_files").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       var splits = IntStream.range(1, 1000).mapToObj(BulkNewIT_RestartInjected::row).map(Text::new)
           .collect(Collectors.toCollection(TreeSet::new));
@@ -800,21 +712,13 @@ public class BulkNewIT_RestartInjected extends SharedMiniClusterBase {
       // faster to create a table w/ lots of splits
       c.tableOperations().delete(tableName);
 
-      RestartFramework.at("after_table_delete_many")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_delete_many").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       c.tableOperations().create(tableName, new NewTableConfiguration().withSplits(splits));
 
-      RestartFramework.at("after_table_create_many_splits")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_many_splits").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       var lpBuilder = LoadPlan.builder();
       lpBuilder.loadFileTo("f1.rf", RangeType.TABLE, null, row(1));
@@ -831,21 +735,13 @@ public class BulkNewIT_RestartInjected extends SharedMiniClusterBase {
 
       var loadPlan = lpBuilder.build();
 
-      RestartFramework.at("after_build_complex_plan")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_build_complex_plan").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       c.tableOperations().importDirectory(dir).to(tableName).plan(loadPlan).load();
 
-      RestartFramework.at("after_bulk_import_many_tablets")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_bulk_import_many_tablets").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       verifyData(c, tableName, 0, 999, false);
 

@@ -84,12 +84,8 @@ public class NewTableConfigurationIT_RestartInjected extends SharedMiniClusterBa
       updatedProps.put(Property.TABLE_ARBITRARY_PROP_PREFIX.getKey() + "newerprop2", "newerval2");
       ntc.setProperties(updatedProps);
       client.tableOperations().create(tableName, ntc);
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       // verify
       Map<String,String> props = ntc.getProperties();
       assertEquals(props.get(Property.TABLE_ARBITRARY_PROP_PREFIX.getKey() + "newerprop1"),
@@ -117,12 +113,8 @@ public class NewTableConfigurationIT_RestartInjected extends SharedMiniClusterBa
       // set groups via NewTableConfiguration
       ntc.setLocalityGroups(lgroups);
       client.tableOperations().create(tableName, ntc);
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       // verify
       Map<String,Set<Text>> createdLocalityGroups =
           client.tableOperations().getLocalityGroups(tableName);
@@ -150,12 +142,8 @@ public class NewTableConfigurationIT_RestartInjected extends SharedMiniClusterBa
       secondGroup.put("lg1", Set.of(new Text("blue"), new Text("red")));
       ntc.setLocalityGroups(secondGroup);
       client.tableOperations().create(tableName, ntc);
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       // verify
       Map<String,Set<Text>> createdLocalityGroups =
           client.tableOperations().getLocalityGroups(tableName);
@@ -183,12 +171,8 @@ public class NewTableConfigurationIT_RestartInjected extends SharedMiniClusterBa
       lgroups.put("lg1", Set.of(new Text("dog")));
       ntc.setLocalityGroups(lgroups);
       client.tableOperations().create(tableName, ntc);
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       // verify
       int count = 0;
       for (Entry<String,String> property : client.tableOperations().getProperties(tableName)) {
@@ -231,12 +215,8 @@ public class NewTableConfigurationIT_RestartInjected extends SharedMiniClusterBa
       lgroups.put("lg1", Set.of(new Text("colF")));
       ntc.setLocalityGroups(lgroups);
       client.tableOperations().create(tableName, ntc);
-      RestartFramework.at("after_table_create")
-          .on(getCluster())
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       // verify groups and verify no iterators
       Map<String,Set<Text>> createdLocalityGroups =
           client.tableOperations().getLocalityGroups(tableName);

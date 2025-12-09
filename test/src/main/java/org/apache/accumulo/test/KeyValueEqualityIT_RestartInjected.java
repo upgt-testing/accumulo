@@ -53,20 +53,13 @@ public class KeyValueEqualityIT_RestartInjected extends AccumuloClusterHarness {
       final String table1 = tables[0], table2 = tables[1];
       final TableOperations tops = client.tableOperations();
       tops.create(table1);
-      org.apache.accumulo.miniclusterImpl.MiniAccumuloClusterImpl mac = (org.apache.accumulo.miniclusterImpl.MiniAccumuloClusterImpl) getCluster();
-      RestartFramework.at("after_table1_create")
-          .on(mac)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      org.apache.accumulo.miniclusterImpl.MiniAccumuloClusterImpl mac =
+          (org.apache.accumulo.miniclusterImpl.MiniAccumuloClusterImpl) getCluster();
+      RestartFramework.at("after_table1_create").on(mac).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       tops.create(table2);
-      RestartFramework.at("after_table2_create")
-          .on(mac)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table2_create").on(mac).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       try (BatchWriter bw1 = client.createBatchWriter(table1);
           BatchWriter bw2 = client.createBatchWriter(table2)) {
@@ -80,12 +73,8 @@ public class KeyValueEqualityIT_RestartInjected extends AccumuloClusterHarness {
           bw2.addMutation(m);
         }
       }
-      RestartFramework.at("after_batch_write")
-          .on(mac)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write").on(mac).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       Iterator<Entry<Key,Value>> t1 = client.createScanner(table1, Authorizations.EMPTY).iterator(),
           t2 = client.createScanner(table2, Authorizations.EMPTY).iterator();

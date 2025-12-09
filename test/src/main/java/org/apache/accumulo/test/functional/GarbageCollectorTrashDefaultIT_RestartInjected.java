@@ -73,35 +73,19 @@ public class GarbageCollectorTrashDefaultIT_RestartInjected extends GarbageColle
     String table = this.getUniqueNames(1)[0];
     final FileSystem fs = super.getCluster().getFileSystem();
     super.makeTrashDir(fs);
-    RestartFramework.at("after_trash_setup")
-        .on(cluster)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_trash_setup").on(getCluster()).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     try (AccumuloClient c = Accumulo.newClient().from(getClientProperties()).build()) {
       ArrayList<StoredTabletFile> files = super.loadData(super.getServerContext(), c, table);
-      RestartFramework.at("after_load_data")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_load_data").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       assertFalse(files.isEmpty());
       c.tableOperations().compact(table, new CompactionConfig());
-      RestartFramework.at("after_compact")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_compact").on(getCluster()).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       TableId tid = TableId.of(c.tableOperations().tableIdMap().get(table));
-      RestartFramework.at("before_gc_verification")
-          .on(cluster)
-          .restart("garbage_collector")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("before_gc_verification").on(getCluster()).restart("garbage_collector")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       // The default value for fs.trash.interval is 0, which means that
       // trash is disabled in the Hadoop configuration. Enabling trash in
       // Accumulo (GC_TRASH_IGNORE = false) still requires enabling trash in Hadoop

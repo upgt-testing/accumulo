@@ -57,40 +57,24 @@ public class BulkIT_RestartInjected extends AccumuloClusterHarness {
   @Test
   public void test() throws Exception {
     try (AccumuloClient client = Accumulo.newClient().from(getClientProps()).build()) {
-      RestartFramework.at("before_bulk_import_test")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("before_bulk_import_test").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       runTest(client, getCluster().getFileSystem(), getCluster().getTemporaryPath(),
           getUniqueNames(1)[0], this.getClass().getName(), testName(), false);
-      RestartFramework.at("after_bulk_import_test")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_bulk_import_test").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     }
   }
 
   @Test
   public void testOld() throws Exception {
     try (AccumuloClient client = Accumulo.newClient().from(getClientProps()).build()) {
-      RestartFramework.at("before_old_bulk_import_test")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("before_old_bulk_import_test").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       runTest(client, getCluster().getFileSystem(), getCluster().getTemporaryPath(),
           getUniqueNames(1)[0], this.getClass().getName(), testName(), true);
-      RestartFramework.at("after_old_bulk_import_test")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_old_bulk_import_test").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     }
   }
 

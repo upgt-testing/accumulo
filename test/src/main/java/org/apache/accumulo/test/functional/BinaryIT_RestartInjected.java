@@ -22,10 +22,10 @@ import java.time.Duration;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.apache.accumulo.cluster.AccumuloCluster;
 import org.apache.accumulo.core.client.Accumulo;
 import org.apache.accumulo.core.client.AccumuloClient;
 import org.apache.accumulo.core.client.admin.NewTableConfiguration;
-import org.apache.accumulo.cluster.AccumuloCluster;
 import org.apache.accumulo.harness.AccumuloClusterHarness;
 import org.apache.accumulo.test.TestBinaryRows;
 import org.apache.hadoop.io.Text;
@@ -46,21 +46,13 @@ public class BinaryIT_RestartInjected extends AccumuloClusterHarness {
       String tableName = getUniqueNames(1)[0];
       c.tableOperations().create(tableName);
 
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       runTest(c, tableName, cluster);
 
-      RestartFramework.at("after_test_completion")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_test_completion").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     }
   }
 
@@ -74,21 +66,13 @@ public class BinaryIT_RestartInjected extends AccumuloClusterHarness {
       NewTableConfiguration ntc = new NewTableConfiguration().withSplits(splits);
       c.tableOperations().create(tableName, ntc);
 
-      RestartFramework.at("after_presplit_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_presplit_table_create").on(getCluster()).restart("manager")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       runTest(c, tableName, cluster);
 
-      RestartFramework.at("after_presplit_test_completion")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_presplit_test_completion").on(getCluster())
+          .restart("tablet_server").withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     }
   }
 
@@ -101,58 +85,38 @@ public class BinaryIT_RestartInjected extends AccumuloClusterHarness {
     opts.mode = "ingest";
     TestBinaryRows.runTest(c, opts);
 
-    RestartFramework.at("after_ingest")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_ingest").on(getCluster()).restart("tablet_server").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     opts.mode = "verify";
     TestBinaryRows.runTest(c, opts);
 
-    RestartFramework.at("after_first_verify")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_first_verify").on(getCluster()).restart("tablet_server").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     opts.start = 25000;
     opts.num = 50000;
     opts.mode = "delete";
     TestBinaryRows.runTest(c, opts);
 
-    RestartFramework.at("after_delete")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_delete").on(getCluster()).restart("tablet_server").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
 
     opts.start = 0;
     opts.num = 25000;
     opts.mode = "verify";
     TestBinaryRows.runTest(c, opts);
 
-    RestartFramework.at("after_second_verify")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_second_verify").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     opts.start = 75000;
     opts.num = 25000;
     opts.mode = "randomLookups";
     TestBinaryRows.runTest(c, opts);
 
-    RestartFramework.at("after_random_lookups")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_random_lookups").on(getCluster()).restart("tablet_server")
+        .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
     opts.start = 25000;
     opts.num = 50000;

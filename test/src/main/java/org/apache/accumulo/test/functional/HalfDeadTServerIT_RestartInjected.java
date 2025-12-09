@@ -38,8 +38,6 @@ import org.apache.accumulo.core.client.Accumulo;
 import org.apache.accumulo.core.client.AccumuloClient;
 import org.apache.accumulo.core.conf.Property;
 import org.apache.accumulo.minicluster.ServerType;
-import org.restarttest.api.RestartFramework;
-import org.restarttest.core.RestartMode;
 import org.apache.accumulo.miniclusterImpl.MiniAccumuloConfigImpl;
 import org.apache.accumulo.start.Main;
 import org.apache.accumulo.test.TestIngest;
@@ -48,6 +46,8 @@ import org.apache.accumulo.tserver.TabletServer;
 import org.apache.hadoop.conf.Configuration;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.restarttest.api.RestartFramework;
+import org.restarttest.core.RestartMode;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
@@ -194,21 +194,13 @@ public class HalfDeadTServerIT_RestartInjected extends ConfigurableMacBase {
             cluster.getProcesses().get(ServerType.TABLET_SERVER).iterator().next());
         sleepUninterruptibly(1, TimeUnit.SECONDS);
 
-        RestartFramework.at("after_kill_regular_tserver")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_kill_regular_tserver").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         client.tableOperations().create("test_ingest");
 
-        RestartFramework.at("after_table_create")
-            .on(cluster)
-            .restart("manager")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_table_create").on(getCluster()).restart("manager").withIndex(0)
+            .withMode(RestartMode.GRACEFUL).execute();
 
         assertEquals(1, client.instanceOperations().getTabletServers().size());
         int rows = 100_000;
@@ -217,22 +209,14 @@ public class HalfDeadTServerIT_RestartInjected extends ConfigurableMacBase {
                 .getProcess();
         sleepUninterruptibly(500, TimeUnit.MILLISECONDS);
 
-        RestartFramework.at("after_start_ingest")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_start_ingest").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         // block I/O with some side-channel trickiness
         File trickFile = new File(trickFilename);
         try {
-          RestartFramework.at("before_io_block")
-              .on(cluster)
-              .restart("tablet_server")
-              .withIndex(0)
-              .withMode(RestartMode.GRACEFUL)
-              .execute();
+          RestartFramework.at("before_io_block").on(getCluster()).restart("tablet_server")
+              .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
           assertTrue(trickFile.createNewFile());
           sleepUninterruptibly(seconds, TimeUnit.SECONDS);
@@ -241,12 +225,8 @@ public class HalfDeadTServerIT_RestartInjected extends ConfigurableMacBase {
             log.error("Couldn't delete {}", trickFile);
           }
 
-          RestartFramework.at("after_io_block")
-              .on(cluster)
-              .restart("tablet_server")
-              .withIndex(0)
-              .withMode(RestartMode.GRACEFUL)
-              .execute();
+          RestartFramework.at("after_io_block").on(getCluster()).restart("tablet_server")
+              .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
         }
 
         if (seconds <= 10) {

@@ -92,12 +92,8 @@ public class ScanServer_NoServersIT_RestartInjected extends SharedMiniClusterBas
 
       final int ingestedEntryCount = createTableAndIngest(client, tableName, null, 10, 10, "colf");
 
-      RestartFramework.at("after_table_create_and_ingest")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_and_ingest").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (Scanner scanner = client.createScanner(tableName, Authorizations.EMPTY)) {
         scanner.setRange(new Range());
@@ -105,22 +101,14 @@ public class ScanServer_NoServersIT_RestartInjected extends SharedMiniClusterBas
         assertEquals(ingestedEntryCount, Iterables.size(scanner),
             "Scanner did not see ingested and flushed entries");
 
-        RestartFramework.at("after_first_scan")
-            .on(getCluster())
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_first_scan").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         final int additionalIngestedEntryCount =
             ingest(client, tableName, 10, 10, 10, "colf", false);
 
-        RestartFramework.at("after_additional_ingest")
-            .on(getCluster())
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_additional_ingest").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         // since there are no scan servers, and we are reading from tservers, we should see update
         assertEquals(ingestedEntryCount + additionalIngestedEntryCount, Iterables.size(scanner),
@@ -137,12 +125,8 @@ public class ScanServer_NoServersIT_RestartInjected extends SharedMiniClusterBas
 
       final int ingestedEntryCount = createTableAndIngest(client, tableName, null, 10, 10, "colf");
 
-      RestartFramework.at("after_table_create_and_ingest")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_and_ingest").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       try (BatchScanner scanner = client.createBatchScanner(tableName, Authorizations.EMPTY)) {
         scanner.setRanges(Collections.singletonList(new Range()));
@@ -150,22 +134,14 @@ public class ScanServer_NoServersIT_RestartInjected extends SharedMiniClusterBas
         assertEquals(ingestedEntryCount, Iterables.size(scanner),
             "Scanner did not see ingested and flushed entries");
 
-        RestartFramework.at("after_first_batch_scan")
-            .on(getCluster())
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_first_batch_scan").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         final int additionalIngestedEntryCount =
             ingest(client, tableName, 10, 10, 10, "colf", false);
 
-        RestartFramework.at("after_additional_ingest")
-            .on(getCluster())
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_additional_ingest").on(getCluster()).restart("tablet_server")
+            .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
         // since there are no scan servers, and we are reading from tservers, we should see update
         assertEquals(ingestedEntryCount + additionalIngestedEntryCount, Iterables.size(scanner),
@@ -191,19 +167,11 @@ public class ScanServer_NoServersIT_RestartInjected extends SharedMiniClusterBas
 
       createTableAndIngest(client, tableName, null, 10, 10, "colf");
 
-      RestartFramework.at("after_table_create_and_ingest")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_and_ingest").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
-      RestartFramework.at("before_timeout_test")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("before_timeout_test").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       assertThrows(TimedOutException.class, () -> {
         try (Scanner scanner = client.createScanner(tableName, Authorizations.EMPTY)) {
@@ -233,19 +201,11 @@ public class ScanServer_NoServersIT_RestartInjected extends SharedMiniClusterBas
 
       createTableAndIngest(client, tableName, null, 10, 10, "colf");
 
-      RestartFramework.at("after_table_create_and_ingest")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create_and_ingest").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
-      RestartFramework.at("before_timeout_test")
-          .on(getCluster())
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("before_timeout_test").on(getCluster()).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
 
       assertThrows(TimedOutException.class, () -> {
         try (BatchScanner scanner = client.createBatchScanner(tableName, Authorizations.EMPTY)) {
