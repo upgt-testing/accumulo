@@ -54,8 +54,6 @@ import org.apache.accumulo.hadoop.mapreduce.AccumuloInputFormat;
 import org.apache.accumulo.hadoop.mapreduce.AccumuloOutputFormat;
 import org.apache.accumulo.miniclusterImpl.MiniAccumuloClusterImpl;
 import org.apache.accumulo.test.functional.ConfigurableMacBase;
-import org.restarttest.api.RestartFramework;
-import org.restarttest.core.RestartMode;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.io.MD5Hash;
@@ -66,6 +64,8 @@ import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.junit.jupiter.api.Test;
+import org.restarttest.api.RestartFramework;
+import org.restarttest.core.RestartMode;
 
 import com.beust.jcommander.Parameter;
 
@@ -99,31 +99,19 @@ public class RowHashIT_RestartInjected extends ConfigurableMacBase {
       AccumuloSecurityException, TableExistsException, TableNotFoundException,
       MutationsRejectedException, IOException, InterruptedException, NoSuchAlgorithmException {
     c.tableOperations().create(tablename);
-    RestartFramework.at("after_table_create")
-        .on(cluster)
-        .restart("manager")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_table_create").on(cluster).restart("manager").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     BatchWriter bw = c.createBatchWriter(tablename);
     for (int i = 0; i < 10; i++) {
       Mutation m = new Mutation("" + i);
       m.put(input_cf, input_cq, "row" + i);
       bw.addMutation(m);
     }
-    RestartFramework.at("after_batch_write")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_batch_write").on(cluster).restart("tablet_server").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     bw.close();
-    RestartFramework.at("after_batch_close")
-        .on(cluster)
-        .restart("tablet_server")
-        .withIndex(0)
-        .withMode(RestartMode.GRACEFUL)
-        .execute();
+    RestartFramework.at("after_batch_close").on(cluster).restart("tablet_server").withIndex(0)
+        .withMode(RestartMode.GRACEFUL).execute();
     Process hash = cluster.exec(RowHash.class, Collections.singletonList(hadoopTmpDirArg), "-c",
         cluster.getClientPropsPath(), "-t", tablename, "--column", input_cfcq).getProcess();
     assertEquals(0, hash.waitFor());

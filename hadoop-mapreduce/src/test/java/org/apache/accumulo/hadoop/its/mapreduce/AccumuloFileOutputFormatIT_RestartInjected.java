@@ -43,8 +43,6 @@ import org.apache.accumulo.core.spi.crypto.NoCryptoServiceFactory;
 import org.apache.accumulo.hadoop.mapreduce.AccumuloFileOutputFormat;
 import org.apache.accumulo.hadoop.mapreduce.AccumuloInputFormat;
 import org.apache.accumulo.harness.AccumuloClusterHarness;
-import org.restarttest.api.RestartFramework;
-import org.restarttest.core.RestartMode;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.FileSystem;
@@ -56,6 +54,8 @@ import org.apache.hadoop.util.ToolRunner;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.restarttest.api.RestartFramework;
+import org.restarttest.core.RestartMode;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -91,62 +91,34 @@ public class AccumuloFileOutputFormatIT_RestartInjected extends AccumuloClusterH
 
     try (AccumuloClient c = Accumulo.newClient().from(getClientProps()).build()) {
       c.tableOperations().create(EMPTY_TABLE);
-      RestartFramework.at("after_empty_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_empty_table_create").on(cluster).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       c.tableOperations().create(TEST_TABLE);
-      RestartFramework.at("after_test_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_test_table_create").on(cluster).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       c.tableOperations().create(BAD_TABLE);
-      RestartFramework.at("after_bad_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_bad_table_create").on(cluster).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       BatchWriter bw = c.createBatchWriter(TEST_TABLE);
       Mutation m = new Mutation("Key");
       m.put("", "", "");
       bw.addMutation(m);
-      RestartFramework.at("after_test_table_batch_write")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_test_table_batch_write").on(cluster).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       bw.close();
-      RestartFramework.at("after_test_table_batch_close")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_test_table_batch_close").on(cluster).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       bw = c.createBatchWriter(BAD_TABLE);
       m = new Mutation("r1");
       m.put("cf1", "cq1", "A&B");
       m.put("cf1", "cq1", "A&B");
       m.put("cf1", "cq2", "A&");
       bw.addMutation(m);
-      RestartFramework.at("after_bad_table_batch_write")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_bad_table_batch_write").on(cluster).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
       bw.close();
-      RestartFramework.at("after_bad_table_batch_close")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_bad_table_batch_close").on(cluster).restart("tablet_server")
+          .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
     }
   }
 

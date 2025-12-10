@@ -42,8 +42,6 @@ import org.apache.accumulo.hadoop.mapred.AccumuloInputFormat;
 import org.apache.accumulo.hadoop.mapreduce.InputFormatBuilder;
 import org.apache.accumulo.hadoopImpl.mapred.RangeInputSplit;
 import org.apache.accumulo.harness.AccumuloClusterHarness;
-import org.restarttest.api.RestartFramework;
-import org.restarttest.core.RestartMode;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.io.Text;
@@ -58,6 +56,8 @@ import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.restarttest.api.RestartFramework;
+import org.restarttest.core.RestartMode;
 
 public class AccumuloInputFormatIT_RestartInjected extends AccumuloClusterHarness {
 
@@ -160,31 +160,19 @@ public class AccumuloInputFormatIT_RestartInjected extends AccumuloClusterHarnes
     String table = getUniqueNames(1)[0];
     try (AccumuloClient c = Accumulo.newClient().from(getClientProps()).build()) {
       c.tableOperations().create(table);
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(cluster).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       BatchWriter bw = c.createBatchWriter(table);
       for (int i = 0; i < 100; i++) {
         Mutation m = new Mutation(new Text(String.format("%09x", i + 1)));
         m.put("", "", String.format("%09x", i));
         bw.addMutation(m);
       }
-      RestartFramework.at("after_batch_write")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write").on(cluster).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       bw.close();
-      RestartFramework.at("after_batch_close")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_close").on(cluster).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       e1 = null;
       e2 = null;
@@ -206,31 +194,19 @@ public class AccumuloInputFormatIT_RestartInjected extends AccumuloClusterHarnes
     try (AccumuloClient c = Accumulo.newClient().from(getClientProps()).build()) {
       c.tableOperations().create(TEST_TABLE_3,
           new NewTableConfiguration().enableSampling(SAMPLER_CONFIG));
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(cluster).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       BatchWriter bw = c.createBatchWriter(TEST_TABLE_3);
       for (int i = 0; i < 100; i++) {
         Mutation m = new Mutation(new Text(String.format("%09x", i + 1)));
         m.put("", "", String.format("%09x", i));
         bw.addMutation(m);
       }
-      RestartFramework.at("after_batch_write")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write").on(cluster).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       bw.close();
-      RestartFramework.at("after_batch_close")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_close").on(cluster).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       MRTester.main(TEST_TABLE_3, "False", "True");
       assertEquals(38, e1Count);
@@ -259,12 +235,8 @@ public class AccumuloInputFormatIT_RestartInjected extends AccumuloClusterHarnes
 
     try (AccumuloClient accumuloClient = Accumulo.newClient().from(getClientProps()).build()) {
       accumuloClient.tableOperations().create(table);
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(cluster).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       AccumuloInputFormat.configure().clientProperties(getClientProps()).table(table).auths(auths)
           .fetchColumns(fetchColumns).scanIsolation(true).localIterators(true).store(job);

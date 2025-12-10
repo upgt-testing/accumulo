@@ -42,8 +42,6 @@ import org.apache.accumulo.core.security.ColumnVisibility;
 import org.apache.accumulo.core.util.PeekingIterator;
 import org.apache.accumulo.hadoop.mapred.AccumuloRowInputFormat;
 import org.apache.accumulo.harness.AccumuloClusterHarness;
-import org.restarttest.api.RestartFramework;
-import org.restarttest.core.RestartMode;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.io.Text;
@@ -57,6 +55,8 @@ import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.restarttest.api.RestartFramework;
+import org.restarttest.core.RestartMode;
 
 /**
  * Tests the new MR API in the hadoop-mapreduce package.
@@ -196,29 +196,17 @@ public class AccumuloRowInputFormatIT_RestartInjected extends AccumuloClusterHar
     try (AccumuloClient client = Accumulo.newClient().from(getClientProps()).build()) {
       String tableName = getUniqueNames(1)[0];
       client.tableOperations().create(tableName);
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(cluster).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       try (BatchWriter writer = client.createBatchWriter(tableName)) {
         insertList(writer, row1);
         insertList(writer, row2);
         insertList(writer, row3);
-        RestartFramework.at("after_batch_write")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_batch_write").on(cluster).restart("tablet_server").withIndex(0)
+            .withMode(RestartMode.GRACEFUL).execute();
       }
-      RestartFramework.at("after_batch_close")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_close").on(cluster).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       MRTester.main(new String[] {tableName});
       assertNull(e1);
       assertNull(e2);

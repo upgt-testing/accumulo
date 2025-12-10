@@ -44,8 +44,6 @@ import org.apache.accumulo.hadoop.mapred.AccumuloFileOutputFormat;
 import org.apache.accumulo.hadoop.mapred.AccumuloInputFormat;
 import org.apache.accumulo.hadoopImpl.mapreduce.lib.ConfiguratorBase;
 import org.apache.accumulo.harness.AccumuloClusterHarness;
-import org.restarttest.api.RestartFramework;
-import org.restarttest.core.RestartMode;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.FileSystem;
@@ -60,6 +58,8 @@ import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.restarttest.api.RestartFramework;
+import org.restarttest.core.RestartMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,9 +67,11 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressFBWarnings(value = "PATH_TRAVERSAL_IN", justification = "paths not from user input")
 public class AccumuloFileOutputFormatIT_RestartInjected extends AccumuloClusterHarness {
-  private static final Logger log = LoggerFactory.getLogger(AccumuloFileOutputFormatIT_RestartInjected.class);
+  private static final Logger log =
+      LoggerFactory.getLogger(AccumuloFileOutputFormatIT_RestartInjected.class);
   private static final int JOB_VISIBILITY_CACHE_SIZE = 3000;
-  private static final String PREFIX = AccumuloFileOutputFormatIT_RestartInjected.class.getSimpleName();
+  private static final String PREFIX =
+      AccumuloFileOutputFormatIT_RestartInjected.class.getSimpleName();
   private static final String BAD_TABLE = PREFIX + "_mapred_bad_table";
   private static final String TEST_TABLE = PREFIX + "_mapred_test_table";
   private static final String EMPTY_TABLE = PREFIX + "_mapred_empty_table";
@@ -88,12 +90,8 @@ public class AccumuloFileOutputFormatIT_RestartInjected extends AccumuloClusterH
   public void testEmptyWrite() throws Exception {
     try (AccumuloClient c = Accumulo.newClient().from(getClientProps()).build()) {
       c.tableOperations().create(EMPTY_TABLE);
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(cluster).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       handleWriteTests(false);
     }
   }
@@ -102,29 +100,17 @@ public class AccumuloFileOutputFormatIT_RestartInjected extends AccumuloClusterH
   public void testRealWrite() throws Exception {
     try (AccumuloClient c = Accumulo.newClient().from(getClientProps()).build()) {
       c.tableOperations().create(TEST_TABLE);
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(cluster).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       BatchWriter bw = c.createBatchWriter(TEST_TABLE);
       Mutation m = new Mutation("Key");
       m.put("", "", "");
       bw.addMutation(m);
-      RestartFramework.at("after_mutation")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_mutation").on(cluster).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       bw.close();
-      RestartFramework.at("after_batch_close")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_close").on(cluster).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       handleWriteTests(true);
     }
   }
@@ -238,31 +224,19 @@ public class AccumuloFileOutputFormatIT_RestartInjected extends AccumuloClusterH
   public void writeBadVisibility() throws Exception {
     try (AccumuloClient c = Accumulo.newClient().from(getClientProps()).build()) {
       c.tableOperations().create(BAD_TABLE);
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(cluster).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       BatchWriter bw = c.createBatchWriter(BAD_TABLE);
       Mutation m = new Mutation("r1");
       m.put("cf1", "cq1", "A&B");
       m.put("cf1", "cq1", "A&B");
       m.put("cf1", "cq2", "A&");
       bw.addMutation(m);
-      RestartFramework.at("after_mutation")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_mutation").on(cluster).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       bw.close();
-      RestartFramework.at("after_batch_close")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_close").on(cluster).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       File f = new File(tempDir, testName());
       assertTrue(f.createNewFile(), "Failed to create file: " + f);
       if (f.delete()) {

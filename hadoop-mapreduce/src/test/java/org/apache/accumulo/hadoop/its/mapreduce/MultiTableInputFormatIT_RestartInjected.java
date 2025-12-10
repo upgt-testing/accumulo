@@ -34,8 +34,6 @@ import org.apache.accumulo.core.data.Value;
 import org.apache.accumulo.hadoop.mapreduce.AccumuloInputFormat;
 import org.apache.accumulo.hadoopImpl.mapreduce.RangeInputSplit;
 import org.apache.accumulo.harness.AccumuloClusterHarness;
-import org.restarttest.api.RestartFramework;
-import org.restarttest.core.RestartMode;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.io.Text;
@@ -45,6 +43,8 @@ import org.apache.hadoop.mapreduce.lib.output.NullOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.junit.jupiter.api.Test;
+import org.restarttest.api.RestartFramework;
+import org.restarttest.core.RestartMode;
 
 public class MultiTableInputFormatIT_RestartInjected extends AccumuloClusterHarness {
 
@@ -135,19 +135,11 @@ public class MultiTableInputFormatIT_RestartInjected extends AccumuloClusterHarn
     String table2 = tableNames[1];
     try (AccumuloClient c = Accumulo.newClient().from(getClientProps()).build()) {
       c.tableOperations().create(table1);
-      RestartFramework.at("after_table1_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table1_create").on(cluster).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       c.tableOperations().create(table2);
-      RestartFramework.at("after_table2_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table2_create").on(cluster).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       BatchWriter bw = c.createBatchWriter(table1);
       BatchWriter bw2 = c.createBatchWriter(table2);
       for (int i = 0; i < 100; i++) {
@@ -158,20 +150,12 @@ public class MultiTableInputFormatIT_RestartInjected extends AccumuloClusterHarn
         t2m.put("", "", String.format("%s_%09x", table2, i));
         bw2.addMutation(t2m);
       }
-      RestartFramework.at("after_batch_write")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_write").on(cluster).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       bw.close();
       bw2.close();
-      RestartFramework.at("after_batch_close")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_close").on(cluster).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       MRTester.main(new String[] {table1, table2});
       assertNull(e1);

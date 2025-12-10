@@ -47,8 +47,6 @@ import org.apache.accumulo.hadoop.mapred.AccumuloInputFormat;
 import org.apache.accumulo.hadoop.mapred.AccumuloOutputFormat;
 import org.apache.accumulo.miniclusterImpl.MiniAccumuloConfigImpl;
 import org.apache.accumulo.test.functional.ConfigurableMacBase;
-import org.restarttest.api.RestartFramework;
-import org.restarttest.core.RestartMode;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.io.Text;
@@ -61,6 +59,8 @@ import org.apache.hadoop.mapred.Reporter;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.junit.jupiter.api.Test;
+import org.restarttest.api.RestartFramework;
+import org.restarttest.core.RestartMode;
 
 public class AccumuloOutputFormatIT_RestartInjected extends ConfigurableMacBase {
 
@@ -77,12 +77,8 @@ public class AccumuloOutputFormatIT_RestartInjected extends ConfigurableMacBase 
       // create a table and put some data in it
       final String tableName = testName();
       client.tableOperations().create(tableName);
-      RestartFramework.at("after_table_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table_create").on(cluster).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       JobConf job = new JobConf();
       BatchWriterConfig batchConfig = new BatchWriterConfig();
@@ -106,12 +102,8 @@ public class AccumuloOutputFormatIT_RestartInjected extends ConfigurableMacBase 
           }
           writer.write(new Text(tableName), m);
         }
-        RestartFramework.at("after_mutations")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_mutations").on(cluster).restart("tablet_server").withIndex(0)
+            .withMode(RestartMode.GRACEFUL).execute();
 
       } catch (Exception e) {
         e.printStackTrace();
@@ -119,12 +111,8 @@ public class AccumuloOutputFormatIT_RestartInjected extends ConfigurableMacBase 
       }
 
       client.securityOperations().revokeTablePermission("root", tableName, TablePermission.WRITE);
-      RestartFramework.at("after_revoke_permission")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_revoke_permission").on(cluster).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       var ex = assertThrows(IOException.class, () -> writer.close(null));
       log.info(ex.getMessage(), ex);
@@ -224,38 +212,22 @@ public class AccumuloOutputFormatIT_RestartInjected extends ConfigurableMacBase 
       String table1 = instanceName + "_t1";
       String table2 = instanceName + "_t2";
       c.tableOperations().create(table1);
-      RestartFramework.at("after_table1_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table1_create").on(cluster).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       c.tableOperations().create(table2);
-      RestartFramework.at("after_table2_create")
-          .on(cluster)
-          .restart("manager")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_table2_create").on(cluster).restart("manager").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
       try (BatchWriter bw = c.createBatchWriter(table1)) {
         for (int i = 0; i < 100; i++) {
           Mutation m = new Mutation(new Text(String.format("%09x", i + 1)));
           m.put("", "", String.format("%09x", i));
           bw.addMutation(m);
         }
-        RestartFramework.at("after_batch_write")
-            .on(cluster)
-            .restart("tablet_server")
-            .withIndex(0)
-            .withMode(RestartMode.GRACEFUL)
-            .execute();
+        RestartFramework.at("after_batch_write").on(cluster).restart("tablet_server").withIndex(0)
+            .withMode(RestartMode.GRACEFUL).execute();
       }
-      RestartFramework.at("after_batch_close")
-          .on(cluster)
-          .restart("tablet_server")
-          .withIndex(0)
-          .withMode(RestartMode.GRACEFUL)
-          .execute();
+      RestartFramework.at("after_batch_close").on(cluster).restart("tablet_server").withIndex(0)
+          .withMode(RestartMode.GRACEFUL).execute();
 
       MRTester.main(new String[] {"root", ROOT_PASSWORD, table1, table2, instanceName,
           getCluster().getZooKeepers()});
