@@ -1,0 +1,52 @@
+{
+  "tests": [
+    {
+      "testClass": "org.apache.accumulo.miniclusterImpl.CleanShutdownMacTest_RestartInjected",
+      "testMethod": "testExecutorServiceShutdown",
+      "restartPoints": [
+        {
+          "position": "after_cluster_create",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ],
+          "index": 0
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.miniclusterImpl.MiniAccumuloClusterImplTest_RestartInjected",
+      "testMethod": "testAccurateProcessListReturned",
+      "restartPoints": [
+        {
+          "position": "after_get_processes",
+          "targets": [
+            "manager"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ],
+          "index": 0
+        }
+      ]
+    },
+    {
+      "testClass": "org.apache.accumulo.miniclusterImpl.MiniAccumuloClusterImplTest_RestartInjected",
+      "testMethod": "saneMonitorInfo",
+      "restartPoints": [
+        {
+          "position": "after_monitor_poll",
+          "targets": [
+            "tablet_server"
+          ],
+          "modes": [
+            "GRACEFUL"
+          ],
+          "index": 0
+        }
+      ]
+    }
+  ]
+}
