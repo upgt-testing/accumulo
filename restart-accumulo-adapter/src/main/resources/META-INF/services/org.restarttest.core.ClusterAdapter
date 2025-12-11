@@ -1,1 +1,2 @@
 org.apache.accumulo.restarttest.AccumuloClusterAdapter
+org.apache.accumulo.restarttest.AccumuloClusterImplAdapter
