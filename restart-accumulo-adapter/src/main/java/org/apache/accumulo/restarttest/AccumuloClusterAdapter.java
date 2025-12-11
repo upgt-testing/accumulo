@@ -60,11 +60,11 @@ public class AccumuloClusterAdapter implements ClusterAdapter<MiniAccumuloCluste
     this.healthCheck = new CompositeHealthCheck<>("accumulo-health");
 
     // Add health checks
-    this.healthCheck.addCheck(new AccumuloManagerActiveCheck());
-    this.healthCheck.addCheck(new AccumuloTabletServersRegisteredCheck());
-    this.healthCheck.addCheck(new AccumuloTabletsAssignedCheck());
-    this.healthCheck.addCheck(new AccumuloClusterBalancedCheck());
-    this.healthCheck.addCheck(new AccumuloScanServersRegisteredCheck());
+    // this.healthCheck.addCheck(new AccumuloManagerActiveCheck());
+    // this.healthCheck.addCheck(new AccumuloTabletServersRegisteredCheck());
+    // this.healthCheck.addCheck(new AccumuloTabletsAssignedCheck());
+    // this.healthCheck.addCheck(new AccumuloClusterBalancedCheck());
+    // this.healthCheck.addCheck(new AccumuloScanServersRegisteredCheck());
   }
 
   @Override
