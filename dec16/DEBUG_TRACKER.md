@@ -9,11 +9,43 @@ Total failure groups: 23
 
 ## Group 3 (Priority 2)
 
-**Status:** [ ] Not started
+**Status:** [X] BUG
 
 **Execution Count:** 8
 
 **Priority Reason:** Test bug - Caused by thrown from test code
+
+**Analysis:**
+This is a **BUG** in the source code at `MiniAccumuloClusterImpl.java:776-782`.
+
+**Root Cause:**
+The `getProcesses()` method calls `references(control.managerProcess)` without checking if processes are null. After `killProcess()` sets a process field to null (e.g., `managerProcess = null` at line 460 in MiniAccumuloClusterControl.java), subsequent calls to `getProcesses()` fail because:
+
+1. `references(null)` creates `Stream.of(null)` - a stream with one null element
+2. `.map(ProcessReference::new)` tries to call `new ProcessReference(null)`
+3. The ProcessReference constructor has `Objects.requireNonNull(process)` which throws NPE
+
+**Location:**
+- `minicluster/src/main/java/org/apache/accumulo/miniclusterImpl/MiniAccumuloClusterImpl.java:776-792`
+
+**Fix Required:**
+The `references()` method should filter out null processes:
+```java
+List<ProcessReference> references(Process... procs) {
+  return Stream.of(procs).filter(Objects::nonNull).map(ProcessReference::new).collect(toList());
+}
+```
+
+Or `getProcesses()` should check for null before calling references():
+```java
+if (control.managerProcess != null) {
+  result.put(ServerType.MANAGER, references(control.managerProcess));
+} else {
+  result.put(ServerType.MANAGER, Collections.emptyList());
+}
+```
+
+**Reproduced:** Yes, successfully reproduced in Docker container `shuaiwang516/accumulo-restart-test:dec16` at `/workspace/apps/accumulo`
 
 ### Generalized Stack Trace
 ```
@@ -90,11 +122,33 @@ Caused by: java.lang.NullPointerException
 
 ## Group 4 (Priority 2)
 
-**Status:** [ ] Not started
+**Status:** [X] BUG
 
 **Execution Count:** 7
 
 **Priority Reason:** Application exception - java.util.NoSuchElementException
+
+**Analysis:**
+This is a **BUG** - a flaky durability issue in the source code.
+
+**Root Cause:**
+The `BatchWriter.flush()` method does not guarantee data durability. After calling `bw.flush()` at line 131 in LogicalTimeIT_RestartInjected.java, the data is sent to the tablet server but may still reside in memory (WAL or memtable) without being synced to disk. When a tablet_server restart occurs immediately after flush(), the data can be lost.
+
+**Evidence:**
+1. Successfully reproduced the failure - it's flaky (fails ~66% of the time in 3 runs)
+2. Debug logging shows:
+   - Before restart: Data for rows 'a' and 'b' exists in the table
+   - After restart: Only row 'a' exists, row 'b' (the final mutation) is LOST
+3. The test calls `bw.addMutation(m)` followed by `bw.flush()`, then immediately restarts the tablet server
+4. The scanner then fails with NoSuchElementException because the expected data is missing
+
+**Location:**
+The bug is in the BatchWriter implementation or the durability guarantees of the tablet server. When `flush()` returns, the data should be in a durable state (persisted to WAL and synced to disk), but currently it is not.
+
+**Impact:**
+This is a critical durability bug. Users may lose data during server restarts if they rely on `flush()` to ensure their writes are durable. This violates typical database durability expectations.
+
+**Reproduced:** Yes, successfully reproduced as a flaky test (fails 2 out of 3 runs) in the accumulo-restart-2.1.4 branch
 
 ### Generalized Stack Trace
 ```
@@ -148,11 +202,49 @@ java.util.NoSuchElementException
 
 ## Group 8 (Priority 2)
 
-**Status:** [ ] Not started
+**Status:** [X] TEST-BUG
 
 **Execution Count:** 4
 
 **Priority Reason:** Application exception - java.lang.IllegalArgumentException
+
+**Analysis:**
+This is a **TEST-BUG** in the test code at `GarbageCollectorTrashBase.java:115`.
+
+**Root Cause:**
+The `countFilesInTrash()` method incorrectly assumes that ALL files in the Hadoop trash directory are tablet files. It iterates through every file in the trash and tries to create a `TabletFile` object from each path (line 115). However, the trash can contain other types of Accumulo files, such as recovery files from the `/accumulo/recovery/` directory.
+
+When the tablet server is restarted during the test, WAL recovery operations occur. When recovery files are cleaned up, they are moved to the trash (since Hadoop trash is enabled in these tests). These recovery files have the path structure `/accumulo/recovery/...` rather than `/accumulo/tables/...`, which causes `TabletFile.parsePath()` to throw an IllegalArgumentException at line 124 because it cannot find the expected `/tables/` directory structure.
+
+**Location:**
+- `test/src/main/java/org/apache/accumulo/test/functional/GarbageCollectorTrashBase.java:115`
+
+**Fix Required:**
+The `countFilesInTrash()` method should handle non-tablet files gracefully. Options include:
+
+1. Catch the IllegalArgumentException and skip files that aren't valid tablet files:
+```java
+try {
+  TabletFile tf = new TabletFile(lfs.getPath());
+  LOG.debug("File in trash: {}, tableId: {}", lfs.getPath(), tf.getTableId());
+  if (tid.equals(tf.getTableId())) {
+    count++;
+  }
+} catch (IllegalArgumentException e) {
+  // Skip non-tablet files (e.g., recovery files)
+  LOG.debug("Skipping non-tablet file in trash: {}", lfs.getPath());
+}
+```
+
+2. Filter paths before creating TabletFile objects by checking if they contain "/tables/":
+```java
+if (!lfs.getPath().toString().contains("/tables/")) {
+  continue;
+}
+TabletFile tf = new TabletFile(lfs.getPath());
+```
+
+**Reproduced:** Yes, successfully reproduced with the first test execution
 
 ### Generalized Stack Trace
 ```
@@ -207,11 +299,37 @@ java.lang.IllegalArgumentException: Missing or invalid part of tablet file metad
 
 ## Group 9 (Priority 2)
 
-**Status:** [ ] Not started
+**Status:** [X] BUG
 
 **Execution Count:** 2
 
 **Priority Reason:** Application exception - java.io.IOException
+
+**Analysis:**
+This is a **BUG** - a critical durability issue in the source code, similar to Group 4.
+
+**Root Cause:**
+The `BatchWriter.close()` method does not guarantee data durability. After calling `bw.close()` (which happens at the end of the try-with-resources block at line 228 in AccumuloOutputFormatIT_RestartInjected.java), the test immediately restarts the tablet server. However, the data written to table1 is COMPLETELY LOST - 0 entries remain out of the 100 that were written.
+
+**Evidence:**
+1. Successfully reproduced the failure
+2. Added debug logging that shows: "DEBUG: After restart, table1 has 0 entries (expected 100)"
+3. The MapReduce job fails with "Job failed!" because when it tries to read from table1, there's no data available
+4. This happens at the `after_batch_close` restart point, meaning the BatchWriter has already been closed when the restart occurs
+
+**Location:**
+The bug is in the BatchWriter/TabletServer durability implementation. When `BatchWriter.close()` returns, it should guarantee that all mutations have been durably persisted (written to WAL and synced to disk), but currently this is not the case.
+
+**Impact:**
+This is a CRITICAL durability bug. Users can lose ALL their data during server restarts if they rely on `close()` to ensure their writes are durable. This violates fundamental database durability expectations and can lead to severe data loss in production environments.
+
+**Difference from Group 4:**
+- Group 4: Data loss after `flush()` (partial loss - some mutations lost)
+- Group 9: Data loss after `close()` (complete loss - ALL mutations lost)
+
+Both are durability bugs, but Group 9 is more severe as it affects `close()`, which users absolutely expect to provide durability guarantees.
+
+**Reproduced:** Yes, successfully reproduced on the first attempt
 
 ### Generalized Stack Trace
 ```
@@ -257,11 +375,42 @@ java.io.IOException: Job failed!
 
 ## Group 11 (Priority 2)
 
-**Status:** [ ] Not started
+**Status:** [X] BUG (with minor TEST-BUG)
 
 **Execution Count:** 2
 
 **Priority Reason:** Test bug - java.lang.IndexOutOfBoundsException thrown from test code
+
+**Analysis:**
+This is primarily a **BUG** - a critical durability issue in the source code, similar to Groups 4 and 9. There is also a minor **TEST-BUG** (poor defensive coding).
+
+**Root Cause:**
+The `BatchWriter.close()` method does not guarantee data durability. The test writes approximately 208 mutations (lines 66-78 in FindMaxIT_RestartInjected.java), closes the BatchWriter via try-with-resources (line 79), then immediately restarts the tablet server (line 81-82).
+
+Debug logging confirms that ALL 208 rows are LOST after the restart:
+```
+DEBUG: After restart, found 0 rows (expected ~208)
+DEBUG: CRITICAL - All data was lost after tablet_server restart!
+```
+
+The test then crashes with `IndexOutOfBoundsException` at line 126 when trying to access `rows.get(rows.size() - 1)`, which becomes `rows.get(-1)` when the rows list is empty.
+
+**Comparison with Original Test:**
+The original non-restart-injected `FindMaxIT.java` works fine - after BatchWriter.close(), data is immediately available for scanning. This confirms that close() is expected to make data available. However, the data is only in memory/WAL and not durably persisted to disk, causing total data loss upon restart.
+
+**Location:**
+The bug is in the BatchWriter/TabletServer durability implementation. When `BatchWriter.close()` returns, it should guarantee that all mutations have been durably persisted (written to WAL and synced to disk).
+
+**Test Code Issue:**
+The test has poor defensive coding - it doesn't check if `rows.isEmpty()` before accessing `rows.get(rows.size() - 1)`. However, this is a minor issue; the test expectation that data persists after close() is reasonable.
+
+**Impact:**
+This is a CRITICAL durability bug. Users can lose ALL their data during server restarts if they rely on `close()` to ensure writes are durable. This is the same fundamental issue as Groups 4 and 9:
+- Group 4: Data loss after `flush()` (partial loss)
+- Group 9: Data loss after `close()` in MapReduce context (complete loss)
+- Group 11: Data loss after `close()` in simple write context (complete loss)
+
+**Reproduced:** Yes, successfully reproduced with the second test execution (FindMaxIT_RestartInjected#test1)
 
 ### Generalized Stack Trace
 ```
@@ -312,11 +461,56 @@ java.lang.IndexOutOfBoundsException: Index 0 out of bounds for length 0
 
 ## Group 15 (Priority 2)
 
-**Status:** [ ] Not started
+**Status:** [X] TEST-BUG
 
 **Execution Count:** 1
 
 **Priority Reason:** Test bug - java.lang.NullPointerException thrown from test code
+
+**Analysis:**
+This is a **TEST-BUG** - a flaky test caused by a race condition and missing wait logic after tablet_server restart.
+
+**Root Cause:**
+After the tablet_server is restarted at line 78-79, the test immediately tries to read the tablet metadata at line 84. However, tablet reassignment is an asynchronous operation that takes time. The restart adapter (`AccumuloClusterImplAdapter.java:123`) only waits 100ms after starting the replacement tablet_server, and all health checks (including `AccumuloTabletsAssignedCheck`) are disabled. This creates a timing window where:
+
+1. The replacement tablet_server has started
+2. But tablets have not yet been reassigned
+3. When `readTablet(extent, ColumnType.LOCATION)` is called, it returns null because the tablet doesn't have a location yet (or the tablet entry is not found in the query results because it has no LOCATION)
+
+**Evidence:**
+- Successfully reproduced as a flaky test (fails ~60% of the time: 3 out of 5 runs)
+- When it passes: The tablet has a CURRENT location
+- When it fails: `readTablet()` returns null with error "tabletMetadata is null! Table exists but tablet metadata not found"
+
+**Location:**
+The issue is in the test code at `test/src/main/java/org/apache/accumulo/test/CorruptMutationIT_RestartInjected.java:84-85`
+
+**Fix Required:**
+The test should wait for the tablet to be reassigned after the restart. Add wait logic before trying to read the tablet metadata:
+
+```java
+RestartFramework.at("after_batch_write").on(getCluster()).restart("tablet_server")
+    .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
+
+var ctx = (ClientContext) c;
+var tableId = ctx.getTableId(table);
+var extent = new KeyExtent(tableId, null, null);
+
+// Wait for tablet to be reassigned
+Wait.waitFor(() -> {
+  var tm = ctx.getAmple().readTablet(extent, TabletMetadata.ColumnType.LOCATION);
+  return tm != null && tm.getLocation() != null &&
+         tm.getLocation().getType() == TabletMetadata.LocationType.CURRENT;
+}, 30_000, 100);
+
+var tabletMetadata = ctx.getAmple().readTablet(extent, TabletMetadata.ColumnType.LOCATION);
+var location = tabletMetadata.getLocation();
+```
+
+**Impact:**
+This is a test-only issue. The test fails to account for the asynchronous nature of tablet reassignment after a tablet_server restart. In production code, applications would typically have retry logic or wait for tablets to become available.
+
+**Reproduced:** Yes, successfully reproduced as a flaky test (fails 3 out of 5 runs)
 
 ### Generalized Stack Trace
 ```
