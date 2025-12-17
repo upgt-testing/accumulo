@@ -543,11 +543,52 @@ java.lang.NullPointerException: Cannot invoke "org.apache.accumulo.core.metadata
 
 ## Group 17 (Priority 2)
 
-**Status:** [ ] Not started
+**Status:** [X] TEST-BUG
 
 **Execution Count:** 1
 
 **Priority Reason:** Application exception - org.apache.zookeeper.KeeperException$NoNodeException
+
+**Analysis:**
+This is a **TEST-BUG** - the test has an incorrect assumption about ZooKeeper lock persistence across manager restarts.
+
+**Root Cause:**
+The test captures a list of manager lock children from ZooKeeper (lines 54-58), then restarts the manager (lines 62-63), and then tries to access a lock using the stale list captured before the restart (line 67).
+
+When a manager is restarted (even gracefully):
+1. Its ZooKeeper lock is an ephemeral node that gets automatically deleted when the process disconnects
+2. When the manager restarts, it creates a NEW ephemeral lock node with a different UUID
+
+The test incorrectly assumes the lock path `children.get(0)` will still be valid after the restart.
+
+**Evidence:**
+Debug logging shows:
+- Before restart: `children = [zlock#d326ddb9...#0000000000, zlock#9c960cb5...#0000000001]`
+- After restart: `childrenAfterRestart = [zlock#9c960cb5...#0000000001, zlock#d6969da9...#0000000002]`
+- Test tries to read: `zlock#d326ddb9...#0000000000` which no longer exists
+
+The original manager's lock (ending in #0000000000) was deleted and replaced with a new lock (ending in #0000000002).
+
+**Location:**
+- `test/src/main/java/org/apache/accumulo/test/functional/BackupManagerIT_RestartInjected.java:67`
+
+**Fix Required:**
+The test should re-query the lock children AFTER the restart instead of using the stale list:
+
+```java
+RestartFramework.at("after_backup_manager_established").on(getCluster()).restart("manager")
+    .withIndex(0).withMode(RestartMode.GRACEFUL).execute();
+
+// Re-query the lock children after restart
+var path = ServiceLock.path(root + Constants.ZMANAGER_LOCK);
+children = ServiceLock.validateAndSort(path, writer.getChildren(path.toString()));
+
+// Now use the fresh children list
+String lockPath = root + Constants.ZMANAGER_LOCK + "/" + children.get(0);
+byte[] data = writer.getData(lockPath);
+```
+
+**Reproduced:** Yes, successfully reproduced on the first attempt
 
 ### Generalized Stack Trace
 ```
@@ -596,11 +637,49 @@ org.apache.zookeeper.KeeperException$NoNodeException: KeeperErrorCode = NoNode f
 
 ## Group 20 (Priority 2)
 
-**Status:** [ ] Not started
+**Status:** [X] BUG
 
 **Execution Count:** 1
 
 **Priority Reason:** Application exception - org.apache.accumulo.core.client.SampleNotPresentException
+
+**Analysis:**
+This is a **BUG** - table properties (specifically sampling configuration) are not properly persisted to ZooKeeper or not correctly recovered after a manager restart.
+
+**Root Cause:**
+The test sets a sampling configuration on table 1 using `setSamplerConfiguration()` (line 472), which calls `modifyProperties()` to send the configuration to the manager via RPC. The operation completes successfully, and the test then restarts the manager (line 474-475). After the restart, when a compaction is triggered (line 483), the compaction runs WITHOUT the sampling configuration (`config []`), creating an RFile without sample data.
+
+**Technical Details:**
+1. `setSamplerConfiguration()` → `modifyProperties()` → RPC call `client.modifyTableProperties()`
+2. The manager should persist table properties to ZooKeeper
+3. When the manager restarts, it should reload table properties from ZooKeeper
+4. However, the FATE log shows: `Seeding FATE[694f4a1fc4c33db2] TABLE_COMPACT Compact table (1) with config []`
+5. The empty `config []` proves the sampling configuration was lost after the manager restart
+
+**Evidence:**
+1. Successfully reproduced the failure
+2. Test sequence:
+   - Line 472: `updateSamplingConfig(client, tableName, SC1)` - sets sampling configuration (COMPLETES SUCCESSFULLY)
+   - Line 474-475: **Manager restart** (happens AFTER updateSamplingConfig returns)
+   - Line 483: `compact()` - should use SC1 but uses empty config instead
+   - Line 485-486: Restart tablet_server
+   - Line 489-491: Verify sample data is present - **FAILS with SampleNotPresentException**
+3. Manager FATE log confirms: `TABLE_COMPACT Compact table (1) with config []` (empty configuration)
+4. Compaction log shows: `Compacting 1<< on i.default.small for USER from [F0000001.rf] size 44 KB config []`
+5. The compaction created file `A0000004.rf` without sample data
+6. Offline/online operations (part of updateSamplingConfig) completed at 23:00:05
+7. Compaction was requested at 23:00:06, after the manager restart
+
+**Location:**
+The bug is in how the manager persists table properties to ZooKeeper when `modifyTableProperties()` is called, OR how it recovers/loads table properties from ZooKeeper after a restart. The sampling configuration should survive a manager restart but does not.
+
+**Impact:**
+This is a CRITICAL bug violating fundamental durability expectations. Users reasonably expect that after setting a table property (via `setSamplerConfiguration()`) and having that operation complete successfully, the property should persist even if the manager restarts. The silent loss of table configuration can lead to:
+- Compactions creating RFiles without expected sample data
+- Data analysis workflows failing when sampling is expected but not present
+- Silent data corruption where table behavior changes unexpectedly after manager restarts
+
+**Reproduced:** Yes, successfully reproduced on the second attempt (first attempt timed out due to unrelated issue with tablet getting stuck in SUSPENDED state)
 
 ### Generalized Stack Trace
 ```
@@ -642,11 +721,78 @@ org.apache.accumulo.core.client.SampleNotPresentException
 
 ## Group 21 (Priority 2)
 
-**Status:** [ ] Not started
+**Status:** [X] TEST-BUG
 
 **Execution Count:** 1
 
 **Priority Reason:** Application exception - java.util.NoSuchElementException
+
+**Analysis:**
+This is a **TEST-BUG** - the test has invalid assumptions that are incompatible with tablet_server restarts.
+
+**Root Cause:**
+The test validates that after a flush operation, tablets remain on the same server. However, the restart injection at `after_flush` fundamentally breaks this assumption. When the tablet_server is restarted:
+
+1. The old tablet_server process is killed (e.g., server A at port 35273)
+2. A new tablet_server process starts (e.g., server B at port 41353)
+3. Tablets MUST be migrated from the dead server to the new server
+4. This reassignment is asynchronous
+
+The test stores `newTablet.current` (pointing to the original server A) and then expects that after the restart, `flushed.current` equals `newTablet.current`. This is impossible because:
+- Server A is dead after the restart
+- Tablets must move to server B (or another server)
+- Therefore `newTablet.current ≠ flushed.current`
+
+**Evidence:**
+Successfully reproduced as a flaky test (5 runs):
+- Run 1: NoSuchElementException (60%)
+- Run 2: NoSuchElementException (60%)
+- Run 3: AssertionFailedError at line 106 - server mismatch (40%)
+- Run 4: NoSuchElementException (60%)
+- Run 5: AssertionFailedError at line 106 - server mismatch (40%)
+
+**Two Failure Modes:**
+
+1. **NoSuchElementException (60% of runs):** The metadata scan happens during tablet reassignment when no results are available yet, causing `scanner.next()` to throw NoSuchElementException
+
+2. **AssertionFailedError (40% of runs):** The tablet has been reassigned to the new server, but the assertion at line 106 fails because `newTablet.current` (old server) ≠ `flushed.current` (new server)
+
+**Location:**
+The issue is at `test/src/main/java/org/apache/accumulo/test/functional/ManagerAssignmentIT_RestartInjected.java:102-108`
+
+**Comparison with Original Test:**
+The original `ManagerAssignmentIT.java` test does NOT have a restart between flush and the assertion (line 90-94). It validates that flushing doesn't move tablets. The restart-injected version accidentally validates that restarting doesn't move tablets, which is fundamentally wrong.
+
+**Fix Required:**
+The test should be updated to handle the tablet_server restart at the `after_flush` position. Options:
+
+1. Wait for tablet reassignment to complete before assertions:
+```java
+RestartFramework.at("after_flush").on(getCluster()).restart("tablet_server").withIndex(0)
+    .withMode(RestartMode.GRACEFUL).execute();
+
+// Wait for tablet to be reassigned
+Wait.waitFor(() -> {
+  try {
+    TabletLocationState tls = getTabletLocationState(c, tableId);
+    return tls != null && tls.current != null;
+  } catch (Exception e) {
+    return false;
+  }
+}, 30_000, 100);
+
+TabletLocationState flushed = getTabletLocationState(c, tableId);
+// Don't check if it's the same server - just verify it has a valid location
+assertNotNull(flushed.current);
+assertNotNull(flushed.last);
+```
+
+2. Skip the server-equality assertions after restart points, since tablets will necessarily move to different servers
+
+**Impact:**
+This is a test-only issue. The test's expectations are invalid when tablet_server restarts occur between flush and the assertion checks.
+
+**Reproduced:** Yes, successfully reproduced as a flaky test (3 out of 5 runs show NoSuchElementException, 2 out of 5 show AssertionFailedError)
 
 ### Generalized Stack Trace
 ```
@@ -686,11 +832,77 @@ java.util.NoSuchElementException
 
 ## Group 22 (Priority 2)
 
-**Status:** [ ] Not started
+**Status:** [X] TEST-BUG (with possible underlying BUG)
 
 **Execution Count:** 1
 
 **Priority Reason:** Application exception - java.util.NoSuchElementException
+
+**Analysis:**
+This is primarily a **TEST-BUG** - the test has invalid assumptions about tablet availability after a tablet_server restart. There may also be an underlying **BUG** with summary persistence.
+
+**Root Cause:**
+After the tablet_server is restarted at line 181-182, the test immediately tries to:1. Get timestamp stats by scanning the table (line 185-186)
+2. Retrieve summaries (line 187-189)
+3. Verify the summaries are present (line 194-195)
+
+However, tablet reassignment is asynchronous. When a tablet_server restarts:
+1. The old tablet_server process is killed
+2. A new tablet_server process starts with a different ID/port
+3. The Manager detects the change and needs to reassign tablets to the new server
+4. This reassignment takes time and is not guaranteed to complete immediately
+
+The test does not wait for tablets to be reassigned before attempting to scan or retrieve summaries, leading to:
+- Either a timeout when trying to scan the table (as seen in reproduction attempts)
+- Or an empty summaries collection if the scan somehow completes but finds no data
+
+**Evidence:**
+1. Attempted reproduction consistently times out, but at different points:
+   - First attempt: Timeout during `waitForBalance()` in the restart adapter (line 172 of AccumuloClusterImplAdapter)
+   - Second attempt: Timeout at `getTimestampStats()` (line 186) when trying to scan the table
+2. The Manager logs show: "not balancing just yet, as collection of live tservers is in flux" - the Manager refuses to balance because it detected tserver set changes
+3. Without proper waiting, tablets may not be available for scanning or summary retrieval
+
+**Restart Adapter Issue:**
+The AccumuloClusterImplAdapter calls `waitForBalance()` which hangs indefinitely because:
+- After a tablet_server restart, the tserver set changes (old server gone, new server added)
+- The Manager sees this as "flux" and refuses to proceed with balancing
+- `waitForBalance()` has no timeout and waits forever
+
+**Possible Underlying BUG:**
+Even if the tablets were properly reassigned, the original failure shows an empty summaries collection. This suggests that summary data may not be properly persisted or recovered after a tablet_server restart, similar to the durability bugs in Groups 4, 9, 11, and 20. However, I cannot confirm this due to the restart framework timeout issues.
+
+**Location:**
+- Test issue: `test/src/main/java/org/apache/accumulo/test/functional/SummaryIT_RestartInjected.java:185-194`
+- Restart adapter issue: `restart-accumulo-adapter/src/main/java/org/apache/accumulo/restarttest/AccumuloClusterImplAdapter.java:172`
+
+**Fix Required:**
+The test should wait for tablets to be reassigned after the restart:
+
+```java
+RestartFramework.at("after_flush").on(getCluster()).restart("tablet_server").withIndex(0)
+    .withMode(RestartMode.GRACEFUL).execute();
+
+// Wait for tablets to be available
+Wait.waitFor(() -> {
+  try {
+    // Try to read from the table to verify tablet is assigned
+    getTimestampStats(table, c);
+    return true;
+  } catch (Exception e) {
+    return false;
+  }
+}, 60_000, 1000);
+
+stats = getTimestampStats(table, c);
+summaries = c.tableOperations().summaries(table).retrieve();
+```
+
+Alternatively, the restart adapter should:
+1. NOT call `waitForBalance()` after restarts (or use a timeout)
+2. Instead, implement a custom wait that checks for tablet assignment using metadata table scans
+
+**Reproduced:** No - Timeout issues with the restart framework prevented full reproduction. The test consistently times out either during `waitForBalance()` or during the first table scan after restart.
 
 ### Generalized Stack Trace
 ```
@@ -732,11 +944,53 @@ java.util.NoSuchElementException
 
 ## Group 1 (Priority 3)
 
-**Status:** [ ] Not started
+**Status:** [X] FP
 
 **Execution Count:** 46
 
 **Priority Reason:** Exception with restart framework involvement
+
+**Analysis:**
+This is a **FALSE POSITIVE (FP)** - the failures are caused by incompatible test patterns, not bugs in the source code.
+
+**Root Cause:**
+The tests perform manual process management operations (manual kill/start, graceful shutdown) that bypass the cluster's normal process tracking. When the restart framework subsequently tries to restart a node, it cannot find any tracked processes and throws "No processes found for role: {type}".
+
+**Technical Details:**
+
+**Test 1 (VerifySerialRecoveryIT_RestartInjected):**
+1. Line 119-121: Test manually kills ALL tablet servers using `getCluster().killProcess()`
+   - This removes them from `MiniAccumuloClusterControl.tabletServerProcesses` list (line 468 in MiniAccumuloClusterControl.java)
+2. Line 122: Test manually starts a new tablet server using `cluster.exec(TabletServer.class)`
+   - The `exec()` method creates a process but does NOT add it to the tracked `tabletServerProcesses` list
+3. Line 129-130: Test tries to restart tablet_server using the restart framework
+   - The restart framework calls `getProcesses()` which queries the now-empty `tabletServerProcesses` list
+   - Error: "No processes found for role: tablet_server"
+
+**Test 2 (GracefulShutdownIT_RestartInjected):**
+1. Line 180: Test sends graceful shutdown signal to garbage collector
+2. Line 181-184: Test waits for GC process to disappear from process list
+3. Line 185-186: Test tries to restart garbage_collector using the restart framework
+   - The process list is now empty after graceful shutdown
+   - Error: "No processes found for role: garbage_collector"
+
+**Test 3 (ScanServerIT_RestartInjected):**
+1. Scan servers are started using low-level `start()` method but may not be properly tracked
+2. When restart framework tries to restart scan_server, it cannot find tracked processes
+   - Error: "No processes found for role: scan_server"
+
+**Why This is FP:**
+The restart framework correctly detects an inconsistent state where processes were managed outside its normal tracking mechanism. This is not a bug in the Accumulo source code, but rather:
+1. Tests that perform manual process lifecycle management (kill, start, graceful shutdown)
+2. Then attempt to use the restart framework which requires processes to be tracked by the cluster
+3. The restart framework's requirement for tracked processes conflicts with the test's manual process management
+
+**Impact:**
+This is a test design issue, not an application bug. The tests should either:
+- Avoid manual process management when using the restart framework, OR
+- Not use restart injection points after manual process management
+
+**Reproduced:** Yes, successfully reproduced Test 1 (VerifySerialRecoveryIT_RestartInjected)
 
 ### Generalized Stack Trace
 ```
@@ -802,11 +1056,47 @@ Caused by: java.lang.IllegalArgumentException: No processes found for role: tabl
 
 ## Group 2 (Priority 3)
 
-**Status:** [ ] Not started
+**Status:** [X] FP
 
 **Execution Count:** 22
 
 **Priority Reason:** Exception with restart framework involvement
+
+**Analysis:**
+This is a **FALSE POSITIVE (FP)** - the failures are caused by a design limitation in the restart adapter's `waitForTabletServers` method.
+
+**Root Cause:**
+When the manager is restarted, the restart adapter's `waitActive` method calls `waitForTabletServers` (line 168 in AccumuloClusterImplAdapter.java), which gets the expected tablet server count from `cluster.getConfig().getNumTservers()` (line 297). This returns the **configured** number of tablet servers, not the **actual** number of running servers.
+
+In the test flow:
+1. The test is configured with `NUM_TSERVERS = 3` (3 tablet servers)
+2. The test manually kills one tablet server using `getCluster().killProcess()` (line 74-75)
+3. Only 2 tablet servers are now running
+4. The test restarts the manager at position `after_tserver_killed` (line 81-82)
+5. The restart adapter waits for 3 tablet servers to register (from config)
+6. But only 2 tablet servers will ever register (the third was killed)
+7. After 60 seconds, the adapter times out with "Timeout waiting for tablet servers to register"
+
+**Evidence:**
+Debug logging confirms:
+```
+DEBUG: Waiting for 3 tablet servers to register (from cluster.getConfig().getNumTservers())
+DEBUG: Currently 2 tablet servers registered (expecting 3): [KingsLand:40867, KingsLand:39179]
+DEBUG: TIMEOUT - Expected 3 tablet servers but only 2 registered after 60000ms
+```
+
+**Why This is FP:**
+1. **Source code is correct**: The Accumulo manager is designed to operate with fewer tablet servers than configured. The manager handles dead tablet servers correctly.
+2. **Test code is correct**: The test intentionally kills a tablet server to verify the manager's behavior when servers die. This is valid testing.
+3. **Restart adapter limitation**: The adapter incorrectly assumes that after a manager restart, the number of registered tablet servers should equal the configured number (`getNumTservers()`). This assumption fails when tests intentionally manage tablet server lifecycles (kill, start).
+
+**Impact:**
+This is a restart framework adapter issue, not an Accumulo bug. Tests that manually kill/start tablet servers and then restart the manager will fail due to the adapter's hardcoded expectation. The adapter should either:
+- Wait for the actual number of running tablet servers (check before restart)
+- Skip the tablet server count check for manager restarts
+- Make the expected count configurable based on actual running processes
+
+**Reproduced:** Yes, successfully reproduced on the first attempt with all three test executions showing the same pattern
 
 ### Generalized Stack Trace
 ```
@@ -870,11 +1160,65 @@ Caused by: java.lang.Exception: Timeout waiting for tablet servers to register
 
 ## Group 7 (Priority 4)
 
-**Status:** [ ] Not started
+**Status:** [X] FP
 
 **Execution Count:** 4
 
 **Priority Reason:** Timeout - inspect later
+
+**Analysis:**
+This is a **FALSE POSITIVE (FP)** - the timeout is caused by a design flaw in the restart adapter, not a bug in the Accumulo source code.
+
+**Root Cause:**
+The restart adapter's `waitActive()` method calls `client.instanceOperations().waitForBalance()` at line 172 in AccumuloClusterImplAdapter.java with **NO TIMEOUT**. This call waits indefinitely for all tablets to be balanced. However, in SSL-enabled tests (and potentially other scenarios), the following issues occur:
+
+1. **SSL Connection Instability**: After restarting a tablet server, the replacement server experiences repeated SSL connection errors: "Socket is closed by peer" (TTransportException). These errors occur continuously in the replacement tablet server's Thrift layer.
+
+2. **Unhosted Tablet**: The manager logs show "not balancing user tablets because there are 1 unhosted tablets" repeatedly. Despite the replacement tablet server being registered (visible in manager logs showing 2 tablet servers: KingsLand:34255 and KingsLand:38585), one tablet remains unhosted, likely due to the SSL connection instability.
+
+3. **Blocking Call with No Timeout**: The `waitForBalance()` call is a blocking RPC to the manager that waits until all tablets are balanced. Since there's an unhosted tablet, this call never returns.
+
+4. **SSL IO Hang**: The test output shows "Thread 'junit-timeout-thread-3' stuck on IO to ssl:mgr:KingsLand:41691 for at least 120072 ms" at 00:48:02 (about 2 minutes after the restart started). Eventually the SSL connection fails with "Socket is closed by peer" and "Connection refused" errors at 00:49:54.
+
+5. **Test Timeout**: The test has a 4-minute timeout (defined in @Timeout annotation), which is reached before the `waitForBalance()` call can complete.
+
+**Evidence:**
+Successfully reproduced the failure on the first attempt. The test consistently times out after 4 minutes when executing the restart at position "after_binary_test".
+
+**Timeline:**
+- 00:46:00: Tablet server restart begins
+- 00:46:01: Replacement tablet server starts
+- 00:46:00-00:49:52: Manager continuously logs "not balancing user tablets because there are 1 unhosted tablets"
+- 00:46:01-00:49:xx: Replacement tablet server continuously experiences "Socket is closed by peer" errors
+- 00:48:02: Test thread stuck on SSL IO for 120+ seconds
+- 00:49:54: SSL connection fails completely, retries show "No managers..." and "Connection refused"
+- Test times out at 4-minute mark
+
+**Why This is FP:**
+1. **Restart Adapter Design Flaw**: The `waitActive()` method (AccumuloClusterImplAdapter.java:172) calls `waitForBalance()` with no timeout, causing indefinite blocking when tablets cannot be balanced.
+
+2. **SSL Test Environment Issue**: The SSL connections experience instability during rapid restart scenarios in the test environment. This is not representative of production behavior where restarts are rare events with proper connection handling.
+
+3. **Accumulo Source Code is Correct**:
+   - The manager correctly refuses to balance when there are unhosted tablets
+   - The replacement tablet server starts and attempts to register properly
+   - The manager can see both tablet servers registered
+   - The issue is the SSL connection layer, not the Accumulo logic
+
+4. **Not Representative of Real-World Scenarios**: In production, tablet server restarts would be followed by proper health checks with timeouts, and SSL connections would be established under stable conditions, not immediately after a process restart.
+
+**Impact:**
+This is a restart framework/adapter limitation that affects tests with:
+- SSL-enabled clusters (SslIT tests)
+- Scenarios where tablets cannot be quickly reassigned after a restart
+- Any situation where `waitForBalance()` might block indefinitely
+
+The adapter should either:
+- Add a timeout to the `waitForBalance()` call
+- Implement a custom wait mechanism with configurable timeout
+- Skip the balance check for certain restart scenarios
+
+**Reproduced:** Yes, successfully reproduced on the first attempt with Test 1 (SslIT_RestartInjected.binary)
 
 ### Generalized Stack Trace
 ```
@@ -931,11 +1275,48 @@ java.util.concurrent.TimeoutException: binary() timed out after 4 minutes
 
 ## Group 10 (Priority 4)
 
-**Status:** [ ] Not started
+**Status:** [X] FP
 
 **Execution Count:** 2
 
 **Priority Reason:** Timeout - inspect later
+
+**Analysis:**
+This is a **FALSE POSITIVE (FP)** - the timeout is caused by the restart adapter's design, not a bug in the Accumulo source code.
+
+**Root Cause:**
+The test has a `@Timeout(10)` annotation (10-second timeout) which was appropriate for the original test without restart injection. However, when the manager is restarted at the `after_get_processes` position, the restart adapter calls `client.instanceOperations().waitForBalance()` at line 172 in AccumuloClusterImplAdapter.java with **NO TIMEOUT**. This blocking call takes approximately 30-50 seconds to complete, far exceeding the test's 10-second timeout.
+
+**Evidence:**
+1. Successfully reproduced the failure on the first attempt
+2. Test output shows:
+   - Restart starts at 00:55:08
+   - `waitForBalance()` call begins at line 24 of the output
+   - InterruptedException occurs at 00:55:39 (31 seconds after restart starts) when JUnit timeout mechanism interrupts the thread
+   - The restart actually completes successfully at 00:55:54 (46 seconds total)
+3. The original non-restart-injected test (`MiniAccumuloClusterImplTest.java:87-104`) runs quickly because it only calls `getProcesses()` and performs assertions - no restart involved
+4. The restart-injected version adds a manager restart between getting the processes and checking them, but the timeout wasn't adjusted
+
+**Comparison:**
+- **Original test**: `getProcesses()` → assertions (completes in <10 seconds)
+- **Restart-injected test**: `getProcesses()` → **RESTART MANAGER** → assertions (restart takes ~46 seconds, timeout after 10)
+
+**Why This is FP:**
+1. The Accumulo source code is working correctly - the manager restarts successfully and the cluster balances properly
+2. The test timeout (10 seconds) was designed for the original test without restart injection
+3. The restart adapter's `waitForBalance()` call has no timeout and blocks for 30-50 seconds, which is a design limitation of the restart framework, not Accumulo
+4. The test's timeout is incompatible with the time required for the injected restart operation
+
+**Impact:**
+This is a restart framework limitation that affects tests with short timeouts when manager restarts are injected. The adapter should either:
+- Add a timeout parameter to the `waitForBalance()` call
+- Skip the balance wait for certain test scenarios
+- Tests that inject manager restarts should have timeouts of at least 60 seconds
+
+**Similar Issue:**
+Test 2 (`saneMonitorInfo`) has a more realistic `@Timeout(60)` (60 seconds), which would be more appropriate for tests with restart injection. However, Test 2 restarts a tablet_server instead of the manager, which may have different timing characteristics.
+
+**Reproduced:** Yes, successfully reproduced Test 1 on the first attempt
 
 ### Generalized Stack Trace
 ```
@@ -974,11 +1355,49 @@ java.util.concurrent.TimeoutException: testAccurateProcessListReturned() timed o
 
 ## Group 5 (Priority 5)
 
-**Status:** [ ] Not started
+**Status:** [X] TEST-BUG
 
 **Execution Count:** 6
 
 **Priority Reason:** Test code issue - exception from test
+
+**Analysis:**
+This is a **TEST-BUG** - the test has invalid assumptions that are fundamentally incompatible with tablet_server restarts.
+
+**Root Cause:**
+The test starts 8 stuck scans on a tablet_server (line 300-313), waits for them to be active (line 316), then restarts the tablet_server (line 318-319). However, scans are server-side resources tied to a specific tablet_server process. When that process is killed and restarted:
+
+1. ALL active scans on the old tablet_server are lost
+2. The new tablet_server starts with NO active scans
+3. The test then tries to cancel the client-side futures (line 323-326) and expects 4 scans to remain active (line 329)
+4. But there are 0 scans after the restart, not 8, so the wait times out
+
+**Evidence:**
+Successfully reproduced on the first attempt. Debug logging confirms:
+- Before restart: 8 active scans
+- After restart: 0 active scans (ALL scans lost)
+- After canceling futures: 0 active scans
+- Waiting for 4 active scans: 0 scans (timeout after 60 seconds)
+
+**Comparison with Original Test:**
+The original non-restart-injected `ZombieScanIT.java` (lines 296-307) does NOT have a restart between starting the scans and canceling them. It tests that when client-side scan threads are canceled, the server-side threads are interrupted, with 4 "zombie" scans remaining (those that don't respond to interrupts).
+
+The restart-injected version adds a restart at position `after_first_stuck_scans_detected`, which fundamentally breaks the test's logic because scans cannot survive a tablet_server restart.
+
+**Location:**
+The issue is at `test/src/main/java/org/apache/accumulo/test/ZombieScanIT_RestartInjected.java:318-336`
+
+**Why This is TEST-BUG (not a source code bug):**
+1. Scans are ephemeral, process-local resources, not persisted state
+2. There's no reasonable expectation that active scans should survive a tablet_server restart
+3. Accumulo is working correctly - when a tablet_server is killed, all its scans are cleaned up
+4. The test's expectations (8 scans → restart → cancel → 4 scans remain) are impossible to satisfy
+5. This is not a durability or correctness issue - it's expected behavior
+
+**Impact:**
+This is a test-only issue. The test was designed to verify zombie scan detection without restarts. The restart injection points are incompatible with the test's logic, as they occur at positions where active scans exist and the test expects them to persist.
+
+**Reproduced:** Yes, successfully reproduced on the first attempt
 
 ### Generalized Stack Trace
 ```
