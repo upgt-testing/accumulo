@@ -22,14 +22,19 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.accumulo.core.client.AccumuloClient;
 import org.apache.accumulo.core.client.security.tokens.PasswordToken;
+import org.apache.accumulo.core.util.HostAndPort;
 import org.apache.accumulo.minicluster.MiniAccumuloCluster;
 import org.apache.accumulo.minicluster.ServerType;
 import org.apache.accumulo.miniclusterImpl.MiniAccumuloClusterImpl;
 import org.apache.accumulo.miniclusterImpl.MiniAccumuloConfigImpl;
 import org.apache.accumulo.miniclusterImpl.ProcessReference;
+import org.apache.accumulo.server.ServerContext;
+import org.apache.accumulo.server.util.Admin;
 import org.restarttest.core.ClusterAdapter;
 import org.restarttest.core.RestartMode;
 import org.restarttest.health.CompositeHealthCheck;
@@ -104,13 +109,13 @@ public class AccumuloClusterAdapter implements ClusterAdapter<MiniAccumuloCluste
     // Kill based on mode
     switch (mode) {
       case GRACEFUL:
-        impl.killProcess(serverType, proc);
+        gracefulShutdownProcess(impl, serverType, nodeIndex, proc);
         break;
       case CRASH:
-        killProcessForcibly(impl, serverType, proc);
+        killProcessForcibly(proc);
         break;
       case DELAYED_CRASH:
-        killProcessForcibly(impl, serverType, proc);
+        killProcessForcibly(proc);
         Thread.sleep(500); // Allow partial state propagation
         break;
       default:
@@ -257,13 +262,107 @@ public class AccumuloClusterAdapter implements ClusterAdapter<MiniAccumuloCluste
 
   /**
    * Kill process forcibly for crash simulation.
+   * Uses SIGKILL to immediately terminate the process without allowing cleanup.
    */
-  private void killProcessForcibly(MiniAccumuloClusterImpl impl, ServerType type,
-                                   ProcessReference proc) throws Exception {
-    // Get the actual Process from the reference
-    // Since ProcessReference is opaque, we use killProcess but could enhance
-    // for more aggressive kill if needed
-    impl.killProcess(type, proc);
+  private void killProcessForcibly(ProcessReference proc) throws Exception {
+    Process process = proc.getProcess();
+    log.info("Forcibly killing process (SIGKILL): {}", process);
+    process.destroyForcibly();
+    // Wait briefly for process to be killed
+    boolean terminated = process.waitFor(10, TimeUnit.SECONDS);
+    if (!terminated) {
+      log.warn("Process did not terminate within 10 seconds after destroyForcibly");
+    }
+  }
+
+  /**
+   * Perform graceful shutdown of a process using Accumulo's native graceful shutdown mechanism.
+   * This signals the server via RPC to stop accepting new work, complete current tasks,
+   * flush data, and cleanly release resources before terminating.
+   */
+  private void gracefulShutdownProcess(MiniAccumuloClusterImpl cluster, ServerType serverType,
+                                       int nodeIndex, ProcessReference proc) throws Exception {
+    try {
+      // Get server address for the process at the given index
+      HostAndPort serverAddress = getServerAddress(cluster, serverType, nodeIndex);
+
+      if (serverAddress != null) {
+        ServerContext context = cluster.getServerContext();
+        log.info("Signaling graceful shutdown to {} at {}", serverType, serverAddress);
+        Admin.signalGracefulShutdown(context, serverAddress);
+
+        // Wait for the process to terminate gracefully
+        Process process = proc.getProcess();
+        boolean terminated = process.waitFor(60, TimeUnit.SECONDS);
+        if (!terminated) {
+          log.warn("Process did not terminate gracefully within 60 seconds, forcing shutdown");
+          process.destroyForcibly();
+          process.waitFor(10, TimeUnit.SECONDS);
+        } else {
+          log.info("Process terminated gracefully");
+        }
+      } else {
+        log.warn("Could not determine server address for {} at index {}, falling back to SIGTERM",
+            serverType, nodeIndex);
+        // Fallback: use regular process termination (SIGTERM with timeout)
+        Process process = proc.getProcess();
+        process.destroy();
+        boolean terminated = process.waitFor(30, TimeUnit.SECONDS);
+        if (!terminated) {
+          log.warn("Process did not terminate within 30 seconds, forcing shutdown");
+          process.destroyForcibly();
+        }
+      }
+    } catch (Exception e) {
+      log.warn("Error during graceful shutdown, falling back to SIGTERM: {}", e.getMessage());
+      Process process = proc.getProcess();
+      process.destroy();
+      process.waitFor(30, TimeUnit.SECONDS);
+    }
+  }
+
+  /**
+   * Get the address (host:port) of a server at the given index.
+   * Returns null if the address cannot be determined.
+   */
+  private HostAndPort getServerAddress(MiniAccumuloClusterImpl cluster, ServerType serverType,
+                                       int nodeIndex) throws Exception {
+    try (AccumuloClient client = cluster.createAccumuloClient("root",
+        new PasswordToken(cluster.getConfig().getRootPassword()))) {
+
+      List<String> addresses;
+      switch (serverType) {
+        case MANAGER:
+          addresses = client.instanceOperations().getManagerLocations();
+          break;
+        case TABLET_SERVER:
+          addresses = client.instanceOperations().getTabletServers();
+          break;
+        case GARBAGE_COLLECTOR:
+          // GC doesn't expose address directly, return null to use fallback
+          log.debug("GC address lookup not supported, using fallback shutdown");
+          return null;
+        case SCAN_SERVER:
+          Set<String> scanServers = client.instanceOperations().getScanServers();
+          addresses = new ArrayList<>(scanServers);
+          break;
+        case COMPACTOR:
+          Set<String> compactors = client.instanceOperations().getCompactors();
+          addresses = new ArrayList<>(compactors);
+          break;
+        default:
+          log.debug("Unknown server type {}, using fallback shutdown", serverType);
+          return null;
+      }
+
+      if (addresses == null || nodeIndex >= addresses.size()) {
+        log.debug("No address found for {} at index {}", serverType, nodeIndex);
+        return null;
+      }
+
+      String addressStr = addresses.get(nodeIndex);
+      return HostAndPort.fromString(addressStr);
+    }
   }
 
   /**

@@ -40,6 +40,12 @@
       <artifactId>accumulo-minicluster</artifactId>
       <version>2.1.4</version>
     </dependency>
+    <!-- Accumulo server base for Admin and ServerContext classes -->
+    <dependency>
+      <groupId>org.apache.accumulo</groupId>
+      <artifactId>accumulo-server-base</artifactId>
+      <version>2.1.4</version>
+    </dependency>
     <!-- Restart Testing Framework core -->
     <dependency>
       <groupId>org.restarttest</groupId>
