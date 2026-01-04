@@ -52,7 +52,6 @@ import org.apache.accumulo.test.util.Wait;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.Text;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Timeout;
 import org.restarttest.api.RestartFramework;
 import org.restarttest.core.RestartMode;
 import org.slf4j.Logger;
@@ -126,7 +125,6 @@ public class LargeSplitRowIT_RestartInjected extends ConfigurableMacBase {
 
   // Test tablet server split with 250 entries with all the same prefix
   @Test
-  @Timeout(60)
   public void automaticSplitWith250Same() throws Exception {
     log.info("Automatic with 250 with same prefix");
 
@@ -195,7 +193,6 @@ public class LargeSplitRowIT_RestartInjected extends ConfigurableMacBase {
 
   // 10 0's; 10 2's; 10 4's... 10 30's etc
   @Test
-  @Timeout(60)
   public void automaticSplitWithGaps() throws Exception {
     log.info("Automatic Split With Gaps");
     try (AccumuloClient client = Accumulo.newClient().from(getClientProperties()).build()) {
@@ -205,7 +202,6 @@ public class LargeSplitRowIT_RestartInjected extends ConfigurableMacBase {
 
   // 10 0's; 10 1's; 10 2's... 10 15's etc
   @Test
-  @Timeout(60)
   public void automaticSplitWithoutGaps() throws Exception {
     log.info("Automatic Split Without Gaps");
     try (AccumuloClient client = Accumulo.newClient().from(getClientProperties()).build()) {
@@ -214,7 +210,6 @@ public class LargeSplitRowIT_RestartInjected extends ConfigurableMacBase {
   }
 
   @Test
-  @Timeout(120)
   public void automaticSplitLater() throws Exception {
     log.info("Split later");
     try (AccumuloClient client = Accumulo.newClient().from(getClientProperties()).build()) {

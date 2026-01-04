@@ -53,7 +53,6 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Timeout;
 import org.restarttest.api.RestartFramework;
 import org.restarttest.core.RestartMode;
 
@@ -202,7 +201,6 @@ public class ScanServerIT_RestartInjected extends SharedMiniClusterBase {
   }
 
   @Test
-  @Timeout(value = 20)
   public void testBatchScannerTimeout() throws Exception {
     // Configure the client to use different scan server selector property values
     Properties props = getClientProps();

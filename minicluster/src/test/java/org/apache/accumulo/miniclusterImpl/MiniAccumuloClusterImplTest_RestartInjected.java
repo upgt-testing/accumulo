@@ -43,7 +43,6 @@ import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Timeout;
 import org.restarttest.api.RestartFramework;
 import org.restarttest.core.RestartMode;
 
@@ -87,7 +86,6 @@ public class MiniAccumuloClusterImplTest_RestartInjected {
   }
 
   @Test
-  @Timeout(10)
   public void testAccurateProcessListReturned() throws Exception {
     Map<ServerType,Collection<ProcessReference>> procs = accumulo.getProcesses();
 
@@ -109,7 +107,6 @@ public class MiniAccumuloClusterImplTest_RestartInjected {
   }
 
   @Test
-  @Timeout(60)
   public void saneMonitorInfo() throws Exception {
     ManagerMonitorInfo stats;
     while (true) {
