@@ -47,6 +47,7 @@ import org.apache.accumulo.test.functional.NativeMapIT;
 import org.apache.accumulo.test.util.CertUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeysPublic;
+import org.apache.hadoop.fs.RawLocalFileSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -97,6 +98,9 @@ public class MiniClusterHarness {
 
     // Invoke the callback for tests to configure MAC before it starts
     configCallback.configureMiniCluster(cfg, coreSite);
+
+    // Always use RawLocalFileSystem to ensure proper fsync behavior for WAL recovery
+    coreSite.set("fs.file.impl", RawLocalFileSystem.class.getName());
 
     MiniAccumuloClusterImpl miniCluster = new MiniAccumuloClusterImpl(cfg);
 

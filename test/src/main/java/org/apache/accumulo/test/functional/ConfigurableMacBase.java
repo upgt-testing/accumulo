@@ -45,6 +45,7 @@ import org.apache.accumulo.tserver.memory.NativeMapLoader;
 import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.RawLocalFileSystem;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -159,6 +160,8 @@ public class ConfigurableMacBase extends AccumuloITBase {
     cfg.setProperty(Property.TSERV_NATIVEMAP_ENABLED, Boolean.TRUE.toString());
     configure(cfg, coreSite);
     configureForEnvironment(cfg, getSslDir(baseDir));
+    // Always use RawLocalFileSystem to ensure proper fsync behavior for WAL recovery
+    coreSite.set("fs.file.impl", RawLocalFileSystem.class.getName());
     if (Boolean.parseBoolean(cfg.getSiteConfig().get(Property.TSERV_NATIVEMAP_ENABLED.getKey()))) {
       NativeMapLoader.loadForTest(List.of(nativePathInDevTree, nativePathInMapReduce), () -> {
         throw new IllegalStateException("Native maps were configured, but not available");
