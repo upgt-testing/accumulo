@@ -1,0 +1,55 @@
+======================================================================
+Test Result Analysis Summary
+======================================================================
+Generated: 2026-01-08 01:30:36
+
+Step 1: Execution Parsing
+----------------------------------------------------------------------
+Total baseline executions: 438
+Total restart executions: 1580
+
+Step 2: Failure Analysis
+----------------------------------------------------------------------
+Baseline failures: 2
+Restart failures (baseline passed): 450
+Ignored restart executions (baseline failed): 8
+
+Step 3: Failure Grouping
+----------------------------------------------------------------------
+Unique failure groups: 18
+Total restart failures analyzed: 0
+
+Group Distribution:
+----------------------------------------------------------------------
+Group   1:   46 executions (  0.0%) - Example: org.apache.accumulo.test.ScanServerGroupConfigurationIT_RestartInjected.testClientConfiguration @ after_default_scan_server_start/scan_server
+Group   2:   22 executions (  0.0%) - Example: org.apache.accumulo.test.functional.TabletMetadataIT_RestartInjected.getLiveTServersTest @ after_tserver_killed/manager
+Group   3:   12 executions (  0.0%) - Example: org.apache.accumulo.test.functional.LogicalTimeIT_RestartInjected.run @ after_final_mutation/tablet_server
+Group   4:    9 executions (  0.0%) - Example: org.apache.accumulo.test.functional.HalfClosedTablet2IT_RestartInjected.testInvalidContextCausesVolumeChooserFailure @ after_set_invalid_context/tablet_server
+Group   5:    8 executions (  0.0%) - Example: org.apache.accumulo.miniclusterImpl.CleanShutdownMacTest_RestartInjected.testExecutorServiceShutdown @ after_cluster_create/manager
+Group   6:    4 executions (  0.0%) - Example: org.apache.accumulo.test.functional.GarbageCollectorTrashEnabledCustomPolicyIT_RestartInjected.testTrashHadoopEnabledAccumuloEnabled @ after_first_compact/tablet_server
+Group   7:    3 executions (  0.0%) - Example: org.apache.accumulo.test.functional.LogicalTimeIT_RestartInjected.run @ after_initial_batch_write/tablet_server
+Group   8:    2 executions (  0.0%) - Example: org.apache.accumulo.hadoop.its.mapred.AccumuloOutputFormatIT_RestartInjected.testMR @ after_batch_close/tablet_server
+Group   9:    2 executions (  0.0%) - Example: org.apache.accumulo.test.functional.SummaryIT_RestartInjected.testPermissions @ after_flush_permissions/tablet_server
+Group  10:    2 executions (  0.0%) - Example: org.apache.accumulo.test.ConditionalWriterIT_RestartInjected.testIterators @ after_batch_write/tablet_server
+Group  11:    1 executions (  0.0%) - Example: org.apache.accumulo.test.functional.FileNormalizationIT_RestartInjected.testSplits @ after_ingest/tablet_server
+Group  12:    1 executions (  0.0%) - Example: org.apache.accumulo.test.functional.HalfClosedTablet2IT_RestartInjected.testInvalidContextCausesVolumeChooserFailure @ after_batch_write/tablet_server
+Group  13:    1 executions (  0.0%) - Example: org.apache.accumulo.test.functional.ManagerAssignmentIT_RestartInjected.test @ after_batch_write/tablet_server
+Group  14:    1 executions (  0.0%) - Example: org.apache.accumulo.test.functional.ManagerAssignmentIT_RestartInjected.test @ after_flush/tablet_server
+Group  15:    1 executions (  0.0%) - Example: org.apache.accumulo.test.functional.BackupManagerIT_RestartInjected.test @ after_backup_manager_established/manager
+Group  16:    1 executions (  0.0%) - Example: org.apache.accumulo.test.functional.VisibilityIT_RestartInjected.run @ after_insert_default_data/tablet_server
+Group  17:    1 executions (  0.0%) - Example: org.apache.accumulo.test.functional.ScanRangeIT_RestartInjected.run @ after_insertData_table2/tablet_server
+Group  18:    1 executions (  0.0%) - Example: org.apache.accumulo.test.functional.SummaryIT_RestartInjected.selectionTest @ after_write_close/tablet_server
+
+Baseline Failures Details:
+----------------------------------------------------------------------
+  1. org.apache.accumulo.test.compaction.ClassLoaderContextCompactionIT_RestartInjected.testClassLoaderContextErrorKillsCompactor (ignored 4 restart executions)
+  2. org.apache.accumulo.test.functional.ManagerAssignmentIT_RestartInjected.testShutdownOnlyTServerWithUserTable (ignored 4 restart executions)
+
+Output Files:
+----------------------------------------------------------------------
+Step 1 results: results/accumulo/dec20/step1_execution_summary.json
+Step 2 results: results/accumulo/dec20/step2_failures.json
+Step 3 results: results/accumulo/dec20/step3_grouped_failures.json
+This summary:   results/accumulo/dec20/summary.txt
+
+======================================================================
