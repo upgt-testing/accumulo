@@ -31,6 +31,7 @@
   <description>Tests for Apache Accumulo.</description>
   <properties>
     <restart.config>${project.basedir}/restarts-config/restart-config.json</restart.config>
+    <restart.tracking.agent>/workspace/RestartTestingFramework/restart-tracking-agent/target/restart-tracking-agent-1.0.0-SNAPSHOT.jar</restart.tracking.agent>
     <timeout.factor>1</timeout.factor>
   </properties>
   <dependencies>
@@ -257,6 +258,7 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-failsafe-plugin</artifactId>
           <configuration>
+            <argLine>-javaagent:${restart.tracking.agent}</argLine>
             <testSourceDirectory>${project.basedir}/src/main/java/</testSourceDirectory>
             <testClassesDirectory>${project.build.directory}/classes/</testClassesDirectory>
             <systemPropertyVariables>
@@ -272,6 +274,7 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
           <configuration>
+            <argLine>-javaagent:${restart.tracking.agent}</argLine>
             <systemPropertyVariables>
               <org.apache.accumulo.test.functional.useCredProviderForIT>${useCredProviderForIT}</org.apache.accumulo.test.functional.useCredProviderForIT>
               <org.apache.accumulo.test.functional.useSslForIT>${useSslForIT}</org.apache.accumulo.test.functional.useSslForIT>

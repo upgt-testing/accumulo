@@ -31,6 +31,7 @@
   <description>Apache Accumulo MapReduce bindings.</description>
   <properties>
     <restart.config>${project.basedir}/restarts-config/restart-config.json</restart.config>
+      <restart.tracking.agent>/workspace/RestartTestingFramework/restart-tracking-agent/target/restart-tracking-agent-1.0.0-SNAPSHOT.jar</restart.tracking.agent>
   </properties>
   <dependencies>
     <dependency>
@@ -141,6 +142,13 @@
         <version>1.0.0-SNAPSHOT</version>
         <configuration>
           <configFile>${restart.config}</configFile>
+        </configuration>
+      </plugin>
+          <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <argLine>-javaagent:${restart.tracking.agent}</argLine>
         </configuration>
       </plugin>
     </plugins>

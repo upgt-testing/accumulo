@@ -31,6 +31,7 @@
   <description>A library for launching and running a standalone instance of Apache Accumulo for testing.</description>
   <properties>
     <restart.config>${project.basedir}/restarts-config/restart-config.json</restart.config>
+      <restart.tracking.agent>/workspace/RestartTestingFramework/restart-tracking-agent/target/restart-tracking-agent-1.0.0-SNAPSHOT.jar</restart.tracking.agent>
   </properties>
   <dependencies>
     <dependency>
@@ -166,6 +167,7 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
           <configuration>
+          <argLine>-javaagent:${restart.tracking.agent}</argLine>
             <!-- mini tests shouldn't be forked, as they are a bit resource intensive -->
             <forkCount>1</forkCount>
             <reuseForks>false</reuseForks>
