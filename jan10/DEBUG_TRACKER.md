@@ -11,7 +11,7 @@ Groups are ordered by likelihood of being actual bugs:
 
 ### Group 5: IllegalArgumentException in TabletFile.parsePath
 
-[ ] Not started
+[x] TEST-BUG - See bugs/TEST-BUG-GROUP-5.md
 
 **Test Executions**: 5 failures
 
@@ -57,7 +57,7 @@ java.lang.IllegalArgumentException: Missing or invalid part of tablet file metad
 
 ### Group 3: NullPointerException in ProcessReference
 
-[ ] Not started
+[x] BUG - See bugs/BUG-GROUP-3.md
 
 **Test Executions**: 8 failures
 
@@ -111,7 +111,7 @@ Caused by: java.lang.NullPointerException
 
 ### Group 7: ThriftTableOperationException - Compaction Conflict
 
-[ ] Not started
+[x] FP - See FPs/FP-GROUP-7.md
 
 **Test Executions**: 1 failure
 
@@ -144,7 +144,7 @@ Caused by: ThriftTableOperationException(tableId:2, tableName:null, op:COMPACT, 
 
 ### Group 8: ZooKeeper NoNodeException
 
-[ ] Not started
+[x] FP - See FPs/FP-GROUP-8.md
 
 **Test Executions**: 1 failure
 
@@ -178,7 +178,7 @@ org.apache.zookeeper.KeeperException$NoNodeException: KeeperErrorCode = NoNode f
 
 ### Group 6: FunctionalTestUtils.checkRFiles - Missing Map Files
 
-[ ] Not started
+[x] FP - See FPs/FP-GROUP-6.md
 
 **Test Executions**: 2 failures
 
@@ -215,7 +215,7 @@ java.lang.Exception: tablet 1< has 0 map files
 
 ### Group 4: Wait.waitFor Timeout
 
-[ ] Not started
+[x] TEST-BUG - See bugs/TEST-BUG-GROUP-4.md
 
 **Test Executions**: 8 failures
 
@@ -262,7 +262,7 @@ java.lang.IllegalStateException: . Timeout exceeded
 
 ### Group 2: Timeout Waiting for Tablet Servers (FALSE POSITIVE - Restart Framework)
 
-[ ] Not started
+[x] FP - See FPs/FP-GROUP-2.md
 
 **Test Executions**: 23 failures
 
@@ -305,9 +305,9 @@ Caused by: java.lang.Exception: Timeout waiting for tablet servers to register
 
 ---
 
-### Group 1: No Processes Found for Role (FALSE POSITIVE - Restart Framework)
+### Group 1: No Processes Found for Role (MiniAccumuloClusterImpl.getProcesses() incomplete)
 
-[ ] Not started
+[x] BUG - See bugs/BUG-GROUP-1.md
 
 **Test Executions**: 46 failures
 
@@ -355,14 +355,14 @@ Caused by: java.lang.IllegalArgumentException: No processes found for role: scan
 
 | Priority | Group ID | Exception Type | Count | Verdict |
 |----------|----------|----------------|-------|---------|
-| HIGH | 5 | IllegalArgumentException (TabletFile.parsePath) | 5 | Potential Bug |
-| HIGH | 3 | NullPointerException (ProcessReference) | 8 | Potential Bug |
-| HIGH | 7 | ThriftTableOperationException (Compaction) | 1 | Potential Bug |
-| MEDIUM | 8 | ZooKeeper NoNodeException | 1 | Needs Inspection |
-| MEDIUM | 6 | Exception (checkRFiles) | 2 | Assertion-like |
-| LOW | 4 | Timeout (Wait.waitFor) | 8 | Test Timeout |
-| FALSE POSITIVE | 2 | Timeout (restarttest) | 23 | Framework Issue |
-| FALSE POSITIVE | 1 | IllegalArgumentException (restarttest) | 46 | Framework Issue |
+| HIGH | 5 | IllegalArgumentException (TabletFile.parsePath) | 5 | **TEST-BUG** |
+| HIGH | 3 | NullPointerException (ProcessReference) | 8 | **BUG** |
+| HIGH | 7 | ThriftTableOperationException (Compaction) | 1 | **FP** |
+| MEDIUM | 8 | ZooKeeper NoNodeException | 1 | **FP** |
+| MEDIUM | 6 | Exception (checkRFiles) | 2 | **FP** |
+| LOW | 4 | Timeout (Wait.waitFor) | 8 | **TEST-BUG** |
+| FALSE POSITIVE | 2 | Timeout (restarttest) | 23 | **FP** |
+| HIGH | 1 | IllegalArgumentException (getProcesses() incomplete) | 46 | **BUG** |
 
 **Total Groups**: 8
 **Total Failures**: 94 (non-assertion)
