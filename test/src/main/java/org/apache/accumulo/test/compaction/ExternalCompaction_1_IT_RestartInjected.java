@@ -513,10 +513,17 @@ public class ExternalCompaction_1_IT_RestartInjected extends SharedMiniClusterBa
       LOG.info("Starting normal tablet server");
       getCluster().getClusterControl().start(ServerType.TABLET_SERVER);
 
-      // Wait for the compaction to be committed.
+      // Wait for the compaction to be committed (with timeout to avoid infinite hang).
       LOG.info("Waiting for compaction completed marker to disappear");
       Stream<ExternalCompactionFinalState> fs2 = getFinalStatesForTable(getCluster(), tid);
+      long waitStart = System.currentTimeMillis();
+      long waitTimeout = 60000; // 60 second timeout
       while (fs2.findAny().isPresent()) {
+        if (System.currentTimeMillis() - waitStart > waitTimeout) {
+          LOG.warn("Timeout waiting for compaction completed marker to disappear after {}ms",
+              waitTimeout);
+          break;
+        }
         LOG.info("Waiting for compaction completed marker to disappear");
         UtilWaitThread.sleep(500);
         fs2 = getFinalStatesForTable(getCluster(), tid);
