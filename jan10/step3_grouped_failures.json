@@ -1,0 +1,1014 @@
+{
+  "failure_groups": [
+    {
+      "group_id": 1,
+      "generalized_stacktrace": "Caused by: java.lang.IllegalArgumentException\n\tat org.apache.accumulo.restarttest.AccumuloClusterImplAdapter.restartNode(AccumuloClusterImplAdapter.java)",
+      "raw_stacktrace_sample": "org.restarttest.core.RestartException: Restart failed at position after_default_scan_server_start\n\tat org.restarttest.core.RestartExecutor.execute(RestartExecutor.java:85)\n\tat org.restarttest.api.RestartPointBuilder.execute(RestartPointBuilder.java:182)\n\tat org.apache.accumulo.test.ScanServerGroupConfigurationIT_RestartInjected.testClientConfiguration(ScanServerGroupConfigurationIT_RestartInjected.java:167)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:569)\n\tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)\n\tat java.base/java.lang.Thread.run(Thread.java:840)\nCaused by: java.lang.IllegalArgumentException: No processes found for role: scan_server\n\tat org.apache.accumulo.restarttest.AccumuloClusterImplAdapter.restartNode(AccumuloClusterImplAdapter.java:87)\n\tat org.apache.accumulo.restarttest.AccumuloClusterImplAdapter.restartNode(AccumuloClusterImplAdapter.java:50)\n\tat org.restarttest.core.RestartExecutor.restartSingleNode(RestartExecutor.java:190)\n\tat org.restarttest.core.RestartExecutor.performRestart(RestartExecutor.java:174)\n\tat org.restarttest.core.RestartExecutor.executeRestart(RestartExecutor.java:112)\n\tat org.restarttest.core.RestartExecutor.execute(RestartExecutor.java:83)\n\t... 7 more\n",
+      "test_executions": [
+        {
+          "testClass": "org.apache.accumulo.test.ScanServerGroupConfigurationIT_RestartInjected",
+          "testMethod": "testClientConfiguration",
+          "position": "after_default_scan_server_start",
+          "target": "scan_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "004-d757482c",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-20/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.ScanServerGroupConfigurationIT_RestartInjected",
+          "testMethod": "testClientConfiguration",
+          "position": "after_group1_scan_server_start",
+          "target": "scan_server",
+          "mode": "GRACEFUL",
+          "index": "1",
+          "executionDir": "006-0da44148",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-20/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.ScanServerGroupConfigurationIT_RestartInjected",
+          "testMethod": "testClientConfiguration",
+          "position": "after_group1_scan",
+          "target": "scan_server",
+          "mode": "GRACEFUL",
+          "index": "1",
+          "executionDir": "007-c6d3721b",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-20/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.functional.HalfDeadTServerIT_RestartInjected",
+          "testMethod": "testRecover",
+          "position": "after_kill_regular_tserver",
+          "target": "tablet_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "011-3e53094c",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-25/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.functional.HalfDeadTServerIT_RestartInjected",
+          "testMethod": "testRecover",
+          "position": "after_start_ingest",
+          "target": "tablet_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "013-79a0c56a",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-25/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.functional.HalfDeadTServerIT_RestartInjected",
+          "testMethod": "testRecover",
+          "position": "after_io_block",
+          "target": "tablet_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "014-fa598ce8",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-25/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.functional.HalfDeadTServerIT_RestartInjected",
+          "testMethod": "testRecover",
+          "position": "before_io_block",
+          "target": "tablet_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "015-24941469",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-25/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.functional.IdleProcessMetricsIT_RestartInjected",
+          "testMethod": "testIdleStopMetrics",
+          "position": "after_start_compactors",
+          "target": "compactor",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "012-17ef38ec",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-27/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.functional.IdleProcessMetricsIT_RestartInjected",
+          "testMethod": "testIdleStopMetrics",
+          "position": "after_start_scan_server",
+          "target": "scan_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "013-56e877de",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-27/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.ScanServerIT_RestartInjected",
+          "testMethod": "testBatchScannerTimeout",
+          "position": "after_first_scan",
+          "target": "scan_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "022-b69e1da0",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-30/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.ScanServerIT_RestartInjected",
+          "testMethod": "testBatchScannerTimeout",
+          "position": "before_timeout_test",
+          "target": "scan_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "023-977a7f8b",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-30/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.compaction.ExternalCompaction_1_IT_RestartInjected",
+          "testMethod": "testExternalCompactionDeadTServer",
+          "position": "after_write_data_dead",
+          "target": "tablet_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "011-9ecce633",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-37/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.compaction.ExternalCompaction_1_IT_RestartInjected",
+          "testMethod": "testExternalCompactionDeadTServer",
+          "position": "after_compact_dead",
+          "target": "tablet_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "013-7a9a795e",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-37/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.compaction.ExternalCompaction_1_IT_RestartInjected",
+          "testMethod": "testExternalCompactionDeadTServer",
+          "position": "after_flush_metadata_dead",
+          "target": "tablet_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "014-e540d359",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-37/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.VerifySerialRecoveryIT_RestartInjected",
+          "testMethod": "testSerializedRecovery",
+          "position": "after_recovery_scan",
+          "target": "tablet_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "023-4d1e774c",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-37/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.functional.IdleProcessMetricsIT_RestartInjected",
+          "testMethod": "idleCompactorTest",
+          "position": "after_start_coordinator_and_compactors",
+          "target": "compactor",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "002-1b9b7bb8",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-39/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.functional.IdleProcessMetricsIT_RestartInjected",
+          "testMethod": "idleCompactorTest",
+          "position": "after_compactor_idle",
+          "target": "compactor",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "003-1b4bc7ef",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-39/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.functional.IdleProcessMetricsIT_RestartInjected",
+          "testMethod": "idleCompactorTest",
+          "position": "after_start_compaction",
+          "target": "compactor",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "006-b33aec56",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-39/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.functional.IdleProcessMetricsIT_RestartInjected",
+          "testMethod": "idleCompactorTest",
+          "position": "after_compactor_busy",
+          "target": "compactor",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "007-87cb039e",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-39/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.functional.IdleProcessMetricsIT_RestartInjected",
+          "testMethod": "idleCompactorTest",
+          "position": "after_compaction_complete",
+          "target": "compactor",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "008-fa2d3576",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-39/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.functional.IdleProcessMetricsIT_RestartInjected",
+          "testMethod": "idleScanServerTest",
+          "position": "after_start_scan_server",
+          "target": "scan_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "002-282be77d",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-40/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.functional.IdleProcessMetricsIT_RestartInjected",
+          "testMethod": "idleScanServerTest",
+          "position": "after_sserver_idle",
+          "target": "scan_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "003-32117f48",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-40/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.functional.IdleProcessMetricsIT_RestartInjected",
+          "testMethod": "idleScanServerTest",
+          "position": "after_scan",
+          "target": "scan_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "006-7988f525",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-40/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.functional.IdleProcessMetricsIT_RestartInjected",
+          "testMethod": "idleScanServerTest",
+          "position": "after_sserver_busy",
+          "target": "scan_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "007-ce27fe77",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-40/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.functional.IdleProcessMetricsIT_RestartInjected",
+          "testMethod": "idleScanServerTest",
+          "position": "after_scan_complete",
+          "target": "scan_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "008-c8e7b221",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-40/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.compaction.ExternalCompaction_1_IT_RestartInjected",
+          "testMethod": "testCompactionAndCompactorDies",
+          "position": "after_write_data_extdies",
+          "target": "tablet_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "017-2b04d7dd",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-42/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.compaction.ExternalCompaction_1_IT_RestartInjected",
+          "testMethod": "testCompactionAndCompactorDies",
+          "position": "after_compact_extdies",
+          "target": "tablet_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "019-71d8f827",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-42/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.functional.GracefulShutdownIT_RestartInjected",
+          "testMethod": "testGracefulShutdown",
+          "position": "after_gc_restart",
+          "target": "garbage_collector",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "010-aadee552",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-49/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.ScanServerConcurrentTabletScanIT_RestartInjected",
+          "testMethod": "testScanSameTabletDifferentDataTabletMetadataCacheDisabled",
+          "position": "after_scan_server_start_cache_disabled",
+          "target": "scan_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "002-d6109d87",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-54/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.ScanServerConcurrentTabletScanIT_RestartInjected",
+          "testMethod": "testScanSameTabletDifferentDataTabletMetadataCacheDisabled",
+          "position": "after_scanner_created_cache_disabled",
+          "target": "scan_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "004-cd7cae4f",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-54/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.ScanServerConcurrentTabletScanIT_RestartInjected",
+          "testMethod": "testScanSameTabletDifferentDataTabletMetadataCacheDisabled",
+          "position": "after_iter2_created_cache_disabled",
+          "target": "scan_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "007-ab3c13f7",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-54/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.ScanServerConcurrentTabletScanIT_RestartInjected",
+          "testMethod": "testScanSameTabletDifferentDataTmCacheEnabledRefreshNotTriggered",
+          "position": "after_scan_server_start_refresh_not_triggered",
+          "target": "scan_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "002-518d75f3",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-55/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.ScanServerConcurrentTabletScanIT_RestartInjected",
+          "testMethod": "testScanSameTabletDifferentDataTmCacheEnabledRefreshNotTriggered",
+          "position": "after_scanner_created",
+          "target": "scan_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "004-28dcae0e",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-55/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.ScanServerConcurrentTabletScanIT_RestartInjected",
+          "testMethod": "testScanSameTabletDifferentDataTmCacheEnabledRefreshNotTriggered",
+          "position": "after_iter2_created",
+          "target": "scan_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "007-aab07b64",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-55/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.ScanServerConcurrentTabletScanIT_RestartInjected",
+          "testMethod": "testScanSameTabletDifferentDataTmCacheEnabledRefreshTriggered",
+          "position": "after_scan_server_start_refresh_triggered",
+          "target": "scan_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "002-23c663cd",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-56/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.ScanServerConcurrentTabletScanIT_RestartInjected",
+          "testMethod": "testScanSameTabletDifferentDataTmCacheEnabledRefreshTriggered",
+          "position": "after_scanner_created",
+          "target": "scan_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "004-635fa87d",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-56/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.ScanServerConcurrentTabletScanIT_RestartInjected",
+          "testMethod": "testScanSameTabletDifferentDataTmCacheEnabledRefreshTriggered",
+          "position": "after_iter2_created",
+          "target": "scan_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "007-cf0c70f8",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-56/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.functional.ScannerIT_RestartInjected",
+          "testMethod": "testSessionCleanup",
+          "position": "after_scan_server_start",
+          "target": "scan_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "016-6f2d9568",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-56/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.ScanServerConcurrentTabletScanIT_RestartInjected",
+          "testMethod": "testScanSameTabletDifferentDataTmCacheEnabledRefreshDisabled",
+          "position": "after_scan_server_start_refresh_disabled",
+          "target": "scan_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "002-8d449f4f",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-57/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.ScanServerConcurrentTabletScanIT_RestartInjected",
+          "testMethod": "testScanSameTabletDifferentDataTmCacheEnabledRefreshDisabled",
+          "position": "after_scanner_created",
+          "target": "scan_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "004-55b8d6a2",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-57/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.ScanServerConcurrentTabletScanIT_RestartInjected",
+          "testMethod": "testScanSameTabletDifferentDataTmCacheEnabledRefreshDisabled",
+          "position": "after_iter2_created",
+          "target": "scan_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "007-c8ee2ff7",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-57/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.ECAdminIT_RestartInjected",
+          "testMethod": "testListRunningCompactions",
+          "position": "after_start_compaction",
+          "target": "compactor",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "018-76257139",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-63/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.ScanServerShutdownIT_RestartInjected",
+          "testMethod": "testRefRemovalOnShutdown",
+          "position": "after_scan_server_start",
+          "target": "scan_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "009-aa926c2c",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-68/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.ScanServerShutdownIT_RestartInjected",
+          "testMethod": "testRefRemovalOnShutdown",
+          "position": "after_batch_scans",
+          "target": "scan_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "012-c8c10066",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-68/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.ScanServerIT_RestartInjected",
+          "testMethod": "testScan",
+          "position": "after_eventual_scan",
+          "target": "scan_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "016-5a479ebd",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-68/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.ScanServerIT_RestartInjected",
+          "testMethod": "testBatchScan",
+          "position": "after_eventual_batch_scan",
+          "target": "scan_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "016-b74de6a3",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-69/test.zip"
+        }
+      ],
+      "execution_count": 46
+    },
+    {
+      "group_id": 2,
+      "generalized_stacktrace": "Caused by: java.lang.Exception\n\tat org.apache.accumulo.restarttest.AccumuloClusterImplAdapter.waitForTabletServers(AccumuloClusterImplAdapter.java)",
+      "raw_stacktrace_sample": "org.restarttest.core.RestartException: Restart failed at position after_tserver_killed\n\tat org.restarttest.core.RestartExecutor.execute(RestartExecutor.java:85)\n\tat org.restarttest.api.RestartPointBuilder.execute(RestartPointBuilder.java:182)\n\tat org.apache.accumulo.test.functional.TabletMetadataIT_RestartInjected.getLiveTServersTest(TabletMetadataIT_RestartInjected.java:82)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:569)\n\tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)\n\tat java.base/java.lang.Thread.run(Thread.java:840)\nCaused by: java.lang.Exception: Timeout waiting for tablet servers to register\n\tat org.apache.accumulo.restarttest.AccumuloClusterImplAdapter.waitForTabletServers(AccumuloClusterImplAdapter.java:314)\n\tat org.apache.accumulo.restarttest.AccumuloClusterImplAdapter.waitActive(AccumuloClusterImplAdapter.java:168)\n\tat org.apache.accumulo.restarttest.AccumuloClusterImplAdapter.waitActive(AccumuloClusterImplAdapter.java:50)\n\tat org.restarttest.core.RestartExecutor.executeRestart(RestartExecutor.java:116)\n\tat org.restarttest.core.RestartExecutor.execute(RestartExecutor.java:83)\n\t... 7 more\n",
+      "test_executions": [
+        {
+          "testClass": "org.apache.accumulo.test.functional.TabletMetadataIT_RestartInjected",
+          "testMethod": "getLiveTServersTest",
+          "position": "after_tserver_killed",
+          "target": "manager",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "019-f10b8f3d",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-22/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.functional.ManagerAssignmentIT_RestartInjected",
+          "testMethod": "testShutdownOnlyTServerWithoutUserTable",
+          "position": "after_wait_for_balance",
+          "target": "manager",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "026-052a13e6",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-36/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.compaction.ExternalCompaction_1_IT_RestartInjected",
+          "testMethod": "testExternalCompactionDeadTServer",
+          "position": "after_table_create_dead",
+          "target": "manager",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "010-444d7d9a",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-37/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.compaction.ExternalCompaction_1_IT_RestartInjected",
+          "testMethod": "testExternalCompactionDeadTServer",
+          "position": "after_start_compactors_dead",
+          "target": "manager",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "012-65ef9d03",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-37/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.functional.ShutdownIT_RestartInjected",
+          "testMethod": "stopDuringStart",
+          "position": "after_stopAll_during_start",
+          "target": "manager",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "028-83752999",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-40/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.compaction.ExternalCompaction_1_IT_RestartInjected",
+          "testMethod": "testCompactionAndCompactorDies",
+          "position": "after_table_create_extdies",
+          "target": "manager",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "016-6698385d",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-42/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.compaction.ExternalCompaction_1_IT_RestartInjected",
+          "testMethod": "testCompactionAndCompactorDies",
+          "position": "after_start_compactors_extdies",
+          "target": "manager",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "018-602ca2bc",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-42/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.functional.SslIT_RestartInjected",
+          "testMethod": "adminStop",
+          "position": "after_admin_stop_test",
+          "target": "manager",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "028-4db9a40e",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-42/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.functional.ManagerAssignmentIT_RestartInjected",
+          "testMethod": "testShutdownOnlyTServerWithUserTable",
+          "position": "after_table_create_shutdown_test",
+          "target": "manager",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "017-9fa38a48",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-54/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.manager.SuspendedTabletsIT_RestartInjected",
+          "testMethod": "crashAndOffline",
+          "position": "after_suspended_verified",
+          "target": "manager",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "012-0e57416c",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-57/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.manager.SuspendedTabletsIT_RestartInjected",
+          "testMethod": "crashAndOffline",
+          "position": "after_table_offline",
+          "target": "manager",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "014-1a7a62b9",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-57/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.manager.SuspendedTabletsIT_RestartInjected",
+          "testMethod": "crashAndResumeTserver",
+          "position": "after_suspended_verified",
+          "target": "manager",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "012-f3e00b33",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-58/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.manager.SuspendedTabletsIT_RestartInjected",
+          "testMethod": "crashAndResumeTserver",
+          "position": "after_tserver_restart",
+          "target": "manager",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "013-b7f5e54b",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-58/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.functional.ShutdownIT_RestartInjected",
+          "testMethod": "shutdownDuringDelete",
+          "position": "after_stopAll_during_delete",
+          "target": "manager",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "019-a03d35ca",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-58/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.functional.ShutdownIT_RestartInjected",
+          "testMethod": "shutdownDuringIngest",
+          "position": "after_stopAll_during_ingest",
+          "target": "manager",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "023-950eec6f",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-58/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.manager.SuspendedTabletsIT_RestartInjected",
+          "testMethod": "shutdownAndOffline",
+          "position": "after_kill_tservers",
+          "target": "manager",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "011-b4865a79",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-59/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.manager.SuspendedTabletsIT_RestartInjected",
+          "testMethod": "shutdownAndOffline",
+          "position": "after_suspended_verified",
+          "target": "manager",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "012-a62b1a83",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-59/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.manager.SuspendedTabletsIT_RestartInjected",
+          "testMethod": "shutdownAndOffline",
+          "position": "after_table_offline",
+          "target": "manager",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "014-3bd6a774",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-59/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.functional.ShutdownIT_RestartInjected",
+          "testMethod": "shutdownDuringDeleteTable",
+          "position": "after_stopAll_during_delete_table",
+          "target": "manager",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "019-aee2ed06",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-59/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.manager.SuspendedTabletsIT_RestartInjected",
+          "testMethod": "shutdownAndResumeTserver",
+          "position": "after_kill_tservers",
+          "target": "manager",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "011-0fa0c713",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-60/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.manager.SuspendedTabletsIT_RestartInjected",
+          "testMethod": "shutdownAndResumeTserver",
+          "position": "after_suspended_verified",
+          "target": "manager",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "012-a1fac921",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-60/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.manager.SuspendedTabletsIT_RestartInjected",
+          "testMethod": "shutdownAndResumeTserver",
+          "position": "after_tserver_restart",
+          "target": "manager",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "013-e123f315",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-60/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.functional.ShutdownIT_RestartInjected",
+          "testMethod": "shutdownDuringQuery",
+          "position": "after_stopAll_during_query",
+          "target": "manager",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "019-08bef279",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-60/test.zip"
+        }
+      ],
+      "execution_count": 23
+    },
+    {
+      "group_id": 3,
+      "generalized_stacktrace": "Caused by: java.lang.NullPointerException\n\tat java.base/java.util.Objects.requireNonNull(Objects.java)",
+      "raw_stacktrace_sample": "org.restarttest.core.RestartException: Restart failed at position after_cluster_create\n\tat org.restarttest.core.RestartExecutor.execute(RestartExecutor.java:85)\n\tat org.restarttest.api.RestartPointBuilder.execute(RestartPointBuilder.java:182)\n\tat org.apache.accumulo.miniclusterImpl.CleanShutdownMacTest_RestartInjected.testExecutorServiceShutdown(CleanShutdownMacTest_RestartInjected.java:55)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:569)\n\tat java.base/java.util.ArrayList.forEach(ArrayList.java:1511)\n\tat java.base/java.util.ArrayList.forEach(ArrayList.java:1511)\nCaused by: java.lang.NullPointerException\n\tat java.base/java.util.Objects.requireNonNull(Objects.java:209)\n\tat org.apache.accumulo.miniclusterImpl.ProcessReference.<init>(ProcessReference.java:30)\n\tat java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)\n\tat java.base/java.util.Spliterators$ArraySpliterator.forEachRemaining(Spliterators.java:992)\n\tat java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)\n\tat java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)\n\tat java.base/java.util.stream.ReduceOps$ReduceOp.evaluateSequential(ReduceOps.java:921)\n\tat java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)\n\tat java.base/java.util.stream.ReferencePipeline.collect(ReferencePipeline.java:682)\n\tat org.apache.accumulo.miniclusterImpl.MiniAccumuloClusterImpl.references(MiniAccumuloClusterImpl.java:776)\n\tat org.apache.accumulo.miniclusterImpl.MiniAccumuloClusterImpl.getProcesses(MiniAccumuloClusterImpl.java:782)\n\tat org.apache.accumulo.restarttest.AccumuloClusterImplAdapter.restartNode(AccumuloClusterImplAdapter.java:85)\n\tat org.apache.accumulo.restarttest.AccumuloClusterImplAdapter.restartNode(AccumuloClusterImplAdapter.java:50)\n\tat org.restarttest.core.RestartExecutor.restartSingleNode(RestartExecutor.java:190)\n\tat org.restarttest.core.RestartExecutor.performRestart(RestartExecutor.java:174)\n\tat org.restarttest.core.RestartExecutor.executeRestart(RestartExecutor.java:112)\n\tat org.restarttest.core.RestartExecutor.execute(RestartExecutor.java:83)\n\t... 5 more\n",
+      "test_executions": [
+        {
+          "testClass": "org.apache.accumulo.miniclusterImpl.CleanShutdownMacTest_RestartInjected",
+          "testMethod": "testExecutorServiceShutdown",
+          "position": "after_cluster_create",
+          "target": "manager",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "002-be7271aa",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-minicluster-05/minicluster.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.upgrade.UpgradeUtilIT_RestartInjected",
+          "testMethod": "testPrepareFailsDueToFateTransactions",
+          "position": "after_manager_stop",
+          "target": "tablet_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "027-36e37442",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-14/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.upgrade.UpgradeUtilIT_RestartInjected",
+          "testMethod": "testPrepareSucceeds",
+          "position": "after_manager_stopped",
+          "target": "tablet_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "027-db9152ba",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-15/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.VolumeIT_RestartInjected",
+          "testMethod": "testRemoveVolumes",
+          "position": "after_stopall",
+          "target": "manager",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "003-bddea203",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-23/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.VolumeIT_RestartInjected",
+          "testMethod": "testNonConfiguredVolumes",
+          "position": "after_verify_and_shutdown",
+          "target": "manager",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "010-e8a946b5",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-32/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.VolumeIT_RestartInjected",
+          "testMethod": "testNonConfiguredVolumes",
+          "position": "after_initialize_volumes",
+          "target": "manager",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "011-b970b9db",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-32/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.VolumeIT_RestartInjected",
+          "testMethod": "testAddVolumes",
+          "position": "after_verify_and_shutdown",
+          "target": "manager",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "016-42a4dfb7",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-33/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.VolumeIT_RestartInjected",
+          "testMethod": "testAddVolumes",
+          "position": "after_initialize_volumes",
+          "target": "manager",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "017-4b4741cb",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-33/test.zip"
+        }
+      ],
+      "execution_count": 8
+    },
+    {
+      "group_id": 4,
+      "generalized_stacktrace": "java.lang.IllegalStateException\n\tat org.apache.accumulo.test.util.Wait.waitFor(Wait.java)",
+      "raw_stacktrace_sample": "java.lang.IllegalStateException: . Timeout exceeded\n\tat org.apache.accumulo.test.util.Wait.waitFor(Wait.java:125)\n\tat org.apache.accumulo.test.util.Wait.waitFor(Wait.java:89)\n\tat org.apache.accumulo.test.util.Wait.waitFor(Wait.java:76)\n\tat org.apache.accumulo.test.util.Wait.waitFor(Wait.java:65)\n\tat org.apache.accumulo.test.functional.ShutdownIT_RestartInjected.runAdminStopTest(ShutdownIT_RestartInjected.java:205)\n\tat org.apache.accumulo.test.functional.ShutdownIT_RestartInjected.adminStop(ShutdownIT_RestartInjected.java:179)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:569)\n\tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)\n\tat java.base/java.lang.Thread.run(Thread.java:840)\n",
+      "test_executions": [
+        {
+          "testClass": "org.apache.accumulo.test.functional.ShutdownIT_RestartInjected",
+          "testMethod": "adminStop",
+          "position": "after_get_tablet_servers",
+          "target": "tablet_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "013-79d84522",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-16/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.compaction.ExternalCompactionProgressIT_RestartInjected",
+          "testMethod": "testCompactionDurationContinuesAfterCoordinatorStop",
+          "position": "after_compact_start_duration_1",
+          "target": "tablet_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "019-dce66c77",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-39/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.functional.GarbageCollectorTrashDefaultIT_RestartInjected",
+          "testMethod": "testTrashHadoopDisabledAccumuloEnabled",
+          "position": "before_gc_verification",
+          "target": "garbage_collector",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "019-3a9f15d3",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-51/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.functional.HalfClosedTabletIT_RestartInjected",
+          "testMethod": "testBadIteratorOnStack",
+          "position": "after_failed_offline_test3",
+          "target": "tablet_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "018-6b186ae1",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-53/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.functional.ManagerAssignmentIT_RestartInjected",
+          "testMethod": "testShutdownOnlyTServerWithUserTable",
+          "position": "after_start_single_tserver",
+          "target": "tablet_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "016-ba31f55c",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-54/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.functional.ManagerAssignmentIT_RestartInjected",
+          "testMethod": "testShutdownOnlyTServerWithUserTable",
+          "position": "after_flush_shutdown_test",
+          "target": "tablet_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "019-41ba5a99",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-54/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.ZombieScanIT_RestartInjected",
+          "testMethod": "testMetrics",
+          "position": "after_first_zombie_verification",
+          "target": "tablet_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "005-4a7a74fe",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-60/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.ZombieScanIT_RestartInjected",
+          "testMethod": "testMetrics",
+          "position": "after_second_stuck_scans_detected",
+          "target": "tablet_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "006-602e2da3",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-60/test.zip"
+        }
+      ],
+      "execution_count": 8
+    },
+    {
+      "group_id": 5,
+      "generalized_stacktrace": "java.lang.IllegalArgumentException\n\tat org.apache.accumulo.core.metadata.TabletFile.parsePath(TabletFile.java)",
+      "raw_stacktrace_sample": "java.lang.IllegalArgumentException: Missing or invalid part of tablet file metadata entry: hdfs://localhost:36851/user/root/.Trash/Current/accumulo/recovery/05bd72db-c862-4015-8bb7-56e04fda0dda/finished\n\tat org.apache.accumulo.core.metadata.TabletFile.parsePath(TabletFile.java:124)\n\tat org.apache.accumulo.core.metadata.TabletFile.<init>(TabletFile.java:162)\n\tat org.apache.accumulo.test.functional.GarbageCollectorTrashBase.countFilesInTrash(GarbageCollectorTrashBase.java:115)\n\tat org.apache.accumulo.test.functional.GarbageCollectorTrashEnabledCustomPolicyIT_RestartInjected.testTrashHadoopEnabledAccumuloEnabled(GarbageCollectorTrashEnabledCustomPolicyIT_RestartInjected.java:123)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:569)\n\tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)\n\tat java.base/java.lang.Thread.run(Thread.java:840)\n",
+      "test_executions": [
+        {
+          "testClass": "org.apache.accumulo.test.functional.GarbageCollectorTrashEnabledCustomPolicyIT_RestartInjected",
+          "testMethod": "testTrashHadoopEnabledAccumuloEnabled",
+          "position": "after_initial_flush",
+          "target": "tablet_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "012-a2e7e10a",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-23/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.functional.GarbageCollectorTrashEnabledCustomPolicyIT_RestartInjected",
+          "testMethod": "testTrashHadoopEnabledAccumuloEnabled",
+          "position": "after_first_compact",
+          "target": "tablet_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "013-06694d5b",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-23/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.functional.GarbageCollectorTrashEnabledCustomPolicyIT_RestartInjected",
+          "testMethod": "testTrashHadoopEnabledAccumuloEnabled",
+          "position": "after_second_compact",
+          "target": "tablet_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "014-15076740",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-23/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.functional.GarbageCollectorTrashEnabledIT_RestartInjected",
+          "testMethod": "testTrashHadoopEnabledAccumuloEnabled",
+          "position": "after_load_data",
+          "target": "tablet_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "017-91c40fb4",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-52/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.functional.GarbageCollectorTrashEnabledIT_RestartInjected",
+          "testMethod": "testTrashHadoopEnabledAccumuloEnabled",
+          "position": "after_compact",
+          "target": "tablet_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "018-460be4ad",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-52/test.zip"
+        }
+      ],
+      "execution_count": 5
+    },
+    {
+      "group_id": 6,
+      "generalized_stacktrace": "java.lang.Exception\n\tat org.apache.accumulo.test.functional.FunctionalTestUtils.checkRFiles(FunctionalTestUtils.java)",
+      "raw_stacktrace_sample": "java.lang.Exception: tablet 1< has 0 map files\n\tat org.apache.accumulo.test.functional.FunctionalTestUtils.checkRFiles(FunctionalTestUtils.java:137)\n\tat org.apache.accumulo.test.functional.BadIteratorMincIT_RestartInjected.test(BadIteratorMincIT_RestartInjected.java:93)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:569)\n\tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)\n\tat java.base/java.lang.Thread.run(Thread.java:840)\n",
+      "test_executions": [
+        {
+          "testClass": "org.apache.accumulo.test.functional.BadIteratorMincIT_RestartInjected",
+          "testMethod": "test",
+          "position": "after_first_flush",
+          "target": "tablet_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "005-1fe0e18f",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-17/test.zip"
+        },
+        {
+          "testClass": "org.apache.accumulo.test.functional.HalfClosedTablet2IT_RestartInjected",
+          "testMethod": "testInvalidContextCausesVolumeChooserFailure",
+          "position": "after_batch_write",
+          "target": "tablet_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "012-eaa52149",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-24/test.zip"
+        }
+      ],
+      "execution_count": 2
+    },
+    {
+      "group_id": 7,
+      "generalized_stacktrace": "Caused by: ThriftTableOperationException(tableId\n\tat org.apache.accumulo.core.manager.thrift.FateService$waitForFateOperation_result$waitForFateOperation_resultStandardScheme.read(FateService.java)",
+      "raw_stacktrace_sample": "org.apache.accumulo.core.client.AccumuloException: Another compaction with iterators and/or a compaction strategy is running\n\tat org.apache.accumulo.core.clientImpl.TableOperationsImpl.doFateOperation(TableOperationsImpl.java:409)\n\tat org.apache.accumulo.core.clientImpl.TableOperationsImpl.compact(TableOperationsImpl.java:895)\n\tat org.apache.accumulo.test.compaction.CompactionExecutorIT_RestartInjected.testDispatchUser(CompactionExecutorIT_RestartInjected.java:348)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:569)\n\tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)\n\tat java.base/java.lang.Thread.run(Thread.java:840)\nCaused by: ThriftTableOperationException(tableId:2, tableName:null, op:COMPACT, type:OTHER, description:Another compaction with iterators and/or a compaction strategy is running)\n\tat org.apache.accumulo.core.manager.thrift.FateService$waitForFateOperation_result$waitForFateOperation_resultStandardScheme.read(FateService.java:5045)\n\tat org.apache.accumulo.core.manager.thrift.FateService$waitForFateOperation_result$waitForFateOperation_resultStandardScheme.read(FateService.java:5013)\n\tat org.apache.accumulo.core.manager.thrift.FateService$waitForFateOperation_result.read(FateService.java:4938)\n\tat org.apache.thrift.TServiceClient.receiveBase(TServiceClient.java:93)\n\tat org.apache.accumulo.core.manager.thrift.FateService$Client.recv_waitForFateOperation(FateService.java:166)\n\tat org.apache.accumulo.core.manager.thrift.FateService$Client.waitForFateOperation(FateService.java:151)\n\tat org.apache.accumulo.core.clientImpl.TableOperationsImpl.waitForFateOperation(TableOperationsImpl.java:311)\n\tat org.apache.accumulo.core.clientImpl.TableOperationsImpl.doFateOperation(TableOperationsImpl.java:380)\n\t... 7 more\n",
+      "test_executions": [
+        {
+          "testClass": "org.apache.accumulo.test.compaction.CompactionExecutorIT_RestartInjected",
+          "testMethod": "testDispatchUser",
+          "position": "after_compact_dispatch_user",
+          "target": "tablet_server",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "023-533f6c6c",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-40/test.zip"
+        }
+      ],
+      "execution_count": 1
+    },
+    {
+      "group_id": 8,
+      "generalized_stacktrace": "org.apache.zookeeper.KeeperException$NoNodeException\n\tat org.apache.zookeeper.KeeperException.create(KeeperException.java)",
+      "raw_stacktrace_sample": "org.apache.zookeeper.KeeperException$NoNodeException: KeeperErrorCode = NoNode for /accumulo/f0a4b0ee-be10-40fc-b23e-aae98f425e70/managers/lock/zlock#25defc49-b2b1-4ba0-ad39-7185981ffe52#0000000000\n\tat org.apache.zookeeper.KeeperException.create(KeeperException.java:117)\n\tat org.apache.zookeeper.KeeperException.create(KeeperException.java:53)\n\tat org.apache.zookeeper.ZooKeeper.getData(ZooKeeper.java:1972)\n\tat org.apache.accumulo.core.fate.zookeeper.ZooReader.lambda$getData$0(ZooReader.java:79)\n\tat org.apache.accumulo.core.fate.zookeeper.ZooReader.retryLoopMutator(ZooReader.java:184)\n\tat org.apache.accumulo.core.fate.zookeeper.ZooReader.retryLoop(ZooReader.java:163)\n\tat org.apache.accumulo.core.fate.zookeeper.ZooReader.retryLoop(ZooReader.java:150)\n\tat org.apache.accumulo.core.fate.zookeeper.ZooReader.getData(ZooReader.java:79)\n\tat org.apache.accumulo.test.functional.BackupManagerIT_RestartInjected.test(BackupManagerIT_RestartInjected.java:67)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:569)\n\tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)\n\tat java.base/java.lang.Thread.run(Thread.java:840)\n",
+      "test_executions": [
+        {
+          "testClass": "org.apache.accumulo.test.functional.BackupManagerIT_RestartInjected",
+          "testMethod": "test",
+          "position": "after_backup_manager_established",
+          "target": "manager",
+          "mode": "GRACEFUL",
+          "index": "0",
+          "executionDir": "016-0ead26df",
+          "modulePath": "/Volumes/JFO_SSD/restart_testing/cloudlab_results/accumulo/jan10/RestartLogs_20260110_shuaiwang516_accumulo-restart-test_jan10_accumulo-test-44/test.zip"
+        }
+      ],
+      "execution_count": 1
+    }
+  ],
+  "statistics": {
+    "unique_failure_groups": 8,
+    "total_non_assertion_failures": 94,
+    "total_assertion_failures": 192,
+    "root_cause_depth": 1
+  }
+}

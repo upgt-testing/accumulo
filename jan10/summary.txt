@@ -1,0 +1,51 @@
+======================================================================
+Test Result Analysis Summary
+======================================================================
+Generated: 2026-01-10 16:48:35
+
+Step 1: Execution Parsing
+----------------------------------------------------------------------
+Total baseline executions: 438
+Total restart executions: 1580
+
+Step 2: Failure Analysis
+----------------------------------------------------------------------
+Baseline failures: 8
+Restart failures (baseline passed): 286
+Ignored restart executions (baseline failed): 34
+
+Step 3: Failure Grouping
+----------------------------------------------------------------------
+Unique failure groups: 8
+Total restart failures analyzed: 0
+
+Group Distribution:
+----------------------------------------------------------------------
+Group   1:   46 executions (  0.0%) - Example: org.apache.accumulo.test.ScanServerGroupConfigurationIT_RestartInjected.testClientConfiguration @ after_default_scan_server_start/scan_server
+Group   2:   23 executions (  0.0%) - Example: org.apache.accumulo.test.functional.TabletMetadataIT_RestartInjected.getLiveTServersTest @ after_tserver_killed/manager
+Group   3:    8 executions (  0.0%) - Example: org.apache.accumulo.miniclusterImpl.CleanShutdownMacTest_RestartInjected.testExecutorServiceShutdown @ after_cluster_create/manager
+Group   4:    8 executions (  0.0%) - Example: org.apache.accumulo.test.functional.ShutdownIT_RestartInjected.adminStop @ after_get_tablet_servers/tablet_server
+Group   5:    5 executions (  0.0%) - Example: org.apache.accumulo.test.functional.GarbageCollectorTrashEnabledCustomPolicyIT_RestartInjected.testTrashHadoopEnabledAccumuloEnabled @ after_initial_flush/tablet_server
+Group   6:    2 executions (  0.0%) - Example: org.apache.accumulo.test.functional.BadIteratorMincIT_RestartInjected.test @ after_first_flush/tablet_server
+Group   7:    1 executions (  0.0%) - Example: org.apache.accumulo.test.compaction.CompactionExecutorIT_RestartInjected.testDispatchUser @ after_compact_dispatch_user/tablet_server
+Group   8:    1 executions (  0.0%) - Example: org.apache.accumulo.test.functional.BackupManagerIT_RestartInjected.test @ after_backup_manager_established/manager
+
+Baseline Failures Details:
+----------------------------------------------------------------------
+  1. org.apache.accumulo.hadoop.its.mapreduce.RowHashIT_RestartInjected.test (ignored 3 restart executions)
+  2. org.apache.accumulo.test.compaction.ErasureCodeIT_RestartInjected.test (ignored 9 restart executions)
+  3. org.apache.accumulo.test.PrintInfoIT_RestartInjected.testOldRFileVersion (ignored 1 restart executions)
+  4. org.apache.accumulo.test.compaction.ClassLoaderContextCompactionIT_RestartInjected.testClassLoaderContextErrorKillsCompactor (ignored 4 restart executions)
+  5. org.apache.accumulo.test.functional.SslIT_RestartInjected.mapReduce (ignored 1 restart executions)
+  6. org.apache.accumulo.test.PrintInfoIT_RestartInjected.testRFileNotContainingSummaryInfo (ignored 5 restart executions)
+  7. org.apache.accumulo.test.PrintInfoIT_RestartInjected.testRFileContainingSummaryInfo (ignored 5 restart executions)
+  8. org.apache.accumulo.test.compaction.ExternalCompaction_2_IT_RestartInjected.testDeleteTableCancelsExternalCompaction (ignored 6 restart executions)
+
+Output Files:
+----------------------------------------------------------------------
+Step 1 results: results-jan10/accumulo/jan10/step1_execution_summary.json
+Step 2 results: results-jan10/accumulo/jan10/step2_failures.json
+Step 3 results: results-jan10/accumulo/jan10/step3_grouped_failures.json
+This summary:   results-jan10/accumulo/jan10/summary.txt
+
+======================================================================
