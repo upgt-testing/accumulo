@@ -8,7 +8,7 @@ Groups are ordered by priority: HIGHEST (most likely bug) to LOWEST (most likely
 
 ## Group 9 - HIGHEST PRIORITY - Likely Actual Bug
 
-- [ ] Not started
+- [x] **TEST CONFIGURATION ISSUE (VERIFIED FIX)** - Summary retrieval returns empty after tablet server restart. Initial diagnosis (stale metadata cache) was INCORRECT. Actual root cause: same as Group 3 - missing `RawLocalFileSystem` configuration. Fixed by adding `RawLocalFileSystem` to base classes. Verified 10/10 passes with fix. See `bugs/BUG-GROUP-9.md` for details.
 
 **Group ID:** 9
 
@@ -51,7 +51,7 @@ java.lang.IndexOutOfBoundsException: Index 0 out of bounds for length 0
 
 ## Group 3 - MEDIUM PRIORITY
 
-- [ ] Not started
+- [x] **TEST CONFIGURATION ISSUE (VERIFIED FIX)** - Data loss after tablet server restart. Root cause: `LogicalTimeIT` is missing `RawLocalFileSystem` configuration required for proper WAL sync behavior. Hadoop's default `LocalFileSystem` does not properly honor fsync/flush, causing intermittent data loss during WAL recovery. Fix: Add `hadoopCoreSite.set("fs.file.impl", RawLocalFileSystem.class.getName())` to the test. Verified 10/10 passes with fix vs ~33% without. See `bugs/BUG-GROUP-3.md` for details.
 
 **Group ID:** 3
 
